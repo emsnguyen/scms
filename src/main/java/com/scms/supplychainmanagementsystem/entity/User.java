@@ -37,8 +37,12 @@ public class User {
 
     @NotNull
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "roleID", referencedColumnName = "roleID")
+    @JoinColumn(name = "RoleID", referencedColumnName = "RoleID")
     private Role role;
+
+    @ManyToOne
+    @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
+    private Warehouse warehouse;
 
     private String firstName;
 
