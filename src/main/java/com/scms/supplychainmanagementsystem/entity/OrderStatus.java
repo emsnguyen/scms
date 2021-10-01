@@ -7,21 +7,20 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class District {
+public class OrderStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long districtID;
+    private Long orderStatusID;
 
-    private String districtName;
 
-    private String districtType;
+    private String Status;
 
-    @ManyToOne
-    @JoinColumn(name = "provinceID", referencedColumnName = "provinceId")
-    private Province province;
+
+
 }

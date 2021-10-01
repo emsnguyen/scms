@@ -7,21 +7,23 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+
+import static javax.persistence.FetchType.LAZY;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class District {
+public class InvProductStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long districtID;
+    private Long statusId;
 
-    private String districtName;
 
-    private String districtType;
+    private String prodStatusDescription;
 
-    @ManyToOne
-    @JoinColumn(name = "provinceID", referencedColumnName = "provinceId")
-    private Province province;
+
+
+
 }
