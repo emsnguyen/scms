@@ -8,4 +8,5 @@ public interface IRefreshTokenService {
     void validateRefreshToken(String token);
 
     void deleteRefreshToken(String token);
+
 }
