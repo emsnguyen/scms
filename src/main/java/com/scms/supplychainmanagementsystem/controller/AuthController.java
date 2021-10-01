@@ -26,9 +26,9 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody RegisterRequest registerRequest) {
-        log.info("Start AuthController - Signup for user: " + registerRequest.getUsername());
+        log.info("[Start AuthController - signup for user: " + registerRequest.getUsername() + "]");
         iAuthService.signup(registerRequest);
-        log.info("End AuthController - Signup for user: " + registerRequest.getUsername());
+        log.info("[End AuthController - signup for user: " + registerRequest.getUsername() + "]");
         return new ResponseEntity<>("User Registration Successful",
                 OK);
     }
@@ -41,8 +41,10 @@ public class AuthController {
 
     @PostMapping("/login")
     public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
-        log.info("AuthController - Login for user: " + loginRequest.getUsername());
-        return iAuthService.login(loginRequest);
+        log.info("[Start AuthController - login with username: " + loginRequest.getUsername() + "]");
+        AuthenticationResponse authenticationResponse = iAuthService.login(loginRequest);
+        log.info("[End AuthController - login with username: " + loginRequest.getUsername() + "]");
+        return authenticationResponse;
     }
 
     @PostMapping("/refresh/token")
@@ -53,6 +55,6 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         iRefreshTokenService.deleteRefreshToken(refreshTokenRequest.getRefreshToken());
-        return ResponseEntity.status(OK).body("Refresh Token Deleted Successfully!!");
+        return ResponseEntity.status(OK).body("Refresh Token Deleted Successfully");
     }
 }
