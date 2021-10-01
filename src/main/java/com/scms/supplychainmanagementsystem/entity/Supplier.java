@@ -41,7 +41,7 @@ public class Supplier {
 
     @ManyToOne
     @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
-    private User warehouseId;
+    private Warehouse warehouseId;
 
     @ManyToOne
     @JoinColumn(name = "DistrictId", referencedColumnName = "DistrictId")

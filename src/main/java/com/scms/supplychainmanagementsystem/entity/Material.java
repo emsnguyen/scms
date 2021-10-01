@@ -37,7 +37,7 @@ public class Material {
 
     @ManyToOne
     @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
-    private User warehouseId;
+    private Warehouse warehouseId;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "createdBy", referencedColumnName = "userID")

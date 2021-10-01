@@ -35,7 +35,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
-    private User warehouseId;
+    private Warehouse warehouseId;
 
     @ManyToOne
     @JoinColumn(name = "categoryID", referencedColumnName = "categoryID")
