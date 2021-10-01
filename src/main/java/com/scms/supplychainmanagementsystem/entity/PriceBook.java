@@ -35,7 +35,7 @@ public class PriceBook {
 
     @ManyToOne
     @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
-    private Warehouse warehouse;
+    private Warehouse warehouseId;
 
 
 }

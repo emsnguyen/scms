@@ -21,25 +21,29 @@ import static javax.persistence.FetchType.LAZY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class OrderDetails{
+public class EmailMessage {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderDetailId;
+    private Long emailMessageId;
 
 
-    private Long productId;
+    private String From;
 
-    private Double quantity ;
+    private Instant createdDate ;
+
+    private Instant lastModifiedDate;
+
+    private String content;
 
 
     @ManyToOne
-    @JoinColumn(name = "orderId", referencedColumnName = "orderId")
-    private Order orderId;
-
+    @JoinColumn(name = "createdBy", referencedColumnName = "userID")
+    private User createdBy;
 
     @ManyToOne
-    @JoinColumn(name = "priceBookId", referencedColumnName = "priceBookId")
-    private PriceBook priceBookId;
+    @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID")
+    private User lastModifiedBy;
 
 
 }

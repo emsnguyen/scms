@@ -21,25 +21,35 @@ import static javax.persistence.FetchType.LAZY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class OrderDetails{
+public class PurchaseHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderDetailId;
+    private Long purchaseID;
 
 
-    private Long productId;
+    private Date PurchaseDate;
 
-    private Double quantity ;
+    private String UnitPrice ;
 
-
-    @ManyToOne
-    @JoinColumn(name = "orderId", referencedColumnName = "orderId")
-    private Order orderId;
-
+    private Double Quantity;
 
     @ManyToOne
-    @JoinColumn(name = "priceBookId", referencedColumnName = "priceBookId")
-    private PriceBook priceBookId;
+    @JoinColumn(name = "SupplierID", referencedColumnName = "SupplierID")
+    private Supplier supplierId;
+
+    @ManyToOne
+    @JoinColumn(name = "MaterialId", referencedColumnName = "MaterialId")
+    private Material materialId;
+
+
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "createdBy", referencedColumnName = "userID")
+    private User createdBy;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID")
+    private User lastModifiedBy;
 
 
 }

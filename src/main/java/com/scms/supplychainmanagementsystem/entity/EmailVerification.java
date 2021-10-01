@@ -21,25 +21,18 @@ import static javax.persistence.FetchType.LAZY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class OrderDetails{
+public class EmailVerification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderDetailId;
+    private Long emailVerificationID;
 
 
-    private Long productId;
+    private String verificationToken;
 
-    private Double quantity ;
-
-
-    @ManyToOne
-    @JoinColumn(name = "orderId", referencedColumnName = "orderId")
-    private Order orderId;
-
+    private Date expiryDate ;
 
     @ManyToOne
-    @JoinColumn(name = "priceBookId", referencedColumnName = "priceBookId")
-    private PriceBook priceBookId;
-
-
+    @JoinColumn(name = "UserID", referencedColumnName = "UserID")
+    private User userId;
 }
+

@@ -38,7 +38,7 @@ public class Customer {
 
     @ManyToOne
     @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
-    private Warehouse warehouse;
+    private Warehouse warehouseId;
 
     private String email;
 

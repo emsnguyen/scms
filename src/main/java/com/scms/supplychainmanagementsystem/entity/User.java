@@ -42,7 +42,7 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
-    private Warehouse warehouse;
+    private Warehouse warehouseId;
 
     private String firstName;
 

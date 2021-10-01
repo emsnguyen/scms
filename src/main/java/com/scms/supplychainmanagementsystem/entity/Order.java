@@ -24,7 +24,7 @@ import static javax.persistence.FetchType.LAZY;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long OrderID;
+    private Long orderId;
 
 
     private Instant createdDate;
@@ -32,26 +32,25 @@ public class Order {
     private Instant lastModifiedDate;
 
     @ManyToOne
-    @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
-    private User warehouse;
+    @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseId")
+    private Warehouse warehouseId;
 
     @ManyToOne
     @JoinColumn(name = "ContactID", referencedColumnName = "ContactID")
     private ContactDelivery contactId;
 
 
-
     @ManyToOne
-    @JoinColumn(name = "OrderStatusID", referencedColumnName = "OrderStatusID")
+    @JoinColumn(name = "OrderStatusID", referencedColumnName = "orderStatusID")
     private OrderStatus orderStatusId;
 
 
     @ManyToOne
-    @JoinColumn(name = "CreatedBy", referencedColumnName = "userID")
+    @JoinColumn(name = "CreatedBy", referencedColumnName = "userId")
     private User createdBy;
 
     @ManyToOne
-    @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID")
+    @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userId")
     private User lastModifiedBy;
 
 

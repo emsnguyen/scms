@@ -1,5 +1,6 @@
 package com.scms.supplychainmanagementsystem.entity;
 
+import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.File;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
@@ -21,25 +23,20 @@ import static javax.persistence.FetchType.LAZY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class OrderDetails{
+public class ImportFileHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderDetailId;
+    private Long importId;
 
 
-    private Long productId;
+    private java.io.File File;
 
-    private Double quantity ;
+    private String Status ;
 
+    private Instant CreatedDate;
 
-    @ManyToOne
-    @JoinColumn(name = "orderId", referencedColumnName = "orderId")
-    private Order orderId;
-
-
-    @ManyToOne
-    @JoinColumn(name = "priceBookId", referencedColumnName = "priceBookId")
-    private PriceBook priceBookId;
-
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "createdBy", referencedColumnName = "userID")
+    private User createdBy;
 
 }
