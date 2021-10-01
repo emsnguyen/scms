@@ -1,6 +1,6 @@
 package com.scms.supplychainmanagementsystem.security;
 
-import com.scms.supplychainmanagementsystem.exceptions.MyException;
+import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +15,7 @@ import java.security.cert.CertificateException;
 import java.sql.Date;
 import java.time.Instant;
 
-import static io.jsonwebtoken.Jwts.parserBuilder;
+import static io.jsonwebtoken.Jwts.parser;
 import static java.util.Date.from;
 
 @Service
@@ -32,15 +32,14 @@ public class JwtProvider {
             InputStream resourceAsStream = getClass().getResourceAsStream("/springblog.jks");
             keyStore.load(resourceAsStream, "secret".toCharArray());
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
-            throw new MyException("Exception occurred while loading keystore", e);
+            throw new AppException("Exception occurred while loading keystore", e);
         }
 
     }
 
     public String generateToken(Authentication authentication) {
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
         return Jwts.builder()
-                .setSubject(principal.getUsername())
+                .setSubject(authentication.getName())
                 .setIssuedAt(from(Instant.now()))
                 .signWith(getPrivateKey())
                 .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationInMillis)))
@@ -60,12 +59,12 @@ public class JwtProvider {
         try {
             return (PrivateKey) keyStore.getKey("springblog", "secret".toCharArray());
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
-            throw new MyException("Exception occured while retrieving public key from keystore", e);
+            throw new AppException("Exception occured while retrieving public key from keystore", e);
         }
     }
 
     public boolean validateToken(String jwt) {
-        parserBuilder().setSigningKey(getPublickey()).build().parseClaimsJws(jwt);
+        parser().setSigningKey(getPublickey()).parseClaimsJws(jwt);
         return true;
     }
 
@@ -73,15 +72,14 @@ public class JwtProvider {
         try {
             return keyStore.getCertificate("springblog").getPublicKey();
         } catch (KeyStoreException e) {
-            throw new MyException("Exception occured while " +
+            throw new AppException("Exception occured while " +
                     "retrieving public key from keystore", e);
         }
     }
 
     public String getUsernameFromJwt(String token) {
-        Claims claims = parserBuilder()
+        Claims claims = parser()
                 .setSigningKey(getPublickey())
-                .build()
                 .parseClaimsJws(token)
                 .getBody();
 

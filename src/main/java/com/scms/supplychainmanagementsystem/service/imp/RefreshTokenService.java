@@ -1,7 +1,7 @@
 package com.scms.supplychainmanagementsystem.service.imp;
 
 import com.scms.supplychainmanagementsystem.entity.RefreshToken;
-import com.scms.supplychainmanagementsystem.exceptions.MyException;
+import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.RefreshTokenRepository;
 import com.scms.supplychainmanagementsystem.service.IRefreshTokenService;
 import lombok.AllArgsConstructor;
@@ -28,7 +28,7 @@ public class RefreshTokenService implements IRefreshTokenService {
 
     public void validateRefreshToken(String token) {
         refreshTokenRepository.findByToken(token)
-                .orElseThrow(() -> new MyException("Invalid refresh Token"));
+                .orElseThrow(() -> new AppException("Invalid refresh Token"));
     }
 
     public void deleteRefreshToken(String token) {
