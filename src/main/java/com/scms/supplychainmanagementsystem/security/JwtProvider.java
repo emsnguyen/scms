@@ -38,9 +38,8 @@ public class JwtProvider {
     }
 
     public String generateToken(Authentication authentication) {
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
         return Jwts.builder()
-                .setSubject(principal.getUsername())
+                .setSubject(authentication.getName())
                 .setIssuedAt(from(Instant.now()))
                 .signWith(getPrivateKey())
                 .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationInMillis)))

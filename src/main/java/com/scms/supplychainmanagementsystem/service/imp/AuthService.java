@@ -102,7 +102,6 @@ public class AuthService implements IAuthService {
         Authentication authenticate = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername()
                         , loginRequest.getPassword()));
-        //, singletonList(getCurrentUser().getRole().getRoleName())));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
         String token = jwtProvider.generateToken(authenticate);
         log.info("GenerateToken for user login successfully");
