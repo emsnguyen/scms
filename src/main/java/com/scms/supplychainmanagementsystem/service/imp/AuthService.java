@@ -44,7 +44,7 @@ public class AuthService implements IAuthService {
     private final IRefreshTokenService iRefreshTokenService;
 
     public void signup(RegisterRequest registerRequest) {
-        log.info("Start AuthService- signup for user: " + registerRequest.getUsername());
+        log.info("[Start AuthService - signup for user: " + registerRequest.getUsername() + "]");
         if (userRepository.existsByUsername(registerRequest.getUsername())) {
             throw new AppException("Username exists");
         }
@@ -53,16 +53,14 @@ public class AuthService implements IAuthService {
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setCreatedDate(Instant.now());
-        // TODO: set active false then active true after verify token from mail
         user.setActive(true);
         user.setRole(roleRepository.findByRoleName(registerRequest.getRoleName())
                 .orElseThrow(() -> new AppException("Not found role")));
-        log.info("Start save user" + user.getUsername() + "to database");
+        log.info("[Start save user " + user.getUsername() + "to database]");
         userRepository.save(user);
-        log.info("End save user" + user.getUsername() + "to database");
+        log.info("[End save user " + user.getUsername() + "to database]");
         String token = generateVerificationToken(user);
-        // TODO: handle send mail token
-        log.info("End AuthService - signup for user: " + registerRequest.getUsername());
+        log.info("[End AuthService - signup for user: " + registerRequest.getUsername() + "]");
     }
 
     @Transactional(readOnly = true)
@@ -98,19 +96,24 @@ public class AuthService implements IAuthService {
     }
 
     public AuthenticationResponse login(LoginRequest loginRequest) {
-        log.info("AuthService - login for user: " + loginRequest.getUsername());
+        log.info("[Start AuthService - login with username: " + loginRequest.getUsername() + "]");
+        log.info("[Start authenticate user's login information]");
         Authentication authenticate = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername()
                         , loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
+        log.info("[End authenticate user's login information]");
+        log.info("[Generate token for user]");
         String token = jwtProvider.generateToken(authenticate);
-        log.info("GenerateToken for user login successfully");
-        return AuthenticationResponse.builder()
+        log.info("[Generate token for user login successfully]");
+        AuthenticationResponse authenticationResponse = AuthenticationResponse.builder()
                 .authenticationToken(token)
                 .refreshToken(iRefreshTokenService.generateRefreshToken().getToken())
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
                 .username(loginRequest.getUsername())
                 .build();
+        log.info("[End AuthService - login with username: " + loginRequest.getUsername() + "]");
+        return authenticationResponse;
     }
 
     public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
