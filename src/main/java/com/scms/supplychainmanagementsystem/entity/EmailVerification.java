@@ -33,6 +33,6 @@ public class EmailVerification {
 
     @ManyToOne
     @JoinColumn(name = "UserID", referencedColumnName = "UserID")
-    private User userId;
+    private User user;
 }
 

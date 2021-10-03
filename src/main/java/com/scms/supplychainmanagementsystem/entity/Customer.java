@@ -38,7 +38,7 @@ public class Customer {
 
     @ManyToOne
     @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
-    private Warehouse warehouseId;
+    private Warehouse warehouse;
 
     private String email;
 
@@ -54,7 +54,7 @@ public class Customer {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "DistrictID", referencedColumnName = "DistrictID")
-    private District districtId;
+    private District district;
 
     private String streetAddress;
 

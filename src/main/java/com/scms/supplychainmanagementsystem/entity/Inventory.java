@@ -46,17 +46,17 @@ public class Inventory {
 
     @ManyToOne
     @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
-    private Warehouse warehouseId;
+    private Warehouse warehouse;
 
     @ManyToOne
     @JoinColumn(name = "ProductId", referencedColumnName = "ProductId")
-    private Product productId;
+    private Product product;
 
 
 
     @ManyToOne
     @JoinColumn(name = "StatusId", referencedColumnName = "StatusId")
-    private InvProductStatus statusId;
+    private InvProductStatus status;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "createdBy", referencedColumnName = "userID")

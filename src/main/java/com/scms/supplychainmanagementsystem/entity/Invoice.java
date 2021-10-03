@@ -38,7 +38,7 @@ public class Invoice{
 
     @OneToOne
     @JoinColumn(name = "OrderID", referencedColumnName = "OrderID")
-    private Order orderId;
+    private Order order;
 
 
     @ManyToOne(fetch = LAZY)

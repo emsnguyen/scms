@@ -33,12 +33,12 @@ public class PriceBookEntry {
 
     @ManyToOne
     @JoinColumn(name = "ProductId", referencedColumnName = "ProductId")
-    private Product productId;
+    private Product product;
 
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "PriceBookId", referencedColumnName = "PriceBookId")
-    private PriceBook priceBookId;
+    private PriceBook priceBook;
 
 
 }

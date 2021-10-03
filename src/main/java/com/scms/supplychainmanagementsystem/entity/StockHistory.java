@@ -38,7 +38,7 @@ public class StockHistory {
 
     @ManyToOne
     @JoinColumn(name = "ProductId", referencedColumnName = "ProductId")
-    private Product productId;
+    private Product product;
 
 
 

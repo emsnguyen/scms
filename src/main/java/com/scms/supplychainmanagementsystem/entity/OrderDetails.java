@@ -34,12 +34,12 @@ public class OrderDetails{
 
     @ManyToOne
     @JoinColumn(name = "orderId", referencedColumnName = "orderId")
-    private Order orderId;
+    private Order order;
 
 
     @ManyToOne
     @JoinColumn(name = "priceBookId", referencedColumnName = "priceBookId")
-    private PriceBook priceBookId;
+    private PriceBook priceBook;
 
 
 }

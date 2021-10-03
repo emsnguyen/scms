@@ -27,7 +27,7 @@ public class ContactDelivery {
 
     @ManyToOne
     @JoinColumn(name = "CustomerId", referencedColumnName = "CustomerId")
-    private Customer customerId;
+    private Customer customer;
 
     private String contactName;
 
@@ -43,7 +43,7 @@ public class ContactDelivery {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "DistrictID", referencedColumnName = "DistrictID")
-    private District districtId;
+    private District district;
 
 
 

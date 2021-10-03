@@ -33,16 +33,16 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseId")
-    private Warehouse warehouseId;
+    private Warehouse warehouse;
 
     @ManyToOne
     @JoinColumn(name = "ContactID", referencedColumnName = "ContactID")
-    private ContactDelivery contactId;
+    private ContactDelivery contact;
 
 
     @ManyToOne
     @JoinColumn(name = "OrderStatusID", referencedColumnName = "orderStatusID")
-    private OrderStatus orderStatusId;
+    private OrderStatus orderStatus;
 
 
     @ManyToOne

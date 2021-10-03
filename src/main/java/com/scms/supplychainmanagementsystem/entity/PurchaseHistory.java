@@ -35,11 +35,11 @@ public class PurchaseHistory {
 
     @ManyToOne
     @JoinColumn(name = "SupplierID", referencedColumnName = "SupplierID")
-    private Supplier supplierId;
+    private Supplier supplier;
 
     @ManyToOne
     @JoinColumn(name = "MaterialId", referencedColumnName = "MaterialId")
-    private Material materialId;
+    private Material material;
 
 
 
