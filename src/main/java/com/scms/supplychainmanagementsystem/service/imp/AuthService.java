@@ -56,10 +56,9 @@ public class AuthService implements IAuthService {
         user.setActive(true);
         user.setRole(roleRepository.findByRoleName(registerRequest.getRoleName())
                 .orElseThrow(() -> new AppException("Not found role")));
-        log.info("[Start save user " + user.getUsername() + "to database]");
+        log.info("[Start save user " + user.getUsername() + " to database]");
         userRepository.save(user);
-        log.info("[End save user " + user.getUsername() + "to database]");
-        String token = generateVerificationToken(user);
+        log.info("[End save user " + user.getUsername() + " to database]");
         log.info("[End AuthService - signup for user: " + registerRequest.getUsername() + "]");
     }
 

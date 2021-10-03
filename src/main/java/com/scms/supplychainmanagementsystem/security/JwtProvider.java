@@ -15,7 +15,7 @@ import java.security.cert.CertificateException;
 import java.sql.Date;
 import java.time.Instant;
 
-import static io.jsonwebtoken.Jwts.parser;
+import static io.jsonwebtoken.Jwts.parserBuilder;
 import static java.util.Date.from;
 
 @Service
@@ -64,7 +64,7 @@ public class JwtProvider {
     }
 
     public boolean validateToken(String jwt) {
-        parser().setSigningKey(getPublickey()).parseClaimsJws(jwt);
+        parserBuilder().setSigningKey(getPublickey()).build().parseClaimsJws(jwt);
         return true;
     }
 
@@ -78,8 +78,9 @@ public class JwtProvider {
     }
 
     public String getUsernameFromJwt(String token) {
-        Claims claims = parser()
+        Claims claims = parserBuilder()
                 .setSigningKey(getPublickey())
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
 
