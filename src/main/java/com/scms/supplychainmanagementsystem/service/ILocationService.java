@@ -9,4 +9,6 @@ public interface ILocationService {
     List<ProvinceResponse> getAllProvinces();
 
     List<DistrictResponse> getListDistrictsByProvinceID(Long provinceId);
+
+    DistrictResponse getDistrictsByProvinceId(Long districtId);
 }

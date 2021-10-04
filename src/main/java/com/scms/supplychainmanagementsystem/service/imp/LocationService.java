@@ -4,6 +4,7 @@ import com.scms.supplychainmanagementsystem.dto.DistrictResponse;
 import com.scms.supplychainmanagementsystem.dto.ProvinceResponse;
 import com.scms.supplychainmanagementsystem.entity.District;
 import com.scms.supplychainmanagementsystem.entity.Province;
+import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.DistrictRepository;
 import com.scms.supplychainmanagementsystem.repository.ProvinceRepository;
 import com.scms.supplychainmanagementsystem.service.ILocationService;
@@ -47,5 +48,18 @@ public class LocationService implements ILocationService {
                         .collect(Collectors.toList());
         log.info("[End LocationService - Get Districts By ProvinceID " + provinceId + "]");
         return districtResponseList;
+    }
+
+    @Override
+    public DistrictResponse getDistrictsByProvinceId(Long districtId) {
+        log.info("[Start LocationService - Get District By DistrictId " + districtId + "]");
+        District district = districtRepository.findById(districtId)
+                .orElseThrow(() -> new AppException("Not Found DistrictId"));
+        DistrictResponse districtResponse = DistrictResponse.builder()
+                .districtID(districtId)
+                .districtName(district.getDistrictName())
+                .provinceID(district.getProvince().getProvinceID()).build();
+        log.info("[End LocationService - Get District By DistrictId " + districtId + "]");
+        return districtResponse;
     }
 }
