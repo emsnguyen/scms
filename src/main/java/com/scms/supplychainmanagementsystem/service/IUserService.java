@@ -1,9 +1,9 @@
 package com.scms.supplychainmanagementsystem.service;
 
-import com.scms.supplychainmanagementsystem.dto.UserRequest;
+import com.scms.supplychainmanagementsystem.dto.UserDto;
 
 public interface IUserService {
-    void updateUser(UserRequest userRequest);
+    void updateUser(UserDto UserDto);
 
-    void saveUser(UserRequest userRequest);
+    void saveUser(UserDto UserDto);
 }
