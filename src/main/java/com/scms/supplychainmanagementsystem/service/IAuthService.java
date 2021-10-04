@@ -11,8 +11,6 @@ public interface IAuthService {
 
     void signup(RegisterRequest registerRequest);
 
-    User getCurrentUser();
-
     void fetchUserAndEnable(VerificationToken verificationToken);
 
     String generateVerificationToken(User user);
