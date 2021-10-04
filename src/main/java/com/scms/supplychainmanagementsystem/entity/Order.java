@@ -6,13 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Date;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -49,7 +43,7 @@ public class Order {
     @JoinColumn(name = "CreatedBy", referencedColumnName = "userId")
     private User createdBy;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userId")
     private User lastModifiedBy;
 

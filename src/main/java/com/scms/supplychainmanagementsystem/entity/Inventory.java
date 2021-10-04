@@ -6,13 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Date;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -26,10 +20,9 @@ public class Inventory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long inventoryId;
 
-
     private Long personCheck;
 
-    private Instant dateCheck ;
+    private Instant dateCheck;
 
     private Boolean isActive;
 
@@ -39,10 +32,9 @@ public class Inventory {
 
     private double shortageQuantity;
 
-    private Instant createdDate ;
+    private Instant createdDate;
 
-    private Instant lastModifiedDate ;
-
+    private Instant lastModifiedDate;
 
     @ManyToOne
     @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
@@ -51,8 +43,6 @@ public class Inventory {
     @ManyToOne
     @JoinColumn(name = "ProductId", referencedColumnName = "ProductId")
     private Product product;
-
-
 
     @ManyToOne
     @JoinColumn(name = "StatusId", referencedColumnName = "StatusId")
@@ -63,9 +53,7 @@ public class Inventory {
     private User createdBy;
 
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID")
     private User lastModifiedBy;
-
-
 }
