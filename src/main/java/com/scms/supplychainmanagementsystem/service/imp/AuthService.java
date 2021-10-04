@@ -20,7 +20,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +42,7 @@ public class AuthService implements IAuthService {
     private final JwtProvider jwtProvider;
     private final IRefreshTokenService iRefreshTokenService;
 
+    @Override
     public void signup(RegisterRequest registerRequest) {
         log.info("[Start AuthService - signup for user: " + registerRequest.getUsername() + "]");
         if (userRepository.existsByUsername(registerRequest.getUsername())) {
@@ -62,15 +62,7 @@ public class AuthService implements IAuthService {
         log.info("[End AuthService - signup for user: " + registerRequest.getUsername() + "]");
     }
 
-    @Transactional(readOnly = true)
-    public User getCurrentUser() {
-        org.springframework.security.core.userdetails.User principal
-                = (org.springframework.security.core.userdetails.User) SecurityContextHolder
-                .getContext().getAuthentication().getPrincipal();
-        return userRepository.findByUsername(principal.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User name not found - " + principal.getUsername()));
-    }
-
+    @Override
     public void fetchUserAndEnable(VerificationToken verificationToken) {
         String username = verificationToken.getUser().getUsername();
         User user = userRepository.findByUsername(username)
@@ -79,6 +71,7 @@ public class AuthService implements IAuthService {
         userRepository.save(user);
     }
 
+    @Override
     public String generateVerificationToken(User user) {
         String token = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken();
@@ -89,11 +82,13 @@ public class AuthService implements IAuthService {
         return token;
     }
 
+    @Override
     public void verifyAccount(String token) {
         Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
         fetchUserAndEnable(verificationToken.orElseThrow(() -> new AppException("Invalid Token")));
     }
 
+    @Override
     public AuthenticationResponse login(LoginRequest loginRequest) {
         log.info("[Start AuthService - login with username: " + loginRequest.getUsername() + "]");
         log.info("[Start authenticate user's login information]");
@@ -115,6 +110,7 @@ public class AuthService implements IAuthService {
         return authenticationResponse;
     }
 
+    @Override
     public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
         iRefreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
         String token = jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
@@ -126,6 +122,7 @@ public class AuthService implements IAuthService {
                 .build();
     }
 
+    @Override
     public boolean isLoggedIn() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();

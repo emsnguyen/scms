@@ -6,6 +6,7 @@ import com.scms.supplychainmanagementsystem.dto.RefreshTokenRequest;
 import com.scms.supplychainmanagementsystem.dto.RegisterRequest;
 import com.scms.supplychainmanagementsystem.service.IAuthService;
 import com.scms.supplychainmanagementsystem.service.IRefreshTokenService;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +26,12 @@ public class AuthController {
     private final IRefreshTokenService iRefreshTokenService;
 
     @PostMapping("/signup")
+    @ApiOperation(value = "[TEST] Create user")
     public ResponseEntity<String> signup(@RequestBody RegisterRequest registerRequest) {
         log.info("[Start AuthController - signup for user: " + registerRequest.getUsername() + "]");
         iAuthService.signup(registerRequest);
         log.info("[End AuthController - signup for user: " + registerRequest.getUsername() + "]");
-        return new ResponseEntity<>("User Registration Successful",
-                OK);
+        return new ResponseEntity<>("User Registration Successful", OK);
     }
 
     @GetMapping("accountVerification/{token}")
