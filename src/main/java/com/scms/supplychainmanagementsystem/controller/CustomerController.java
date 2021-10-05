@@ -39,7 +39,7 @@ public class CustomerController {
         return status(HttpStatus.OK).body(customerslist);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     public ResponseEntity<String> createCustomer(@Valid @RequestBody CustomerDto customerDto) {
         log.info("[Start CustomerController -  createCustomer " + customerDto.getEmail() + "]");

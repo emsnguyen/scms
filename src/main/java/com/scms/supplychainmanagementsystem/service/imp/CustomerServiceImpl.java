@@ -78,7 +78,7 @@ public class CustomerServiceImpl implements ICustomerService {
         log.info("[Start save customer " +customer.getEmail() + " to database]");
         customerRepository.saveAndFlush(customer);
         log.info("[End save customer " + customer.getEmail() + " to database]");
-        log.info("[End CustomerService - saveCuctomer with Email: " +customer.getEmail() + "]");
+        log.info("[End CustomerService - saveCustomer with Email: " +customer.getEmail() + "]");
     }
 }
 
