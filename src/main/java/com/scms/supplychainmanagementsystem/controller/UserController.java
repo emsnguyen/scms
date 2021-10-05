@@ -53,6 +53,8 @@ public class UserController {
                 .streetAddress(currentUser.getStreetAddress())
                 .createdDate(currentUser.getCreatedDate())
                 .createdBy(currentUser.getUsername())
+                .lastModifiedBy(currentUser.getLastModifiedBy().getUsername())
+                .lastModifiedDate(currentUser.getLastModifiedDate())
                 .build();
         log.info("[End UserController - Get User Profile]");
         return status(HttpStatus.OK).body(user);
@@ -80,10 +82,27 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long userId) {
         log.info("[Start UserController - Get User By User ID]");
-        // TODO:
-        UserDto user = new UserDto();
+        User user = iUserService.findUserById(userId);
+        UserDto userDto = UserDto.builder()
+                .userId(userId)
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .roleId(user.getRole().getRoleID())
+                .warehouseId(user.getWarehouse().getWarehouseID())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .isActive(user.isActive())
+                .phone(user.getPhone())
+                .dateOfBirth(user.getDateOfBirth())
+                .districtId(user.getDistrict().getDistrictID())
+                .streetAddress(user.getStreetAddress())
+                .createdDate(user.getCreatedDate())
+                .createdBy(user.getUsername())
+                .lastModifiedBy(user.getLastModifiedBy().getUsername())
+                .lastModifiedDate(user.getLastModifiedDate())
+                .build();
         log.info("[End UserController - Get User By User ID]");
-        return status(HttpStatus.OK).body(user);
+        return status(HttpStatus.OK).body(userDto);
     }
 
     @PutMapping("/{userId}")
@@ -91,7 +110,8 @@ public class UserController {
     @ApiOperation(value = "Requires ADMIN or MANAGER Access")
     public ResponseEntity<String> updateUser(@PathVariable Long userId, @Valid @RequestBody UserDto userDto) {
         log.info("[Start UserController - Update User with username " + userDto.getUsername() + "]");
-        // TODO:
+        iUserService.findUserById(userId);
+        iUserService.updateUser(userDto);
         log.info("[End UserController - Update User with username " + userDto.getUsername() + "]");
         return new ResponseEntity<>("User Updated Successfully", OK);
     }

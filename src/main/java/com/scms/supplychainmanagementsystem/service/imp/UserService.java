@@ -29,7 +29,40 @@ public class UserService implements IUserService {
 
     @Override
     public void updateUser(UserDto userDto) {
-
+        log.info("[Start UserService - updateUser with username: " + userDto.getUsername() + "]");
+        log.info("[Start get current user]");
+        User currentUser = userCommon.getCurrentUser();
+        log.info("[End get current user : " + currentUser.getUsername() + "]");
+        if (userDto.getRoleId() == 1) {
+            if (currentUser.getRole().getRoleID() != 1) {
+                throw new AppException("You are not allow to update role ADMIN");
+            }
+        }
+        Warehouse warehouse = new Warehouse();
+        if (currentUser.getRole().getRoleID() == 1) {
+            if (userDto.getRoleId() != 1) {
+                warehouse.setWarehouseID(userDto.getWarehouseId());
+            }
+        }
+        User user = User.builder()
+                .email(userDto.getEmail())
+                .role(roleRepository.findById(userDto.getRoleId())
+                        .orElseThrow(() -> new AppException("Not found role")))
+                .warehouse(warehouse)
+                .firstName(userDto.getFirstName())
+                .lastName(userDto.getLastName())
+                .isActive(userDto.isActive())
+                .phone(userDto.getPhone())
+                .dateOfBirth(userDto.getDateOfBirth())
+                .district(District.builder().districtID(userDto.getDistrictId()).build())
+                .streetAddress(userDto.getStreetAddress())
+                .lastModifiedBy(currentUser)
+                .lastModifiedDate(Instant.now())
+                .build();
+        log.info("[Start save user " + user.getUsername() + " to database]");
+        userRepository.saveAndFlush(user);
+        log.info("[End save user " + user.getUsername() + " to database]");
+        log.info("[End UserService - updateUser with username: " + userDto.getUsername() + "]");
     }
 
     @Override
@@ -74,5 +107,20 @@ public class UserService implements IUserService {
         log.info("[End save user " + user.getUsername() + " to database]");
         log.info("[End UserService - saveUser with username: " + userDto.getUsername() + "]");
     }
+
+
+    @Override
+    public User findUserById(Long userId) {
+        log.info("[Start UserService - find user by userID = " + userId + "]");
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
+        log.info("[End UserService - find user by userID = " + userId + "]");
+        return user;
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+
+    }
+
 
 }
