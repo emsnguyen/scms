@@ -1,17 +1,21 @@
 package com.scms.supplychainmanagementsystem.controller;
 
+import com.scms.supplychainmanagementsystem.dto.CustomerDto;
+import com.scms.supplychainmanagementsystem.dto.UserDto;
 import com.scms.supplychainmanagementsystem.entity.Customer;
 import com.scms.supplychainmanagementsystem.service.ICustomerService;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.ResponseEntity.status;
 
 
@@ -33,6 +37,15 @@ public class CustomerController {
         List<Customer> customerslist = iCustomerService.getAllCustomerInWarehouse();
         log.info("[End Customer - list]");
         return status(HttpStatus.OK).body(customerslist);
+    }
+
+    @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    public ResponseEntity<String> createCustomer(@Valid @RequestBody CustomerDto customerDto) {
+        log.info("[Start CustomerController -  createCustomer " + customerDto.getEmail() + "]");
+        iCustomerService.saveCustomer(customerDto);
+        log.info("[End CustomerController -  createCustomer " + customerDto.getEmail()+ "]");
+        return new ResponseEntity<>("Created Successfully", CREATED);
     }
 
 }
