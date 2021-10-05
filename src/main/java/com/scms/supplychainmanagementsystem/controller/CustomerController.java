@@ -30,7 +30,7 @@ public class CustomerController {
     @GetMapping("/list")
     public ResponseEntity<List<Customer>> getAllCustomer(){
         log.info("[Start Customer - list]");
-        List<Customer> customerslist = iCustomerService.getAllCustomer();
+        List<Customer> customerslist = iCustomerService.getAllCustomerInWarehouse();
         log.info("[End Customer - list]");
         return status(HttpStatus.OK).body(customerslist);
     }
