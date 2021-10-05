@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -45,44 +46,40 @@ public class CustomerServiceImpl implements ICustomerService {
 
     @Override
     public void saveCustomer(CustomerDto customerDto) {
-//        log.info("[Start CustomerService - saveCustomer with username: " + customerDto.get + "]");
-//        if (userRepository.existsByUsername(userDto.getUsername())) {
-//            throw new AppException("Username exists");
-//        }
-//        log.info("[Start get current user]");
-//        User currentUser = userCommon.getCurrentUser();
-//        log.info("[End get current user : " + currentUser.getUsername() + "]");
-//        if (userDto.getRoleId() == 1) {
-//            if (currentUser.getRole().getRoleID() != 1) {
-//                throw new AppException("You are not allow to create role ADMIN");
-//            }
-//        }
-//        Warehouse warehouse = new Warehouse();
-//        if (currentUser.getRole().getRoleID() == 1) {
-//            if (userDto.getRoleId() != 1) {
-//                warehouse.setWarehouseID(userDto.getWarehouseId());
-//            }
-//        }
-//        User user = User.builder()
-//                .username(userDto.getUsername())
-//                .password(passwordEncoder.encode("123@456"))
-//                .email(userDto.getEmail())
-//                .role(roleRepository.findById(userDto.getRoleId())
-//                        .orElseThrow(() -> new AppException("Not found role")))
-//                .warehouse(warehouse)
-//                .firstName(userDto.getFirstName())
-//                .lastName(userDto.getLastName())
-//                .isActive(userDto.isActive())
-//                .phone(userDto.getPhone())
-//                .dateOfBirth(userDto.getDateOfBirth())
-//                .district(District.builder().districtID(userDto.getDistrictId()).build())
-//                .streetAddress(userDto.getStreetAddress())
-//                .createdDate(Instant.now())
-//                .createdBy(currentUser)
-//                .build();
-//        log.info("[Start save user " + user.getUsername() + " to database]");
-//        userRepository.saveAndFlush(user);
-//        log.info("[End save user " + user.getUsername() + " to database]");
-//        log.info("[End UserService - saveUser with username: " + userDto.getUsername() + "]");
+        log.info("[Start CustomerService - saveCustomer with email: " + customerDto.getEmail() + "]");
+        if (customerRepository.existsByEmail(customerDto.getEmail())) {
+            throw new AppException("Email exists");
+        }
+        log.info("[Start get current user]");
+        User currentUser = userCommon.getCurrentUser();
+        log.info("[End get current user : " + currentUser.getUsername() + "]");
+
+        Warehouse warehouse = new Warehouse();
+        warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+
+        Customer customer = Customer.builder()
+                .customerCode(customerDto.getCustomerCode())
+                .CustomerType(customerDto.getCustomerType())
+                .customerName(customerDto.getCustomerName())
+                .email(customerDto.getEmail())
+                .warehouse(warehouse)
+                .phone(customerDto.getPhone())
+                .DateOfBirth(customerDto.getDateOfBirth())
+                .Gender(customerDto.getGender())
+                .Facebook(customerDto.getFacebook())
+                .CompanyName(customerDto.getCompanyName())
+                .Note(customerDto.getNote())
+                .district(District.builder().districtID(customerDto.getDistrictId()).build())
+                .streetAddress(customerDto.getStreetAddress())
+                .createdDate(Instant.now())
+                .createdBy(currentUser)
+                .lastModifiedBy(currentUser)
+                .build();
+        log.info("[Start save customer " +customer.getEmail() + " to database]");
+        customerRepository.saveAndFlush(customer);
+        log.info("[End save customer " + customer.getEmail() + " to database]");
+        log.info("[End CustomerService - saveCuctomer with Email: " +customer.getEmail() + "]");
     }
 }
+
+
