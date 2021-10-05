@@ -3,6 +3,7 @@ package com.scms.supplychainmanagementsystem.controller;
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.UserDto;
 import com.scms.supplychainmanagementsystem.entity.User;
+import com.scms.supplychainmanagementsystem.entity.Warehouse;
 import com.scms.supplychainmanagementsystem.service.IUserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -34,11 +35,15 @@ public class UserController {
     public ResponseEntity<UserDto> getUserProfile() {
         log.info("[Start UserController - Get User Profile]");
         User currentUser = userCommon.getCurrentUser();
+        Warehouse warehouse = new Warehouse();
+        if (currentUser.getRole().getRoleID() != 1) {
+            warehouse = currentUser.getWarehouse();
+        }
         UserDto user = UserDto.builder()
                 .username(currentUser.getUsername())
                 .email(currentUser.getEmail())
                 .roleId(currentUser.getRole().getRoleID())
-                .warehouseId(currentUser.getWarehouse().getWarehouseID())
+                .warehouseId(warehouse.getWarehouseID())
                 .firstName(currentUser.getFirstName())
                 .lastName(currentUser.getLastName())
                 .isActive(currentUser.isActive())
