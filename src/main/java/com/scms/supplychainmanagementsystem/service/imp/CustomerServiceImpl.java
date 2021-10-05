@@ -69,6 +69,7 @@ public class CustomerServiceImpl implements ICustomerService {
                 .Facebook(customerDto.getFacebook())
                 .CompanyName(customerDto.getCompanyName())
                 .Note(customerDto.getNote())
+                .TaxCode(customerDto.getTaxCode())
                 .district(District.builder().districtID(customerDto.getDistrictId()).build())
                 .streetAddress(customerDto.getStreetAddress())
                 .createdDate(Instant.now())
