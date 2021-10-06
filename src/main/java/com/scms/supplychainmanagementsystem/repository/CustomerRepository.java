@@ -30,7 +30,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> , Pagi
     Page<Customer> findByWarehouse(@Param("warehouseid") Long warehouseId,Pageable pageable);
 
 
-
+    @Query(value = "Delete  FROM test.customer where customer_id= :customerid and warehouseid= :warehouseid",nativeQuery = true)
+    boolean deleteCustomer(@Param("customerid") Long customerId ,@Param("warehouseid") Long warehouseId);
 
     boolean existsByEmail(String email);
 }

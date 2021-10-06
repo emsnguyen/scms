@@ -65,9 +65,17 @@ public class CustomerController {
     @ApiOperation(value = "Requires ADMIN or MANAGER Access")
     public ResponseEntity<String> updateCustomer(@PathVariable Long customerId, @Valid @RequestBody CustomerDto customerDto) {
         log.info("[Start CustomerController - Update Customer with email " + customerDto.getEmail() + "]");
-        // TODO:
+        iCustomerService.updateCustomer(customerId,customerDto);
         log.info("[End CustomerController - Update Customer with email " + customerDto.getEmail() + "]");
-        return new ResponseEntity<>("User Customer Successfully", OK);
+        return new ResponseEntity<>("Update Customer Successfully", OK);
+    }
+
+    @DeleteMapping ("/delete/{customerid}")
+    public ResponseEntity<String> DeleteCustomer(@PathVariable Long customerid) {
+        log.info("[Start CustomerController - Get Customer By ID]");
+         iCustomerService.deleteCustomer(customerid);
+        log.info("[End CustomerController - Get Customer By ID]");
+        return new ResponseEntity<>("Delete Customer Successfully", OK);
     }
 
 }
