@@ -1,5 +1,6 @@
 package com.scms.supplychainmanagementsystem.service;
 
+import com.scms.supplychainmanagementsystem.dto.ResetPasswordRequest;
 import com.scms.supplychainmanagementsystem.dto.UserDto;
 import com.scms.supplychainmanagementsystem.entity.User;
 
@@ -11,4 +12,6 @@ public interface IUserService {
     void deleteUser(Long userId);
 
     User findUserById(Long userId);
+
+    void resetPassword(ResetPasswordRequest resetPasswordRequest);
 }

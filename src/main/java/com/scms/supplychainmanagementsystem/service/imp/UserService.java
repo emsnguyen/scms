@@ -1,6 +1,7 @@
 package com.scms.supplychainmanagementsystem.service.imp;
 
 import com.scms.supplychainmanagementsystem.common.UserCommon;
+import com.scms.supplychainmanagementsystem.dto.ResetPasswordRequest;
 import com.scms.supplychainmanagementsystem.dto.UserDto;
 import com.scms.supplychainmanagementsystem.entity.District;
 import com.scms.supplychainmanagementsystem.entity.User;
@@ -110,6 +111,7 @@ public class UserService implements IUserService {
 
 
     @Override
+    @Transactional(readOnly = true)
     public User findUserById(Long userId) {
         log.info("[Start UserService - find user by userID = " + userId + "]");
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
@@ -118,9 +120,22 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void deleteUser(Long userId) {
-
+    public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        log.info("[Start UserService - Reset Password username " + userCommon.getCurrentUser().getUsername() + "]");
+        User currentUser = userCommon.getCurrentUser();
+        if (!userRepository.existsByPassword(passwordEncoder.encode(resetPasswordRequest.getCurrentPassword()))) {
+            throw new AppException("Current password is not correct");
+        }
+        currentUser.setPassword(passwordEncoder.encode(resetPasswordRequest.getNewPassword()));
+        userRepository.save(currentUser);
+        log.info("[End UserService - Delete User By userID = " + currentUser.getUsername() + "]");
     }
 
-
+    @Override
+    public void deleteUser(Long userId) {
+        log.info("[Start UserService - Delete User By userID = " + userId + "]");
+        userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
+        userRepository.deleteById(userId);
+        log.info("[End UserService - Delete User By userID = " + userId + "]");
+    }
 }

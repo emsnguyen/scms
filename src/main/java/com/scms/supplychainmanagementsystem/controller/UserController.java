@@ -1,6 +1,7 @@
 package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.common.UserCommon;
+import com.scms.supplychainmanagementsystem.dto.ResetPasswordRequest;
 import com.scms.supplychainmanagementsystem.dto.UserDto;
 import com.scms.supplychainmanagementsystem.entity.User;
 import com.scms.supplychainmanagementsystem.entity.Warehouse;
@@ -62,7 +63,7 @@ public class UserController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-    @ApiOperation(value = "Requires ADMIN or MANAGER Access")
+    @ApiOperation(value = "Requires ADMIN or MANAGER Access. Disable field [userId,createdBy, createdDate,lastModifiedBy,lastModifiedDate]")
     public ResponseEntity<String> createUser(@Valid @RequestBody UserDto userDto) {
         log.info("[Start UserController -  createUser " + userDto.getUsername() + "]");
         iUserService.saveUser(userDto);
@@ -107,13 +108,32 @@ public class UserController {
 
     @PutMapping("/{userId}")
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-    @ApiOperation(value = "Requires ADMIN or MANAGER Access")
+    @ApiOperation(value = "Requires ADMIN or MANAGER Access. Disable field [userId, username,createdBy, createdDate,lastModifiedBy,lastModifiedDate]")
     public ResponseEntity<String> updateUser(@PathVariable Long userId, @Valid @RequestBody UserDto userDto) {
         log.info("[Start UserController - Update User with username " + userDto.getUsername() + "]");
         iUserService.findUserById(userId);
         iUserService.updateUser(userDto);
         log.info("[End UserController - Update User with username " + userDto.getUsername() + "]");
         return new ResponseEntity<>("User Updated Successfully", OK);
+    }
+
+    @DeleteMapping("/{userId}")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    @ApiOperation(value = "Requires ADMIN or MANAGER Access")
+    public ResponseEntity<String> deleteUser(@PathVariable Long userId, @Valid @RequestBody UserDto userDto) {
+        log.info("[Start UserController - Delete User with username " + userDto.getUsername() + "]");
+        iUserService.findUserById(userId);
+        iUserService.updateUser(userDto);
+        log.info("[End UserController - Delete User with username " + userDto.getUsername() + "]");
+        return new ResponseEntity<>("User Deleted Successfully", OK);
+    }
+
+    @PutMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        log.info("[Start UserController - Change Password with username " + userCommon.getCurrentUser().getUsername() + "]");
+        iUserService.resetPassword(resetPasswordRequest);
+        log.info("[End UserController - Change Password with username " + userCommon.getCurrentUser().getUsername() + "]");
+        return new ResponseEntity<>("Password Change Successfully", OK);
     }
 
 }
