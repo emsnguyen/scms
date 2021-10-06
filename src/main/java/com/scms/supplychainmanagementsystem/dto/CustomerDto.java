@@ -68,7 +68,8 @@ public class CustomerDto {
         Gender = entity.getGender();
         TaxCode = entity.getTaxCode();
         Facebook = entity.getFacebook();
-        this.districtId = entity.getDistrict().getDistrictID();
+        if(entity.getDistrict()!=null){
+        this.districtId = entity.getDistrict().getDistrictID();}
         this.streetAddress = entity.getStreetAddress();
         CompanyName = entity.getCompanyName();
         Note = entity.getNote();
