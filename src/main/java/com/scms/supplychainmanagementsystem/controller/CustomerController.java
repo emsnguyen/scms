@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -35,11 +36,17 @@ public class CustomerController {
 
 
     @GetMapping("/list")
-    public ResponseEntity<Page<Customer>> getAllCustomer(Pageable page){
+    public ResponseEntity<List<CustomerDto>> getAllCustomer(Pageable page){
         log.info("[Start Customer - list]");
         Page<Customer> customerslist = iCustomerService.getAllCustomerInWarehouse(page);
         log.info("[End Customer - list]");
-        return status(HttpStatus.OK).body(customerslist);
+        List<Customer> listcus = customerslist.getContent();
+        List<CustomerDto> listDto = new ArrayList<>();
+        for(int i=0;i<listcus.size();i++){
+            CustomerDto cuss = new CustomerDto(listcus.get(i));
+            listDto.add(cuss);
+        }
+        return status(HttpStatus.OK).body(listDto);
     }
 
 

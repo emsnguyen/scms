@@ -1,5 +1,6 @@
 package com.scms.supplychainmanagementsystem.dto;
 
+import com.scms.supplychainmanagementsystem.entity.Customer;
 import com.scms.supplychainmanagementsystem.entity.District;
 import com.scms.supplychainmanagementsystem.entity.User;
 import com.scms.supplychainmanagementsystem.entity.Warehouse;
@@ -54,4 +55,25 @@ public class CustomerDto {
     private String createdBy;
 
     private String lastModifiedBy;
+
+    public CustomerDto(Customer entity) {
+        this.customerId = entity.getCustomerId();
+        this.customerCode = entity.getCustomerCode();
+        CustomerType = entity.getCustomerType();
+        this.customerName = entity.getCustomerName();
+        this.warehouseId = entity.getWarehouse().getWarehouseID();
+        this.email = entity.getEmail();
+        this.phone = entity.getPhone();
+        DateOfBirth = entity.getDateOfBirth();
+        Gender = entity.getGender();
+        TaxCode = entity.getTaxCode();
+        Facebook = entity.getFacebook();
+        this.districtId = entity.getDistrict().getDistrictID();
+        this.streetAddress = entity.getStreetAddress();
+        CompanyName = entity.getCompanyName();
+        Note = entity.getNote();
+        this.createdDate = entity.getCreatedDate();
+        this.createdBy = entity.getCreatedBy().getUsername().toString();
+        this.lastModifiedBy = entity.getCreatedBy().getUsername().toString();
+    }
 }
