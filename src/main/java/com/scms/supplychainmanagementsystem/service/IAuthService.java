@@ -21,6 +21,4 @@ public interface IAuthService {
 
     AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
 
-    boolean isLoggedIn();
-
 }
