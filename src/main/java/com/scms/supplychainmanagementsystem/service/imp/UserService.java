@@ -1,6 +1,7 @@
 package com.scms.supplychainmanagementsystem.service.imp;
 
 import com.scms.supplychainmanagementsystem.common.UserCommon;
+import com.scms.supplychainmanagementsystem.dto.ResetPasswordRequest;
 import com.scms.supplychainmanagementsystem.dto.UserDto;
 import com.scms.supplychainmanagementsystem.entity.District;
 import com.scms.supplychainmanagementsystem.entity.User;
@@ -29,7 +30,40 @@ public class UserService implements IUserService {
 
     @Override
     public void updateUser(UserDto userDto) {
-
+        log.info("[Start UserService - updateUser with username: " + userDto.getUsername() + "]");
+        log.info("[Start get current user]");
+        User currentUser = userCommon.getCurrentUser();
+        log.info("[End get current user : " + currentUser.getUsername() + "]");
+        if (userDto.getRoleId() == 1) {
+            if (currentUser.getRole().getRoleID() != 1) {
+                throw new AppException("You are not allow to update role ADMIN");
+            }
+        }
+        Warehouse warehouse = new Warehouse();
+        if (currentUser.getRole().getRoleID() == 1) {
+            if (userDto.getRoleId() != 1) {
+                warehouse.setWarehouseID(userDto.getWarehouseId());
+            }
+        }
+        User user = User.builder()
+                .email(userDto.getEmail())
+                .role(roleRepository.findById(userDto.getRoleId())
+                        .orElseThrow(() -> new AppException("Not found role")))
+                .warehouse(warehouse)
+                .firstName(userDto.getFirstName())
+                .lastName(userDto.getLastName())
+                .isActive(userDto.isActive())
+                .phone(userDto.getPhone())
+                .dateOfBirth(userDto.getDateOfBirth())
+                .district(District.builder().districtID(userDto.getDistrictId()).build())
+                .streetAddress(userDto.getStreetAddress())
+                .lastModifiedBy(currentUser)
+                .lastModifiedDate(Instant.now())
+                .build();
+        log.info("[Start save user " + user.getUsername() + " to database]");
+        userRepository.saveAndFlush(user);
+        log.info("[End save user " + user.getUsername() + " to database]");
+        log.info("[End UserService - updateUser with username: " + userDto.getUsername() + "]");
     }
 
     @Override
@@ -75,4 +109,33 @@ public class UserService implements IUserService {
         log.info("[End UserService - saveUser with username: " + userDto.getUsername() + "]");
     }
 
+
+    @Override
+    @Transactional(readOnly = true)
+    public User findUserById(Long userId) {
+        log.info("[Start UserService - find user by userID = " + userId + "]");
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
+        log.info("[End UserService - find user by userID = " + userId + "]");
+        return user;
+    }
+
+    @Override
+    public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        log.info("[Start UserService - Reset Password username " + userCommon.getCurrentUser().getUsername() + "]");
+        User currentUser = userCommon.getCurrentUser();
+        if (!userRepository.existsByPassword(passwordEncoder.encode(resetPasswordRequest.getCurrentPassword()))) {
+            throw new AppException("Current password is not correct");
+        }
+        currentUser.setPassword(passwordEncoder.encode(resetPasswordRequest.getNewPassword()));
+        userRepository.save(currentUser);
+        log.info("[End UserService - Delete User By userID = " + currentUser.getUsername() + "]");
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+        log.info("[Start UserService - Delete User By userID = " + userId + "]");
+        userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
+        userRepository.deleteById(userId);
+        log.info("[End UserService - Delete User By userID = " + userId + "]");
+    }
 }

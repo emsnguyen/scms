@@ -6,13 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Date;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -29,7 +22,7 @@ public class Product {
 
     private String ProductName;
 
-    private String QuantityUnitOfMeasure ;
+    private String QuantityUnitOfMeasure;
 
     private Boolean isActive;
 
@@ -40,7 +33,6 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "categoryID", referencedColumnName = "categoryID")
     private Category category;
-
 
 
     @ManyToOne(fetch = LAZY)

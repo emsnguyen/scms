@@ -5,10 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-
-
-import static javax.persistence.FetchType.LAZY;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Getter
 @Setter
@@ -20,10 +20,6 @@ public class InvProductStatus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long statusId;
 
-
     private String prodStatusDescription;
-
-
-
 
 }
