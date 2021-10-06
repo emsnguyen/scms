@@ -2,11 +2,13 @@ package com.scms.supplychainmanagementsystem.service.imp;
 
 import com.scms.supplychainmanagementsystem.dto.DistrictResponse;
 import com.scms.supplychainmanagementsystem.dto.ProvinceResponse;
+import com.scms.supplychainmanagementsystem.dto.WarehouseDto;
 import com.scms.supplychainmanagementsystem.entity.District;
 import com.scms.supplychainmanagementsystem.entity.Province;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.DistrictRepository;
 import com.scms.supplychainmanagementsystem.repository.ProvinceRepository;
+import com.scms.supplychainmanagementsystem.repository.WarehouseRepository;
 import com.scms.supplychainmanagementsystem.service.ILocationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 public class LocationService implements ILocationService {
     private final ProvinceRepository provinceRepository;
     private final DistrictRepository districtRepository;
+    private final WarehouseRepository warehouseRepository;
 
     @Override
     public List<ProvinceResponse> getAllProvinces() {
@@ -61,5 +64,15 @@ public class LocationService implements ILocationService {
                 .provinceID(district.getProvince().getProvinceID()).build();
         log.info("[End LocationService - Get District By DistrictId " + districtId + "]");
         return districtResponse;
+    }
+
+    @Override
+    public List<WarehouseDto> getAllWarehouses() {
+        log.info("[Start LocationService - Get All Warehouses]");
+        List<WarehouseDto> warehouses = warehouseRepository
+                .findAll().stream()
+                .map(x -> new WarehouseDto(x.getWarehouseID(), x.getWarehouseName(), x.getAddress())).collect(Collectors.toList());
+        log.info("[End LocationService - Get All Warehouses]");
+        return warehouses;
     }
 }

@@ -2,6 +2,7 @@ package com.scms.supplychainmanagementsystem.service.imp;
 
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.ChangePasswordRequest;
+import com.scms.supplychainmanagementsystem.dto.RoleDto;
 import com.scms.supplychainmanagementsystem.dto.UserDto;
 import com.scms.supplychainmanagementsystem.entity.District;
 import com.scms.supplychainmanagementsystem.entity.User;
@@ -12,11 +13,15 @@ import com.scms.supplychainmanagementsystem.repository.UserRepository;
 import com.scms.supplychainmanagementsystem.service.IUserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -36,7 +41,7 @@ public class UserService implements IUserService {
         log.info("[End get current user : " + currentUser.getUsername() + "]");
         if (userDto.getRoleId() == 1) {
             if (currentUser.getRole().getRoleID() != 1) {
-                throw new AppException("You are not allow to update role ADMIN");
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You are not allow to update role ADMIN");
             }
         }
         Warehouse warehouse = new Warehouse();
@@ -138,5 +143,14 @@ public class UserService implements IUserService {
         userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
         userRepository.deleteById(userId);
         log.info("[End UserService - Delete User By userID = " + userId + "]");
+    }
+
+    @Override
+    public List<RoleDto> getAllRoles() {
+        log.info("[Start UserService - Get All Roles]");
+        List<RoleDto> roleDtoList = roleRepository.findAll()
+                .stream().map(x -> new RoleDto(x.getRoleID(), x.getRoleName())).collect(Collectors.toList());
+        log.info("[End UserService - Get All Roles]");
+        return roleDtoList;
     }
 }

@@ -2,10 +2,11 @@ package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.ChangePasswordRequest;
+import com.scms.supplychainmanagementsystem.dto.RoleDto;
 import com.scms.supplychainmanagementsystem.dto.UserDto;
 import com.scms.supplychainmanagementsystem.entity.User;
 import com.scms.supplychainmanagementsystem.entity.Warehouse;
-import com.scms.supplychainmanagementsystem.exceptions.CustomException;
+import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.service.IUserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -36,35 +38,31 @@ public class UserController {
     @ApiOperation(value = "Returns the current user profile")
     public ResponseEntity<UserDto> getUserProfile() {
         log.info("[Start UserController - Get User Profile]");
-        UserDto user;
-        if (userCommon.isLoggedIn()) {
-            User currentUser = userCommon.getCurrentUser();
-            Warehouse warehouse = new Warehouse();
-            if (currentUser.getRole().getRoleID() != 1) {
-                warehouse = currentUser.getWarehouse();
-            }
-            user = UserDto.builder()
-                    .username(currentUser.getUsername())
-                    .email(currentUser.getEmail())
-                    .roleId(currentUser.getRole().getRoleID())
-                    .warehouseId(warehouse.getWarehouseID())
-                    .firstName(currentUser.getFirstName())
-                    .lastName(currentUser.getLastName())
-                    .isActive(currentUser.isActive())
-                    .phone(currentUser.getPhone())
-                    .dateOfBirth(currentUser.getDateOfBirth())
-                    .districtId(currentUser.getDistrict().getDistrictID())
-                    .streetAddress(currentUser.getStreetAddress())
-                    .createdDate(currentUser.getCreatedDate())
-                    .createdBy(currentUser.getUsername())
-                    .lastModifiedBy(currentUser.getLastModifiedBy().getUsername())
-                    .lastModifiedDate(currentUser.getLastModifiedDate())
-                    .build();
-            log.info("[End UserController - Get User Profile]");
-            return status(HttpStatus.OK).body(user);
-        } else {
-            throw new CustomException("NOT_LOGGIN", HttpStatus.FORBIDDEN);
+        User currentUser = userCommon.getCurrentUser();
+        Warehouse warehouse = new Warehouse();
+        if (currentUser.getRole().getRoleID() != 1) {
+            warehouse = currentUser.getWarehouse();
         }
+        UserDto user = UserDto.builder()
+                .username(currentUser.getUsername())
+                .email(currentUser.getEmail())
+                .roleId(currentUser.getRole().getRoleID())
+                .warehouseId(warehouse.getWarehouseID())
+                .firstName(currentUser.getFirstName())
+                .lastName(currentUser.getLastName())
+                .isActive(currentUser.isActive())
+                .phone(currentUser.getPhone())
+                .dateOfBirth(currentUser.getDateOfBirth())
+                .districtId(currentUser.getDistrict().getDistrictID())
+                .streetAddress(currentUser.getStreetAddress())
+                .createdDate(currentUser.getCreatedDate())
+                .createdBy(currentUser.getUsername())
+                .lastModifiedBy(currentUser.getLastModifiedBy().getUsername())
+                .lastModifiedDate(currentUser.getLastModifiedDate())
+                .build();
+        log.info("[End UserController - Get User Profile]");
+        return status(HttpStatus.OK).body(user);
+
     }
 
     @PostMapping
@@ -89,27 +87,33 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long userId) {
         log.info("[Start UserController - Get User By User ID]");
-        User user = iUserService.findUserById(userId);
-        UserDto userDto = UserDto.builder()
-                .userId(userId)
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .roleId(user.getRole().getRoleID())
-                .warehouseId(user.getWarehouse().getWarehouseID())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .isActive(user.isActive())
-                .phone(user.getPhone())
-                .dateOfBirth(user.getDateOfBirth())
-                .districtId(user.getDistrict().getDistrictID())
-                .streetAddress(user.getStreetAddress())
-                .createdDate(user.getCreatedDate())
-                .createdBy(user.getUsername())
-                .lastModifiedBy(user.getLastModifiedBy().getUsername())
-                .lastModifiedDate(user.getLastModifiedDate())
-                .build();
-        log.info("[End UserController - Get User By User ID]");
-        return status(HttpStatus.OK).body(userDto);
+        try {
+            User user = iUserService.findUserById(userId);
+            UserDto userDto = UserDto.builder()
+                    .userId(userId)
+                    .username(user.getUsername())
+                    .email(user.getEmail())
+                    .roleId(user.getRole().getRoleID())
+                    .warehouseId(user.getWarehouse().getWarehouseID())
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .isActive(user.isActive())
+                    .phone(user.getPhone())
+                    .dateOfBirth(user.getDateOfBirth())
+                    .districtId(user.getDistrict().getDistrictID())
+                    .streetAddress(user.getStreetAddress())
+                    .createdDate(user.getCreatedDate())
+                    .createdBy(user.getUsername())
+                    .lastModifiedBy(user.getLastModifiedBy().getUsername())
+                    .lastModifiedDate(user.getLastModifiedDate())
+                    .build();
+            log.info("[End UserController - Get User By User ID]");
+            return status(HttpStatus.OK).body(userDto);
+        } catch (NullPointerException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SOME_DATA_NOT_EXIST");
+        } catch (Exception e) {
+            throw new AppException("CREATE_USER_FAIL");
+        }
     }
 
     @PutMapping("/{userId}")
@@ -128,18 +132,35 @@ public class UserController {
     @ApiOperation(value = "Requires ADMIN or MANAGER Access")
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         log.info("[Start UserController - Delete User with userid = " + userId + "]");
-        iUserService.findUserById(userId);
-        iUserService.deleteUser(userId);
-        log.info("[End UserController - Delete User with userid " + userId + "]");
-        return new ResponseEntity<>("User Deleted Successfully", OK);
+        try {
+            iUserService.findUserById(userId);
+            iUserService.deleteUser(userId);
+            log.info("[End UserController - Delete User with userid " + userId + "]");
+            return new ResponseEntity<>("User Deleted Successfully", OK);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "DELETE_USER_FAIL");
+        }
     }
 
-    @PutMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+    @PutMapping("/change-password")
+    @ApiOperation(value = "Required login again when change pw successfully")
+    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
         log.info("[Start UserController - Change Password with username " + userCommon.getCurrentUser().getUsername() + "]");
-        iUserService.changePassword(changePasswordRequest);
-        log.info("[End UserController - Change Password with username " + userCommon.getCurrentUser().getUsername() + "]");
-        return new ResponseEntity<>("Password Change Successfully", OK);
+        try {
+            iUserService.changePassword(changePasswordRequest);
+            log.info("[End UserController - Change Password with username " + userCommon.getCurrentUser().getUsername() + "]");
+            return new ResponseEntity<>("Password Change Successfully", OK);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "UPDATE_PASSWORD_FAIL");
+        }
+    }
+
+    @GetMapping("/list-role")
+    public ResponseEntity<List<RoleDto>> getAllRoles() {
+        log.info("[Start UserController - Get All Roles]");
+        List<RoleDto> roleDto = iUserService.getAllRoles();
+        log.info("[End UserController - Get All Roles]");
+        return status(HttpStatus.OK).body(roleDto);
     }
 
 }

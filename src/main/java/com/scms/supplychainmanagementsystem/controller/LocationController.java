@@ -2,6 +2,7 @@ package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.dto.DistrictResponse;
 import com.scms.supplychainmanagementsystem.dto.ProvinceResponse;
+import com.scms.supplychainmanagementsystem.dto.WarehouseDto;
 import com.scms.supplychainmanagementsystem.service.ILocationService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -44,6 +45,14 @@ public class LocationController {
         DistrictResponse districtResponses = iLocationService.getDistrictsByProvinceId(districtId);
         log.info("[End LocationController - getDistrictsByProvinceId]");
         return status(HttpStatus.OK).body(districtResponses);
+    }
+
+    @GetMapping("/warehouse")
+    public ResponseEntity<List<WarehouseDto>> getAllWarehouses() {
+        log.info("[Start LocationController - getAllWarehouse]");
+        List<WarehouseDto> warehouseDtoList = iLocationService.getAllWarehouses();
+        log.info("[End LocationController - getAllWarehouse]");
+        return status(HttpStatus.OK).body(warehouseDtoList);
     }
 
 }
