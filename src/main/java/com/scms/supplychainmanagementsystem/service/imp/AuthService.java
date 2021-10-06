@@ -15,7 +15,6 @@ import com.scms.supplychainmanagementsystem.service.IAuthService;
 import com.scms.supplychainmanagementsystem.service.IRefreshTokenService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -77,7 +76,6 @@ public class AuthService implements IAuthService {
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(token);
         verificationToken.setUser(user);
-
         verificationTokenRepository.save(verificationToken);
         return token;
     }
@@ -96,10 +94,9 @@ public class AuthService implements IAuthService {
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername()
                         , loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
-        log.info("[End authenticate user's login information]");
-        log.info("[Generate token for user]");
+        log.info("[Authenticate user's login successful]");
         String token = jwtProvider.generateToken(authenticate);
-        log.info("[Generate token for user login successfully]");
+        log.info("[Generate token for user login with username " + loginRequest.getUsername() + " successfully]");
         AuthenticationResponse authenticationResponse = AuthenticationResponse.builder()
                 .authenticationToken(token)
                 .refreshToken(iRefreshTokenService.generateRefreshToken().getToken())
@@ -120,12 +117,6 @@ public class AuthService implements IAuthService {
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
                 .username(refreshTokenRequest.getUsername())
                 .build();
-    }
-
-    @Override
-    public boolean isLoggedIn() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
     }
 
 }

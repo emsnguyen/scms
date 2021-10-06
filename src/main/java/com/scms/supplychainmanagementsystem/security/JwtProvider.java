@@ -1,8 +1,8 @@
 package com.scms.supplychainmanagementsystem.security;
 
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -18,6 +18,7 @@ import java.time.Instant;
 import static io.jsonwebtoken.Jwts.parserBuilder;
 import static java.util.Date.from;
 
+@Slf4j
 @Service
 public class JwtProvider {
 
@@ -64,7 +65,21 @@ public class JwtProvider {
     }
 
     public boolean validateToken(String jwt) {
-        parserBuilder().setSigningKey(getPublickey()).build().parseClaimsJws(jwt);
+        try {
+            parserBuilder().setSigningKey(getPublickey()).build().parseClaimsJws(jwt);
+        } catch (MalformedJwtException ex) {
+            log.error("Invalid JWT token");
+            throw new AppException("INVALID_TOKEN");
+        } catch (ExpiredJwtException ex) {
+            log.error("Expired JWT token");
+            throw new AppException("EXPIRED_TOKEN");
+        } catch (UnsupportedJwtException ex) {
+            log.error("Unsupported JWT token");
+            throw new AppException("UNSUPPORTED_TOKEN");
+        } catch (IllegalArgumentException ex) {
+            log.error("JWT claims string is empty.");
+            throw new AppException("JWT_Claims_IS_EMPTY");
+        }
         return true;
     }
 

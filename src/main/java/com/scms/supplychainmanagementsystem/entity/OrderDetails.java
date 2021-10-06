@@ -6,30 +6,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Date;
-
-import static javax.persistence.FetchType.LAZY;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class OrderDetails{
+public class OrderDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderDetailId;
 
+    @ManyToOne
+    @JoinColumn(name = "productID", referencedColumnName = "productID")
+    private Product product;
 
-    private Long productId;
-
-    private Double quantity ;
+    private Double quantity;
 
 
     @ManyToOne
