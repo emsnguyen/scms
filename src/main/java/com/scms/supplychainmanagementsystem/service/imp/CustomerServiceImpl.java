@@ -12,6 +12,8 @@ import com.scms.supplychainmanagementsystem.service.ICustomerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +40,19 @@ public class CustomerServiceImpl implements ICustomerService {
         User currentUser = userCommon.getCurrentUser();
         return customerRepository.findByWarehouse(userCommon.getCurrentUser().getWarehouse().getWarehouseID());
     }
+
+    @Override
+    public Page<Customer> getAllCustomerInWarehousePage(Pageable pageable) {
+            return customerRepository.findAll(pageable);
+
+    }
+
+    @Override
+    public Customer getCustomerByIdInWarehouse(Long customerId) {
+        Customer customer =customerRepository.findByCustomerIdAnhInWarehouse(customerId,userCommon.getCurrentUser().getWarehouse().getWarehouseID());
+        return customer;
+    }
+
 
     @Override
     public void updateCustomer(CustomerDto customerDto) {
