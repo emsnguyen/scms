@@ -35,20 +35,13 @@ public class CustomerController {
 
 
     @GetMapping("/list")
-    public ResponseEntity<List<Customer>> getAllCustomer(){
+    public ResponseEntity<Page<Customer>> getAllCustomer(Pageable page){
         log.info("[Start Customer - list]");
-        List<Customer> customerslist = iCustomerService.getAllCustomerInWarehouse();
+        Page<Customer> customerslist = iCustomerService.getAllCustomerInWarehouse(page);
         log.info("[End Customer - list]");
         return status(HttpStatus.OK).body(customerslist);
     }
 
-    @GetMapping("/listpage")
-    public ResponseEntity<Page<Customer>> getAllCustomerpage(Pageable pageable){
-        log.info("[Start Customer - list]");
-        Page<Customer>  customerslist = iCustomerService.getAllCustomerInWarehousePage(pageable);
-        log.info("[End Customer - list]");
-        return status(HttpStatus.OK).body(customerslist);
-    }
 
     @PostMapping("/create")
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")

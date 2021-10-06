@@ -10,9 +10,7 @@ import java.util.List;
 
 public interface ICustomerService {
 
-    public List<Customer> getAllCustomerInWarehouse();
-
-    public Page<Customer> getAllCustomerInWarehousePage(Pageable pageable);
+    public Page<Customer> getAllCustomerInWarehouse(Pageable pageable);
 
     public Customer getCustomerByIdInWarehouse(Long customerId);
 

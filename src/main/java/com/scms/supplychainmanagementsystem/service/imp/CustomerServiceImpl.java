@@ -36,16 +36,11 @@ public class CustomerServiceImpl implements ICustomerService {
 
 
     @Override
-    public List<Customer> getAllCustomerInWarehouse() {
+    public Page<Customer> getAllCustomerInWarehouse(Pageable pageable) {
         User currentUser = userCommon.getCurrentUser();
-        return customerRepository.findByWarehouse(userCommon.getCurrentUser().getWarehouse().getWarehouseID());
+        return customerRepository.findByWarehouse(userCommon.getCurrentUser().getWarehouse().getWarehouseID(),pageable);
     }
 
-    @Override
-    public Page<Customer> getAllCustomerInWarehousePage(Pageable pageable) {
-            return customerRepository.findAll(pageable);
-
-    }
 
     @Override
     public Customer getCustomerByIdInWarehouse(Long customerId) {
