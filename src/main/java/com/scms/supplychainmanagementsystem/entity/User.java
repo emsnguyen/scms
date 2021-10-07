@@ -1,5 +1,6 @@
 package com.scms.supplychainmanagementsystem.entity;
 
+import io.micrometer.core.lang.Nullable;
 import lombok.*;
 
 import javax.persistence.*;
@@ -9,8 +10,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.time.LocalDate;
-
-import static javax.persistence.FetchType.LAZY;
 
 @Getter
 @Setter
@@ -34,12 +33,13 @@ public class User {
     private String email;
 
     @NotNull
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "RoleID", referencedColumnName = "RoleID")
+    @ManyToOne
+    @JoinColumn(name = "roleid", referencedColumnName = "roleid", insertable = false)
     private Role role;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @Nullable
+    @JoinColumn(name = "warehouseId", referencedColumnName = "warehouseId", insertable = false)
     private Warehouse warehouse;
 
     private String firstName;
@@ -52,20 +52,20 @@ public class User {
 
     private LocalDate dateOfBirth;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "DistrictID", referencedColumnName = "DistrictID")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "DistrictID", referencedColumnName = "DistrictID", insertable = false)
     private District district;
 
     private String streetAddress;
 
     private Instant createdDate;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "createdBy", referencedColumnName = "userID")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "createdBy", referencedColumnName = "userID", insertable = false)
     private User createdBy;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID", insertable = false)
     private User lastModifiedBy;
 
     private Instant lastModifiedDate;

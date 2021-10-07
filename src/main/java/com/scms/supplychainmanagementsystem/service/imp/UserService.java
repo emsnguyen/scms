@@ -66,7 +66,7 @@ public class UserService implements IUserService {
                 .lastModifiedDate(Instant.now())
                 .build();
         log.info("[Start save user " + user.getUsername() + " to database]");
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
         log.info("[End save user " + user.getUsername() + " to database]");
         log.info("[End UserService - updateUser with username: " + userDto.getUsername() + "]");
     }
@@ -117,11 +117,29 @@ public class UserService implements IUserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User findUserById(Long userId) {
+    public UserDto getUserById(Long userId) {
         log.info("[Start UserService - find user by userID = " + userId + "]");
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
+        UserDto userDto = UserDto.builder()
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .roleId(roleRepository.findById(user.getRole().getRoleID())
+                        .orElseThrow(() -> new AppException("Not found role")).getRoleID())
+                .warehouseId(user.getWarehouse() != null ? user.getWarehouse().getWarehouseID() : null)
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .isActive(user.isActive())
+                .phone(user.getPhone())
+                .dateOfBirth(user.getDateOfBirth())
+                .districtId(user.getDistrict() != null ? user.getDistrict().getDistrictID() : null)
+                .streetAddress(user.getStreetAddress())
+                .createdDate(Instant.now())
+                .createdBy(user.getCreatedBy() != null ? user.getCreatedBy().getUsername() : null)
+                .lastModifiedDate(user.getLastModifiedDate())
+                .lastModifiedBy(user.getLastModifiedBy() != null ? user.getLastModifiedBy().getUsername() : null)
+                .build();
         log.info("[End UserService - find user by userID = " + userId + "]");
-        return user;
+        return userDto;
     }
 
     @Override

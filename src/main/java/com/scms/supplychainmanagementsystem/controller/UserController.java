@@ -6,7 +6,6 @@ import com.scms.supplychainmanagementsystem.dto.RoleDto;
 import com.scms.supplychainmanagementsystem.dto.UserDto;
 import com.scms.supplychainmanagementsystem.entity.User;
 import com.scms.supplychainmanagementsystem.entity.Warehouse;
-import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.service.IUserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -88,31 +87,11 @@ public class UserController {
     public ResponseEntity<UserDto> getUserById(@PathVariable Long userId) {
         log.info("[Start UserController - Get User By User ID]");
         try {
-            User user = iUserService.findUserById(userId);
-            UserDto userDto = UserDto.builder()
-                    .userId(userId)
-                    .username(user.getUsername())
-                    .email(user.getEmail())
-                    .roleId(user.getRole().getRoleID())
-                    .warehouseId(user.getWarehouse().getWarehouseID())
-                    .firstName(user.getFirstName())
-                    .lastName(user.getLastName())
-                    .isActive(user.isActive())
-                    .phone(user.getPhone())
-                    .dateOfBirth(user.getDateOfBirth())
-                    .districtId(user.getDistrict().getDistrictID())
-                    .streetAddress(user.getStreetAddress())
-                    .createdDate(user.getCreatedDate())
-                    .createdBy(user.getUsername())
-                    .lastModifiedBy(user.getLastModifiedBy().getUsername())
-                    .lastModifiedDate(user.getLastModifiedDate())
-                    .build();
+            UserDto userDto = iUserService.getUserById(userId);
             log.info("[End UserController - Get User By User ID]");
             return status(HttpStatus.OK).body(userDto);
         } catch (NullPointerException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SOME_DATA_NOT_EXIST");
-        } catch (Exception e) {
-            throw new AppException("CREATE_USER_FAIL");
         }
     }
 
@@ -121,7 +100,7 @@ public class UserController {
     @ApiOperation(value = "Requires ADMIN or MANAGER Access. Disable field [userId, username,createdBy, createdDate,lastModifiedBy,lastModifiedDate]")
     public ResponseEntity<String> updateUser(@PathVariable Long userId, @Valid @RequestBody UserDto userDto) {
         log.info("[Start UserController - Update User with username " + userDto.getUsername() + "]");
-        iUserService.findUserById(userId);
+        iUserService.getUserById(userId);
         iUserService.updateUser(userDto);
         log.info("[End UserController - Update User with username " + userDto.getUsername() + "]");
         return new ResponseEntity<>("User Updated Successfully", OK);
@@ -133,7 +112,6 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         log.info("[Start UserController - Delete User with userid = " + userId + "]");
         try {
-            iUserService.findUserById(userId);
             iUserService.deleteUser(userId);
             log.info("[End UserController - Delete User with userid " + userId + "]");
             return new ResponseEntity<>("User Deleted Successfully", OK);

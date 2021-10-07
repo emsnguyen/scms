@@ -3,7 +3,6 @@ package com.scms.supplychainmanagementsystem.service;
 import com.scms.supplychainmanagementsystem.dto.ChangePasswordRequest;
 import com.scms.supplychainmanagementsystem.dto.RoleDto;
 import com.scms.supplychainmanagementsystem.dto.UserDto;
-import com.scms.supplychainmanagementsystem.entity.User;
 
 import java.util.List;
 
@@ -14,7 +13,7 @@ public interface IUserService {
 
     void deleteUser(Long userId);
 
-    User findUserById(Long userId);
+    UserDto getUserById(Long userId);
 
     void changePassword(ChangePasswordRequest changePasswordRequest);
 

@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.ResponseEntity.status;
 
@@ -24,11 +26,14 @@ public class LocationController {
 
     @GetMapping("/provinces")
     @ApiOperation(value = "Display all provinces")
-    public ResponseEntity<List<ProvinceResponse>> listProvinces() {
+    public ResponseEntity<Map<String, Object>> listProvinces() {
         log.info("[Start LocationController - listProvinces]");
         List<ProvinceResponse> provinceResponseList = iLocationService.getAllProvinces();
+        Map<String, Object> result = new HashMap<>();
+        result.put("data", provinceResponseList);
+        result.put("message", "OK");
         log.info("[End LocationController - listProvinces]");
-        return status(HttpStatus.OK).body(provinceResponseList);
+        return status(HttpStatus.OK).body(result);
     }
 
     @GetMapping("/provinces/{provinceId}")
