@@ -39,6 +39,9 @@ public class UserService implements IUserService {
         log.info("[Start get current user]");
         User currentUser = userCommon.getCurrentUser();
         log.info("[End get current user : " + currentUser.getUsername() + "]");
+        if (!userCommon.checkResourcesInWarehouse(userDto.getUserId())) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You are not allow access this resource");
+        }
         if (userDto.getRoleId() == 1) {
             if (currentUser.getRole().getRoleID() != 1) {
                 throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You are not allow to update role ADMIN");
@@ -120,6 +123,15 @@ public class UserService implements IUserService {
     public UserDto getUserById(Long userId) {
         log.info("[Start UserService - find user by userID = " + userId + "]");
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
+        if (!userCommon.checkResourcesInWarehouse(userId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You are not allow access this resource");
+        }
+        User current = userCommon.getCurrentUser();
+        if (user.getWarehouse() != null && current != null) {
+            if (user.getWarehouse().getWarehouseID() != current.getWarehouse().getWarehouseID()) {
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You are not allow access");
+            }
+        }
         UserDto userDto = UserDto.builder()
                 .username(user.getUsername())
                 .email(user.getEmail())
@@ -158,7 +170,9 @@ public class UserService implements IUserService {
     @Override
     public void deleteUser(Long userId) {
         log.info("[Start UserService - Delete User By userID = " + userId + "]");
-        userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
+        if (!userCommon.checkResourcesInWarehouse(userId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You are not allow access this resource");
+        }
         userRepository.deleteById(userId);
         log.info("[End UserService - Delete User By userID = " + userId + "]");
     }
