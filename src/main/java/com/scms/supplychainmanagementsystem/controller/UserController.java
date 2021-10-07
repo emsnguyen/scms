@@ -5,6 +5,7 @@ import com.scms.supplychainmanagementsystem.dto.ChangePasswordRequest;
 import com.scms.supplychainmanagementsystem.dto.RoleDto;
 import com.scms.supplychainmanagementsystem.dto.UserDto;
 import com.scms.supplychainmanagementsystem.entity.User;
+import com.scms.supplychainmanagementsystem.entity.Warehouse;
 import com.scms.supplychainmanagementsystem.service.IUserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -41,11 +42,15 @@ public class UserController {
     public ResponseEntity<UserDto> getUserProfile() {
         log.info("[Start UserController - Get User Profile]");
         User currentUser = userCommon.getCurrentUser();
+        Warehouse warehouse = new Warehouse();
+        if (currentUser.getRole().getRoleID() != 1) {
+            warehouse = currentUser.getWarehouse();
+        }
         UserDto user = UserDto.builder()
                 .username(currentUser.getUsername())
                 .email(currentUser.getEmail())
                 .roleId(currentUser.getRole().getRoleID())
-                .warehouseId(currentUser.getWarehouse() != null ? currentUser.getWarehouse().getWarehouseID() : null)
+                .warehouseId(warehouse != null ? warehouse.getWarehouseID() : null)
                 .firstName(currentUser.getFirstName())
                 .lastName(currentUser.getLastName())
                 .isActive(currentUser.isActive())
@@ -74,10 +79,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getAllUsersInWarehouse(@RequestParam String username,
-                                                                      @RequestParam String roleName,
-                                                                      @RequestParam(defaultValue = "1") int page,
-                                                                      @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Map<String, Object>> getAllUsersInWarehouse(@RequestParam(defaultValue = "0") int page,
+                                                                      @RequestParam(defaultValue = "4") int size) {
         log.info("[Start UserController - Get All Users In Warehouse]");
         try {
             List<User> userList;
@@ -92,7 +95,7 @@ public class UserController {
             response.put("currentPage", userPage.getNumber());
             response.put("totalItems", userPage.getTotalElements());
             response.put("totalPages", userPage.getTotalPages());
-            response.put("message", HttpStatus.OK);
+
             log.info("[End UserController - Get All Users In Warehouse]");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
