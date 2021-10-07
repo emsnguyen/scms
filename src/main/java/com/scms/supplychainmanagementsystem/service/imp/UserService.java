@@ -91,11 +91,15 @@ public class UserService implements IUserService {
             }
         }
         Warehouse warehouse = new Warehouse();
-        // if (currentUser.getRole().getRoleID() == 1) {
-        //   if (userDto.getRoleId() != 1) {
-        warehouse.setWarehouseID(userDto.getWarehouseId());
-        // }
-        //}
+        if (currentUser.getRole().getRoleID() == 1) {
+            warehouse.setWarehouseID(userDto.getWarehouseId());
+        } else {
+            if (currentUser.getWarehouse() != null) {
+                warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+            } else {
+                throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY);
+            }
+        }
         User user = User.builder()
                 .username(userDto.getUsername())
                 .password(passwordEncoder.encode("123@456"))
@@ -198,5 +202,11 @@ public class UserService implements IUserService {
             userPage = userRepository.findAll(pageble);
         }
         return userPage;
+    }
+
+    @Override
+    public boolean checkUserExistByUserId(Long userId) {
+
+        return false;
     }
 }
