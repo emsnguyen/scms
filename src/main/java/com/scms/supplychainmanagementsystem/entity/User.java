@@ -1,6 +1,5 @@
 package com.scms.supplychainmanagementsystem.entity;
 
-import io.micrometer.core.lang.Nullable;
 import lombok.*;
 
 import javax.persistence.*;
@@ -33,13 +32,12 @@ public class User {
     private String email;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "roleid", referencedColumnName = "roleid", insertable = false)
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "roleid", referencedColumnName = "roleid")
     private Role role;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @Nullable
-    @JoinColumn(name = "warehouseId", referencedColumnName = "warehouseId", insertable = false)
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "warehouseId", referencedColumnName = "warehouseId")
     private Warehouse warehouse;
 
     private String firstName;
@@ -52,7 +50,7 @@ public class User {
 
     private LocalDate dateOfBirth;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "DistrictID", referencedColumnName = "DistrictID", insertable = false)
     private District district;
 
@@ -60,11 +58,11 @@ public class User {
 
     private Instant createdDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "createdBy", referencedColumnName = "userID", insertable = false)
     private User createdBy;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID", insertable = false)
     private User lastModifiedBy;
 

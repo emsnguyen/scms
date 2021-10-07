@@ -13,6 +13,8 @@ import com.scms.supplychainmanagementsystem.repository.UserRepository;
 import com.scms.supplychainmanagementsystem.service.IUserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -89,11 +91,11 @@ public class UserService implements IUserService {
             }
         }
         Warehouse warehouse = new Warehouse();
-        if (currentUser.getRole().getRoleID() == 1) {
-            if (userDto.getRoleId() != 1) {
-                warehouse.setWarehouseID(userDto.getWarehouseId());
-            }
-        }
+        // if (currentUser.getRole().getRoleID() == 1) {
+        //   if (userDto.getRoleId() != 1) {
+        warehouse.setWarehouseID(userDto.getWarehouseId());
+        // }
+        //}
         User user = User.builder()
                 .username(userDto.getUsername())
                 .password(passwordEncoder.encode("123@456"))
@@ -184,5 +186,17 @@ public class UserService implements IUserService {
                 .stream().map(x -> new RoleDto(x.getRoleID(), x.getRoleName())).collect(Collectors.toList());
         log.info("[End UserService - Get All Roles]");
         return roleDtoList;
+    }
+
+    @Override
+    public Page<User> getAllUsers(Pageable pageble) {
+        Page<User> userPage;
+        if (userCommon.getCurrentUser().getWarehouse() != null) {
+            Long warehouseId = userCommon.getCurrentUser().getWarehouse().getWarehouseID();
+            userPage = userRepository.findAllByWarehouse_WarehouseID(warehouseId, pageble);
+        } else {
+            userPage = userRepository.findAll(pageble);
+        }
+        return userPage;
     }
 }

@@ -10,6 +10,9 @@ import com.scms.supplychainmanagementsystem.service.IUserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,8 +20,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -75,13 +79,30 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsersInWarehouse() {
+    public ResponseEntity<Map<String, Object>> getAllUsersInWarehouse(@RequestParam(defaultValue = "0") int page,
+                                                                      @RequestParam(defaultValue = "4") int size) {
         log.info("[Start UserController - Get All Users In Warehouse]");
-        // TODO:
-        List<UserDto> users = new ArrayList<>();
-        log.info("[End UserController - Get All Users In Warehouse]");
-        return status(HttpStatus.OK).body(users);
+        try {
+            List<User> userList;
+            Page<User> userPage;
+            Pageable pageable = PageRequest.of(page, size);
+
+            userPage = iUserService.getAllUsers(pageable);
+            userList = userPage.getContent();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", userList);
+            response.put("currentPage", userPage.getNumber());
+            response.put("totalItems", userPage.getTotalElements());
+            response.put("totalPages", userPage.getTotalPages());
+
+            log.info("[End UserController - Get All Users In Warehouse]");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long userId) {
@@ -100,7 +121,6 @@ public class UserController {
     @ApiOperation(value = "Requires ADMIN or MANAGER Access. Disable field [userId, username,createdBy, createdDate,lastModifiedBy,lastModifiedDate]")
     public ResponseEntity<String> updateUser(@PathVariable Long userId, @Valid @RequestBody UserDto userDto) {
         log.info("[Start UserController - Update User with username " + userDto.getUsername() + "]");
-        iUserService.getUserById(userId);
         iUserService.updateUser(userDto);
         log.info("[End UserController - Update User with username " + userDto.getUsername() + "]");
         return new ResponseEntity<>("User Updated Successfully", OK);
