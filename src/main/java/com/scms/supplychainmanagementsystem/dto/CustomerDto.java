@@ -75,6 +75,6 @@ public class CustomerDto {
         Note = entity.getNote();
         this.createdDate = entity.getCreatedDate();
         this.createdBy = entity.getCreatedBy().getUsername().toString();
-        this.lastModifiedBy = entity.getCreatedBy().getUsername().toString();
+        this.lastModifiedBy = entity.getLastModifiedBy().getUsername().toString();
     }
 }

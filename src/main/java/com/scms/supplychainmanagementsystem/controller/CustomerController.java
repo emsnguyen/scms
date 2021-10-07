@@ -60,11 +60,12 @@ public class CustomerController {
     }
 
     @GetMapping("/{customerid}")
-    public ResponseEntity<Customer> getCustomerByIdInWareHouse(@PathVariable Long customerid) {
+    public ResponseEntity<CustomerDto> getCustomerByIdInWareHouse(@PathVariable Long customerid) {
         log.info("[Start CustomerController - Get Customer By ID]");
         Customer customer = iCustomerService.getCustomerByIdInWarehouse(customerid);
+        CustomerDto customerDto = new CustomerDto(customer);
         log.info("[End CustomerController - Get Customer By ID]");
-        return status(HttpStatus.OK).body(customer);
+        return status(HttpStatus.OK).body(customerDto);
     }
 
     @PutMapping("/{customerId}")
