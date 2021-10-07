@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.time.LocalDate;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -37,7 +38,7 @@ public class User {
     @JoinColumn(name = "RoleID", referencedColumnName = "RoleID")
     private Role role;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
     private Warehouse warehouse;
 
@@ -49,9 +50,9 @@ public class User {
 
     private String phone;
 
-    private Instant dateOfBirth;
+    private LocalDate dateOfBirth;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "DistrictID", referencedColumnName = "DistrictID")
     private District district;
 
@@ -59,11 +60,11 @@ public class User {
 
     private Instant createdDate;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "createdBy", referencedColumnName = "userID")
     private User createdBy;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID")
     private User lastModifiedBy;
 
