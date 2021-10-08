@@ -51,7 +51,7 @@ public class User {
     private LocalDate dateOfBirth;
 
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "DistrictID", referencedColumnName = "DistrictID", insertable = false)
+    @JoinColumn(name = "DistrictID", referencedColumnName = "DistrictID")
     private District district;
 
     private String streetAddress;
@@ -59,11 +59,11 @@ public class User {
     private Instant createdDate;
 
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "createdBy", referencedColumnName = "userID", insertable = false)
+    @JoinColumn(name = "createdBy", referencedColumnName = "userID")
     private User createdBy;
 
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID", insertable = false)
+    @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID")
     private User lastModifiedBy;
 
     private Instant lastModifiedDate;

@@ -5,6 +5,7 @@ import com.scms.supplychainmanagementsystem.dto.ChangePasswordRequest;
 import com.scms.supplychainmanagementsystem.dto.RoleDto;
 import com.scms.supplychainmanagementsystem.dto.UserDto;
 import com.scms.supplychainmanagementsystem.entity.User;
+import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.service.IUserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -38,8 +39,9 @@ public class UserController {
 
     @GetMapping("/me")
     @ApiOperation(value = "Returns the current user profile")
-    public ResponseEntity<UserDto> getUserProfile() {
+    public ResponseEntity<Map<String, Object>> getUserProfile() {
         log.info("[Start UserController - Get User Profile]");
+        Map<String, Object> result = new HashMap<>();
         User currentUser = userCommon.getCurrentUser();
         UserDto user = UserDto.builder()
                 .username(currentUser.getUsername())
@@ -58,8 +60,10 @@ public class UserController {
                 .lastModifiedBy(currentUser.getLastModifiedBy() != null ? currentUser.getLastModifiedBy().getUsername() : null)
                 .lastModifiedDate(currentUser.getLastModifiedDate())
                 .build();
+        result.put("data", user);
+        result.put("message", OK);
         log.info("[End UserController - Get User Profile]");
-        return status(HttpStatus.OK).body(user);
+        return status(HttpStatus.OK).body(result);
 
     }
 
@@ -104,11 +108,14 @@ public class UserController {
 
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long userId) {
+    public ResponseEntity<Map<String, Object>> getUserById(@PathVariable Long userId) {
         log.info("[Start UserController - Get User By User ID]");
+        Map<String, Object> result = new HashMap<>();
         UserDto userDto = iUserService.getUserById(userId);
+        result.put("data", userDto);
+        result.put("message", OK);
         log.info("[End UserController - Get User By User ID]");
-        return status(HttpStatus.OK).body(userDto);
+        return status(HttpStatus.OK).body(result);
     }
 
     @PutMapping("/{userId}")
@@ -116,7 +123,12 @@ public class UserController {
     @ApiOperation(value = "Requires ADMIN or MANAGER Access. Disable field [userId, username,createdBy, createdDate,lastModifiedBy,lastModifiedDate]")
     public ResponseEntity<String> updateUser(@PathVariable Long userId, @Valid @RequestBody UserDto userDto) {
         log.info("[Start UserController - Update User with username " + userDto.getUsername() + "]");
-        iUserService.updateUser(userDto);
+        if (iUserService.checkUserExistByUserId(userId)) {
+            userDto.setUserId(userId);
+            iUserService.updateUser(userDto);
+        } else {
+            throw new AppException("User not found");
+        }
         log.info("[End UserController - Update User with username " + userDto.getUsername() + "]");
         return new ResponseEntity<>("User Updated Successfully", OK);
     }
@@ -144,11 +156,14 @@ public class UserController {
     }
 
     @GetMapping("/list-role")
-    public ResponseEntity<List<RoleDto>> getAllRoles() {
+    public ResponseEntity<Map<String, Object>> getAllRoles() {
         log.info("[Start UserController - Get All Roles]");
+        Map<String, Object> result = new HashMap<>();
         List<RoleDto> roleDto = iUserService.getAllRoles();
+        result.put("data", roleDto);
+        result.put("message", OK);
         log.info("[End UserController - Get All Roles]");
-        return status(HttpStatus.OK).body(roleDto);
+        return status(HttpStatus.OK).body(result);
     }
 
 }

@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.ResponseEntity.status;
 
 @RestController
@@ -31,33 +32,42 @@ public class LocationController {
         List<ProvinceResponse> provinceResponseList = iLocationService.getAllProvinces();
         Map<String, Object> result = new HashMap<>();
         result.put("data", provinceResponseList);
-        result.put("message", "OK");
+        result.put("message", OK);
         log.info("[End LocationController - listProvinces]");
         return status(HttpStatus.OK).body(result);
     }
 
     @GetMapping("/provinces/{provinceId}")
-    public ResponseEntity<List<DistrictResponse>> getDistrictsByProvinceId(@PathVariable Long provinceId) {
+    public ResponseEntity<Map<String, Object>> getDistrictsByProvinceId(@PathVariable Long provinceId) {
         log.info("[Start LocationController - getDistrictsByProvinceId]");
+        Map<String, Object> result = new HashMap<>();
         List<DistrictResponse> districtResponseList = iLocationService.getListDistrictsByProvinceID(provinceId);
+        result.put("data", districtResponseList);
+        result.put("message", OK);
         log.info("[End LocationController - getDistrictsByProvinceId]");
-        return status(HttpStatus.OK).body(districtResponseList);
+        return status(OK).body(result);
     }
 
     @GetMapping("/districts")
-    public ResponseEntity<DistrictResponse> getDistrictByDistrictId(@RequestParam Long districtId) {
+    public ResponseEntity<Map<String, Object>> getDistrictByDistrictId(@RequestParam Long districtId) {
         log.info("[Start LocationController - getDistrictsByProvinceId]");
+        Map<String, Object> result = new HashMap<>();
         DistrictResponse districtResponses = iLocationService.getDistrictsByProvinceId(districtId);
+        result.put("data", districtResponses);
+        result.put("message", OK);
         log.info("[End LocationController - getDistrictsByProvinceId]");
-        return status(HttpStatus.OK).body(districtResponses);
+        return status(OK).body(result);
     }
 
     @GetMapping("/warehouse")
-    public ResponseEntity<List<WarehouseDto>> getAllWarehouses() {
+    public ResponseEntity<Map<String, Object>> getAllWarehouses() {
         log.info("[Start LocationController - getAllWarehouse]");
+        Map<String, Object> result = new HashMap<>();
         List<WarehouseDto> warehouseDtoList = iLocationService.getAllWarehouses();
+        result.put("data", warehouseDtoList);
+        result.put("message", OK);
         log.info("[End LocationController - getAllWarehouse]");
-        return status(HttpStatus.OK).body(warehouseDtoList);
+        return status(OK).body(result);
     }
 
 }
