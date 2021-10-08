@@ -205,4 +205,16 @@ public class UserService implements IUserService {
     public boolean checkUserExistByUserId(Long userId) {
         return userRepository.existsById(userId);
     }
+
+    @Override
+    public void updateUserActive(Long userId, Boolean isActive) {
+        log.info("[Start UserService - Update User Active " + userId + "]");
+        if (!userCommon.checkResourcesInWarehouse(userId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You are not allow access this resource");
+        }
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
+        user.setActive(isActive);
+        userRepository.saveAndFlush(user);
+        log.info("[End UserService - Update User Active " + userId + "]");
+    }
 }

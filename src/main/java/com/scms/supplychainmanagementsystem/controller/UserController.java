@@ -81,7 +81,7 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> getAllUsersInWarehouse(@RequestParam(required = false) String username,
                                                                       @RequestParam(required = false) Long roleId,
                                                                       @RequestParam(required = false) Long warehouseId,
-                                                                      @RequestParam(defaultValue = "1") int page,
+                                                                      @RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "10") int size) {
         log.info("[Start UserController - Get All Users In Warehouse]");
         List<User> userList;
@@ -166,4 +166,14 @@ public class UserController {
         return status(HttpStatus.OK).body(result);
     }
 
+    @PutMapping("/status/{userId}")
+    public ResponseEntity<String> updateUserActive(@PathVariable Long userId, @RequestParam Boolean isActive) {
+        log.info("[Start UserController - Update User Active " + userId + "]");
+        if (!iUserService.checkUserExistByUserId(userId)) {
+            throw new AppException("User not found");
+        }
+        iUserService.updateUserActive(userId, isActive);
+        log.info("[End UserController - Update User Active " + userId + "]");
+        return new ResponseEntity<>("Update User Active Status Successfully", OK);
+    }
 }

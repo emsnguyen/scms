@@ -25,4 +25,6 @@ public interface IUserService {
     Page<User> getAllUsers(String username, Long roleId, Long warehouseId, Pageable pageble);
 
     boolean checkUserExistByUserId(Long userId);
+
+    void updateUserActive(Long userId, Boolean isActive);
 }
