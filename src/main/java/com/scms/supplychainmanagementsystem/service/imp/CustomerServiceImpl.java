@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.plaf.basic.BasicIconFactory;
 import java.time.Instant;
 
 
@@ -78,7 +79,7 @@ public class CustomerServiceImpl implements ICustomerService {
                 .lastModifiedBy(currentUser)
                 .build();
         log.info("[Start update customer " + customer.getEmail() + " to database]");
-        customerRepository.saveAndFlush(customer);
+        customerRepository.save(customer);
         log.info("[End update customer " + customer.getEmail() + " to database]");
         log.info("[End CustomerService - updateCustomer with Email: " + customer.getEmail() + "]");
     }

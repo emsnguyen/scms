@@ -3,6 +3,7 @@ package com.scms.supplychainmanagementsystem.controller;
 import com.scms.supplychainmanagementsystem.dto.CustomerDto;
 import com.scms.supplychainmanagementsystem.dto.UserDto;
 import com.scms.supplychainmanagementsystem.entity.Customer;
+import com.scms.supplychainmanagementsystem.entity.User;
 import com.scms.supplychainmanagementsystem.repository.CustomerRepository;
 import com.scms.supplychainmanagementsystem.repository.UserRepository;
 import com.scms.supplychainmanagementsystem.service.ICustomerService;
@@ -10,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -19,7 +21,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -49,9 +53,38 @@ public class CustomerController {
         return status(HttpStatus.OK).body(listDto);
     }
 
+//    @GetMapping("/list1")
+//    public ResponseEntity<Map<String, Object>> getAllCustomerInWarehouse(@RequestParam(required = false) String username,
+//                                                                      @RequestParam(required = false) Long roleId,
+//                                                                      @RequestParam(required = false) Long warehouseId,
+//                                                                      @RequestParam(defaultValue = "1") int page,
+//                                                                      @RequestParam(defaultValue = "10") int size) {
+//        log.info("[Start UserController - Get All Users In Warehouse]");
+//        List<User> userList;
+//        Page<User> userPage;
+//        Pageable pageable = PageRequest.of(page, size);
+//
+//        userPage = iUserService.getAllUsers(username, roleId, warehouseId, pageable);
+//
+//        userList = userPage.getContent();
+//
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("data", userList);
+//        response.put("currentPage", userPage.getNumber());
+//        response.put("totalItems", userPage.getTotalElements());
+//        response.put("totalPages", userPage.getTotalPages());
+//        if (!userPage.isEmpty()) {
+//            response.put("message", HttpStatus.OK);
+//        } else {
+//            response.put("message", "EMPTY_RESULT");
+//        }
+//        log.info("[End UserController - Get All Users In Warehouse]");
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
+
 
     @PostMapping("/create")
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+//    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     public ResponseEntity<String> createCustomer(@Valid @RequestBody CustomerDto customerDto) {
         log.info("[Start CustomerController -  createCustomer " + customerDto.getEmail() + "]");
         iCustomerService.saveCustomer(customerDto);
@@ -70,7 +103,7 @@ public class CustomerController {
     }
 
     @PutMapping("/{customerId}")
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+//    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @ApiOperation(value = "Requires ADMIN or MANAGER Access")
     public ResponseEntity<String> updateCustomer(@PathVariable Long customerId, @Valid @RequestBody CustomerDto customerDto) {
         log.info("[Start CustomerController - Update Customer with email " + customerDto.getEmail() + "]");
