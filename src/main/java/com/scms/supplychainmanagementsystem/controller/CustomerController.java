@@ -63,9 +63,10 @@ public class CustomerController {
     public ResponseEntity<CustomerDto> getCustomerByIdInWareHouse(@PathVariable Long customerid) {
         log.info("[Start CustomerController - Get Customer By ID]");
         Customer customer = iCustomerService.getCustomerByIdInWarehouse(customerid);
+        if(customer!=null){
         CustomerDto customerDto = new CustomerDto(customer);
         log.info("[End CustomerController - Get Customer By ID]");
-        return status(HttpStatus.OK).body(customerDto);
+        return status(HttpStatus.OK).body(customerDto);}else{return null;}
     }
 
     @PutMapping("/{customerId}")
