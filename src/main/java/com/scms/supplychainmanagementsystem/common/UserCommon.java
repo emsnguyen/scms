@@ -1,6 +1,7 @@
 package com.scms.supplychainmanagementsystem.common;
 
 import com.scms.supplychainmanagementsystem.entity.User;
+import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,5 +28,18 @@ public class UserCommon {
     public boolean isLoggedIn() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
+    }
+
+    public boolean checkResourcesInWarehouse(Long userId) {
+        User u = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
+        User current = getCurrentUser();
+        if (current.getRole().getRoleID() == 1) {
+            return true;
+        }
+        if (u.getWarehouse() != null && current.getWarehouse() != null) {
+            return u.getWarehouse().getWarehouseID().equals(current.getWarehouse().getWarehouseID());
+        } else {
+            throw new AppException("Register warehouse first");
+        }
     }
 }

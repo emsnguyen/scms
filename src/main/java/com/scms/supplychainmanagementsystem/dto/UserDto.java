@@ -1,8 +1,11 @@
 package com.scms.supplychainmanagementsystem.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.micrometer.core.lang.Nullable;
 import lombok.*;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -29,7 +32,9 @@ public class UserDto {
 
     private String phone;
 
-    private Instant dateOfBirth;
+    @Nullable
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate dateOfBirth;
 
     private Long districtId;
 
@@ -37,8 +42,10 @@ public class UserDto {
 
     private String createdBy;
 
+    //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss.SSSZ")
     private Instant createdDate;
 
+    //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss.SSSZ")
     private String lastModifiedBy;
 
     private Instant lastModifiedDate;

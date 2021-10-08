@@ -8,8 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
-
-import static javax.persistence.FetchType.LAZY;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -33,12 +32,12 @@ public class User {
     private String email;
 
     @NotNull
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "RoleID", referencedColumnName = "RoleID")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "roleid", referencedColumnName = "roleid")
     private Role role;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "warehouseId", referencedColumnName = "warehouseId")
     private Warehouse warehouse;
 
     private String firstName;
@@ -49,22 +48,22 @@ public class User {
 
     private String phone;
 
-    private Instant dateOfBirth;
+    private LocalDate dateOfBirth;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "DistrictID", referencedColumnName = "DistrictID")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "DistrictID", referencedColumnName = "DistrictID", insertable = false)
     private District district;
 
     private String streetAddress;
 
     private Instant createdDate;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "createdBy", referencedColumnName = "userID")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "createdBy", referencedColumnName = "userID", insertable = false)
     private User createdBy;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID", insertable = false)
     private User lastModifiedBy;
 
     private Instant lastModifiedDate;

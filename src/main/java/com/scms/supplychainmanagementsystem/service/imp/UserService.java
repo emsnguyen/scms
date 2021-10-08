@@ -2,6 +2,7 @@ package com.scms.supplychainmanagementsystem.service.imp;
 
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.ChangePasswordRequest;
+import com.scms.supplychainmanagementsystem.dto.RoleDto;
 import com.scms.supplychainmanagementsystem.dto.UserDto;
 import com.scms.supplychainmanagementsystem.entity.District;
 import com.scms.supplychainmanagementsystem.entity.User;
@@ -12,11 +13,17 @@ import com.scms.supplychainmanagementsystem.repository.UserRepository;
 import com.scms.supplychainmanagementsystem.service.IUserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -34,9 +41,12 @@ public class UserService implements IUserService {
         log.info("[Start get current user]");
         User currentUser = userCommon.getCurrentUser();
         log.info("[End get current user : " + currentUser.getUsername() + "]");
+        if (!userCommon.checkResourcesInWarehouse(userDto.getUserId())) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You are not allow access this resource");
+        }
         if (userDto.getRoleId() == 1) {
             if (currentUser.getRole().getRoleID() != 1) {
-                throw new AppException("You are not allow to update role ADMIN");
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You are not allow to update role ADMIN");
             }
         }
         Warehouse warehouse = new Warehouse();
@@ -61,7 +71,7 @@ public class UserService implements IUserService {
                 .lastModifiedDate(Instant.now())
                 .build();
         log.info("[Start save user " + user.getUsername() + " to database]");
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
         log.info("[End save user " + user.getUsername() + " to database]");
         log.info("[End UserService - updateUser with username: " + userDto.getUsername() + "]");
     }
@@ -81,11 +91,11 @@ public class UserService implements IUserService {
             }
         }
         Warehouse warehouse = new Warehouse();
-        if (currentUser.getRole().getRoleID() == 1) {
-            if (userDto.getRoleId() != 1) {
-                warehouse.setWarehouseID(userDto.getWarehouseId());
-            }
-        }
+        // if (currentUser.getRole().getRoleID() == 1) {
+        //   if (userDto.getRoleId() != 1) {
+        warehouse.setWarehouseID(userDto.getWarehouseId());
+        // }
+        //}
         User user = User.builder()
                 .username(userDto.getUsername())
                 .password(passwordEncoder.encode("123@456"))
@@ -112,11 +122,32 @@ public class UserService implements IUserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User findUserById(Long userId) {
+    public UserDto getUserById(Long userId) {
         log.info("[Start UserService - find user by userID = " + userId + "]");
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
+        if (!userCommon.checkResourcesInWarehouse(userId)) {
+            throw new AppException("You are not allow access this resource");
+        }
+        UserDto userDto = UserDto.builder()
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .roleId(roleRepository.findById(user.getRole().getRoleID())
+                        .orElseThrow(() -> new AppException("Not found role")).getRoleID())
+                .warehouseId(user.getWarehouse() != null ? user.getWarehouse().getWarehouseID() : null)
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .isActive(user.isActive())
+                .phone(user.getPhone())
+                .dateOfBirth(user.getDateOfBirth())
+                .districtId(user.getDistrict() != null ? user.getDistrict().getDistrictID() : null)
+                .streetAddress(user.getStreetAddress())
+                .createdDate(Instant.now())
+                .createdBy(user.getCreatedBy() != null ? user.getCreatedBy().getUsername() : null)
+                .lastModifiedDate(user.getLastModifiedDate())
+                .lastModifiedBy(user.getLastModifiedBy() != null ? user.getLastModifiedBy().getUsername() : null)
+                .build();
         log.info("[End UserService - find user by userID = " + userId + "]");
-        return user;
+        return userDto;
     }
 
     @Override
@@ -135,8 +166,44 @@ public class UserService implements IUserService {
     @Override
     public void deleteUser(Long userId) {
         log.info("[Start UserService - Delete User By userID = " + userId + "]");
-        userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
+        if (!userCommon.checkResourcesInWarehouse(userId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You are not allow access this resource");
+        }
         userRepository.deleteById(userId);
         log.info("[End UserService - Delete User By userID = " + userId + "]");
+    }
+
+    @Override
+    public List<RoleDto> getAllRoles() {
+        log.info("[Start UserService - Get All Roles]");
+        List<RoleDto> roleDtoList = roleRepository.findAll()
+                .stream().map(x -> new RoleDto(x.getRoleID(), x.getRoleName())).collect(Collectors.toList());
+        log.info("[End UserService - Get All Roles]");
+        return roleDtoList;
+    }
+
+    @Override
+    public Page<User> getAllUsers(String username, Long roleId, Long warehouseId, Pageable pageable) {
+        log.info("[Start UserService - Get All Users]");
+        Page<User> userPage;
+        Warehouse wh = userCommon.getCurrentUser().getWarehouse();
+        Long userId = userCommon.getCurrentUser().getUserId();
+        if (wh != null) {
+            if (wh.getWarehouseID() == 0) {
+                userPage = userRepository.filterAllWarehouses(username, roleId, warehouseId, userId, pageable);
+            } else {
+                userPage = userRepository.filterInOneWarehouse(username, roleId, wh.getWarehouseID(), userId, pageable);
+            }
+        } else {
+            throw new AppException("Current user have not register warehouse yet");
+        }
+
+        log.info("[End UserService - Get All Users]");
+        return userPage;
+    }
+
+    @Override
+    public boolean checkUserExistByUserId(Long userId) {
+        return userRepository.existsById(userId);
     }
 }

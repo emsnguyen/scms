@@ -2,22 +2,26 @@ package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.ChangePasswordRequest;
+import com.scms.supplychainmanagementsystem.dto.RoleDto;
 import com.scms.supplychainmanagementsystem.dto.UserDto;
 import com.scms.supplychainmanagementsystem.entity.User;
-import com.scms.supplychainmanagementsystem.entity.Warehouse;
-import com.scms.supplychainmanagementsystem.exceptions.CustomException;
 import com.scms.supplychainmanagementsystem.service.IUserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -36,34 +40,27 @@ public class UserController {
     @ApiOperation(value = "Returns the current user profile")
     public ResponseEntity<UserDto> getUserProfile() {
         log.info("[Start UserController - Get User Profile]");
-        if (userCommon.isLoggedIn()) {
-            User currentUser = userCommon.getCurrentUser();
-            Warehouse warehouse = new Warehouse();
-            if (currentUser.getRole().getRoleID() != 1) {
-                warehouse = currentUser.getWarehouse();
-            }
-            UserDto user = UserDto.builder()
-                    .username(currentUser.getUsername())
-                    .email(currentUser.getEmail())
-                    .roleId(currentUser.getRole().getRoleID())
-                    .warehouseId(warehouse.getWarehouseID())
-                    .firstName(currentUser.getFirstName())
-                    .lastName(currentUser.getLastName())
-                    .isActive(currentUser.isActive())
-                    .phone(currentUser.getPhone())
-                    .dateOfBirth(currentUser.getDateOfBirth())
-                    .districtId(currentUser.getDistrict().getDistrictID())
-                    .streetAddress(currentUser.getStreetAddress())
-                    .createdDate(currentUser.getCreatedDate())
-                    .createdBy(currentUser.getUsername())
-                    .lastModifiedBy(currentUser.getLastModifiedBy().getUsername())
-                    .lastModifiedDate(currentUser.getLastModifiedDate())
-                    .build();
-            log.info("[End UserController - Get User Profile]");
-            return status(HttpStatus.OK).body(user);
-        } else {
-            throw new CustomException("NOT_LOGGIN", HttpStatus.FORBIDDEN);
-        }
+        User currentUser = userCommon.getCurrentUser();
+        UserDto user = UserDto.builder()
+                .username(currentUser.getUsername())
+                .email(currentUser.getEmail())
+                .roleId(currentUser.getRole().getRoleID())
+                .warehouseId(currentUser.getWarehouse() != null ? currentUser.getWarehouse().getWarehouseID() : null)
+                .firstName(currentUser.getFirstName())
+                .lastName(currentUser.getLastName())
+                .isActive(currentUser.isActive())
+                .phone(currentUser.getPhone())
+                .dateOfBirth(currentUser.getDateOfBirth())
+                .districtId(currentUser.getDistrict() != null ? currentUser.getDistrict().getDistrictID() : null)
+                .streetAddress(currentUser.getStreetAddress())
+                .createdDate(currentUser.getCreatedDate())
+                .createdBy(currentUser.getUsername())
+                .lastModifiedBy(currentUser.getLastModifiedBy() != null ? currentUser.getLastModifiedBy().getUsername() : null)
+                .lastModifiedDate(currentUser.getLastModifiedDate())
+                .build();
+        log.info("[End UserController - Get User Profile]");
+        return status(HttpStatus.OK).body(user);
+
     }
 
     @PostMapping
@@ -77,36 +74,39 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsersInWarehouse() {
+    public ResponseEntity<Map<String, Object>> getAllUsersInWarehouse(@RequestParam(required = false) String username,
+                                                                      @RequestParam(required = false) Long roleId,
+                                                                      @RequestParam(required = false) Long warehouseId,
+                                                                      @RequestParam(defaultValue = "1") int page,
+                                                                      @RequestParam(defaultValue = "10") int size) {
         log.info("[Start UserController - Get All Users In Warehouse]");
-        // TODO:
-        List<UserDto> users = new ArrayList<>();
+        List<User> userList;
+        Page<User> userPage;
+        Pageable pageable = PageRequest.of(page, size);
+
+        userPage = iUserService.getAllUsers(username, roleId, warehouseId, pageable);
+
+        userList = userPage.getContent();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", userList);
+        response.put("currentPage", userPage.getNumber());
+        response.put("totalItems", userPage.getTotalElements());
+        response.put("totalPages", userPage.getTotalPages());
+        if (!userPage.isEmpty()) {
+            response.put("message", HttpStatus.OK);
+        } else {
+            response.put("message", "EMPTY_RESULT");
+        }
         log.info("[End UserController - Get All Users In Warehouse]");
-        return status(HttpStatus.OK).body(users);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long userId) {
         log.info("[Start UserController - Get User By User ID]");
-        User user = iUserService.findUserById(userId);
-        UserDto userDto = UserDto.builder()
-                .userId(userId)
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .roleId(user.getRole().getRoleID())
-                .warehouseId(user.getWarehouse().getWarehouseID())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .isActive(user.isActive())
-                .phone(user.getPhone())
-                .dateOfBirth(user.getDateOfBirth())
-                .districtId(user.getDistrict().getDistrictID())
-                .streetAddress(user.getStreetAddress())
-                .createdDate(user.getCreatedDate())
-                .createdBy(user.getUsername())
-                .lastModifiedBy(user.getLastModifiedBy().getUsername())
-                .lastModifiedDate(user.getLastModifiedDate())
-                .build();
+        UserDto userDto = iUserService.getUserById(userId);
         log.info("[End UserController - Get User By User ID]");
         return status(HttpStatus.OK).body(userDto);
     }
@@ -116,7 +116,6 @@ public class UserController {
     @ApiOperation(value = "Requires ADMIN or MANAGER Access. Disable field [userId, username,createdBy, createdDate,lastModifiedBy,lastModifiedDate]")
     public ResponseEntity<String> updateUser(@PathVariable Long userId, @Valid @RequestBody UserDto userDto) {
         log.info("[Start UserController - Update User with username " + userDto.getUsername() + "]");
-        iUserService.findUserById(userId);
         iUserService.updateUser(userDto);
         log.info("[End UserController - Update User with username " + userDto.getUsername() + "]");
         return new ResponseEntity<>("User Updated Successfully", OK);
@@ -127,18 +126,29 @@ public class UserController {
     @ApiOperation(value = "Requires ADMIN or MANAGER Access")
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         log.info("[Start UserController - Delete User with userid = " + userId + "]");
-        iUserService.findUserById(userId);
+        if (!iUserService.checkUserExistByUserId(userId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
         iUserService.deleteUser(userId);
         log.info("[End UserController - Delete User with userid " + userId + "]");
         return new ResponseEntity<>("User Deleted Successfully", OK);
     }
 
-    @PutMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+    @PutMapping("/change-password")
+    @ApiOperation(value = "Required login again when change pw successfully")
+    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
         log.info("[Start UserController - Change Password with username " + userCommon.getCurrentUser().getUsername() + "]");
         iUserService.changePassword(changePasswordRequest);
         log.info("[End UserController - Change Password with username " + userCommon.getCurrentUser().getUsername() + "]");
         return new ResponseEntity<>("Password Change Successfully", OK);
+    }
+
+    @GetMapping("/list-role")
+    public ResponseEntity<List<RoleDto>> getAllRoles() {
+        log.info("[Start UserController - Get All Roles]");
+        List<RoleDto> roleDto = iUserService.getAllRoles();
+        log.info("[End UserController - Get All Roles]");
+        return status(HttpStatus.OK).body(roleDto);
     }
 
 }

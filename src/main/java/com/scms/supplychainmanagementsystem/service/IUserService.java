@@ -1,8 +1,13 @@
 package com.scms.supplychainmanagementsystem.service;
 
 import com.scms.supplychainmanagementsystem.dto.ChangePasswordRequest;
+import com.scms.supplychainmanagementsystem.dto.RoleDto;
 import com.scms.supplychainmanagementsystem.dto.UserDto;
 import com.scms.supplychainmanagementsystem.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface IUserService {
     void updateUser(UserDto UserDto);
@@ -11,7 +16,13 @@ public interface IUserService {
 
     void deleteUser(Long userId);
 
-    User findUserById(Long userId);
+    UserDto getUserById(Long userId);
 
     void changePassword(ChangePasswordRequest changePasswordRequest);
+
+    List<RoleDto> getAllRoles();
+
+    Page<User> getAllUsers(String username, Long roleId, Long warehouseId, Pageable pageble);
+
+    boolean checkUserExistByUserId(Long userId);
 }

@@ -18,8 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.util.List;
 
 
 @AllArgsConstructor
@@ -27,7 +25,6 @@ import java.util.List;
 @Slf4j
 @Service
 public class CustomerServiceImpl implements ICustomerService {
-
 
 
     @Autowired
@@ -38,19 +35,19 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public Page<Customer> getAllCustomerInWarehouse(Pageable pageable) {
         User currentUser = userCommon.getCurrentUser();
-        return customerRepository.findByWarehouse(userCommon.getCurrentUser().getWarehouse().getWarehouseID(),pageable);
+        return customerRepository.findByWarehouse(userCommon.getCurrentUser().getWarehouse().getWarehouseID(), pageable);
     }
 
 
     @Override
     public Customer getCustomerByIdInWarehouse(Long customerId) {
-        Customer customer =customerRepository.findByCustomerIdAnhInWarehouse(customerId,userCommon.getCurrentUser().getWarehouse().getWarehouseID());
+        Customer customer = customerRepository.findByCustomerIdAnhInWarehouse(customerId, userCommon.getCurrentUser().getWarehouse().getWarehouseID());
         return customer;
     }
 
 
     @Override
-    public void updateCustomer(Long customerid,CustomerDto customerDto) {
+    public void updateCustomer(Long customerid, CustomerDto customerDto) {
         log.info("[Start CustomerService - UpdateCustomer with email: " + customerDto.getEmail() + "]");
 
         log.info("[Start get current user]");
@@ -80,10 +77,10 @@ public class CustomerServiceImpl implements ICustomerService {
                 .createdBy(currentUser)
                 .lastModifiedBy(currentUser)
                 .build();
-        log.info("[Start update customer " +customer.getEmail() + " to database]");
+        log.info("[Start update customer " + customer.getEmail() + " to database]");
         customerRepository.saveAndFlush(customer);
         log.info("[End update customer " + customer.getEmail() + " to database]");
-        log.info("[End CustomerService - updateCustomer with Email: " +customer.getEmail() + "]");
+        log.info("[End CustomerService - updateCustomer with Email: " + customer.getEmail() + "]");
     }
 
     @Override
@@ -118,15 +115,15 @@ public class CustomerServiceImpl implements ICustomerService {
                 .createdBy(currentUser)
                 .lastModifiedBy(currentUser)
                 .build();
-        log.info("[Start save customer " +customer.getEmail() + " to database]");
+        log.info("[Start save customer " + customer.getEmail() + " to database]");
         customerRepository.saveAndFlush(customer);
         log.info("[End save customer " + customer.getEmail() + " to database]");
-        log.info("[End CustomerService - saveCustomer with Email: " +customer.getEmail() + "]");
+        log.info("[End CustomerService - saveCustomer with Email: " + customer.getEmail() + "]");
     }
 
     @Override
     public void deleteCustomer(Long customerid) {
-        customerRepository.deleteCustomer(customerid,userCommon.getCurrentUser().getWarehouse().getWarehouseID());
+        customerRepository.deleteCustomer(customerid, userCommon.getCurrentUser().getWarehouse().getWarehouseID());
     }
 }
 

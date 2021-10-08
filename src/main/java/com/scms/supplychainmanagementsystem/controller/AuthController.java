@@ -41,11 +41,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginRequest loginRequest) {
         log.info("[Start AuthController - login with username: " + loginRequest.getUsername() + "]");
         AuthenticationResponse authenticationResponse = iAuthService.login(loginRequest);
         log.info("[End AuthController - login with username: " + loginRequest.getUsername() + "]");
-        return authenticationResponse;
+        return ResponseEntity.status(OK).body(authenticationResponse);
     }
 
     @PostMapping("/refresh/token")

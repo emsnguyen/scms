@@ -19,7 +19,7 @@ public class District {
 
     private String districtType;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "provinceID", referencedColumnName = "provinceId")
     private Province province;
 }
