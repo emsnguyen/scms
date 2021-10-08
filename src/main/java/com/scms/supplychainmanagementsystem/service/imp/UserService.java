@@ -126,13 +126,7 @@ public class UserService implements IUserService {
         log.info("[Start UserService - find user by userID = " + userId + "]");
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
         if (!userCommon.checkResourcesInWarehouse(userId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You are not allow access this resource");
-        }
-        User current = userCommon.getCurrentUser();
-        if (user.getWarehouse() != null && current != null) {
-            if (user.getWarehouse().getWarehouseID() != current.getWarehouse().getWarehouseID()) {
-                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You are not allow access");
-            }
+            throw new AppException("You are not allow access this resource");
         }
         UserDto userDto = UserDto.builder()
                 .username(user.getUsername())
@@ -189,14 +183,27 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Page<User> getAllUsers(Pageable pageble) {
+    public Page<User> getAllUsers(String username, Long roleId, Long warehouseId, Pageable pageable) {
+        log.info("[Start UserService - Get All Users]");
         Page<User> userPage;
-        if (userCommon.getCurrentUser().getWarehouse() != null) {
-            Long warehouseId = userCommon.getCurrentUser().getWarehouse().getWarehouseID();
-            userPage = userRepository.findAllByWarehouse_WarehouseID(warehouseId, pageble);
+        Warehouse wh = userCommon.getCurrentUser().getWarehouse();
+        Long userId = userCommon.getCurrentUser().getUserId();
+        if (wh != null) {
+            if (wh.getWarehouseID() == 0) {
+                userPage = userRepository.filterAllWarehouses(username, roleId, warehouseId, userId, pageable);
+            } else {
+                userPage = userRepository.filterInOneWarehouse(username, roleId, wh.getWarehouseID(), userId, pageable);
+            }
         } else {
-            userPage = userRepository.findAll(pageble);
+            throw new AppException("Current user have not register warehouse yet");
         }
+
+        log.info("[End UserService - Get All Users]");
         return userPage;
+    }
+
+    @Override
+    public boolean checkUserExistByUserId(Long userId) {
+        return userRepository.existsById(userId);
     }
 }

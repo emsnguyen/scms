@@ -5,7 +5,6 @@ import com.scms.supplychainmanagementsystem.dto.ChangePasswordRequest;
 import com.scms.supplychainmanagementsystem.dto.RoleDto;
 import com.scms.supplychainmanagementsystem.dto.UserDto;
 import com.scms.supplychainmanagementsystem.entity.User;
-import com.scms.supplychainmanagementsystem.entity.Warehouse;
 import com.scms.supplychainmanagementsystem.service.IUserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -42,15 +41,11 @@ public class UserController {
     public ResponseEntity<UserDto> getUserProfile() {
         log.info("[Start UserController - Get User Profile]");
         User currentUser = userCommon.getCurrentUser();
-        Warehouse warehouse = new Warehouse();
-        if (currentUser.getRole().getRoleID() != 1) {
-            warehouse = currentUser.getWarehouse();
-        }
         UserDto user = UserDto.builder()
                 .username(currentUser.getUsername())
                 .email(currentUser.getEmail())
                 .roleId(currentUser.getRole().getRoleID())
-                .warehouseId(warehouse != null ? warehouse.getWarehouseID() : null)
+                .warehouseId(currentUser.getWarehouse() != null ? currentUser.getWarehouse().getWarehouseID() : null)
                 .firstName(currentUser.getFirstName())
                 .lastName(currentUser.getLastName())
                 .isActive(currentUser.isActive())
@@ -79,41 +74,41 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getAllUsersInWarehouse(@RequestParam(defaultValue = "0") int page,
-                                                                      @RequestParam(defaultValue = "4") int size) {
+    public ResponseEntity<Map<String, Object>> getAllUsersInWarehouse(@RequestParam(required = false) String username,
+                                                                      @RequestParam(required = false) Long roleId,
+                                                                      @RequestParam(required = false) Long warehouseId,
+                                                                      @RequestParam(defaultValue = "1") int page,
+                                                                      @RequestParam(defaultValue = "10") int size) {
         log.info("[Start UserController - Get All Users In Warehouse]");
-        try {
-            List<User> userList;
-            Page<User> userPage;
-            Pageable pageable = PageRequest.of(page, size);
+        List<User> userList;
+        Page<User> userPage;
+        Pageable pageable = PageRequest.of(page, size);
 
-            userPage = iUserService.getAllUsers(pageable);
-            userList = userPage.getContent();
+        userPage = iUserService.getAllUsers(username, roleId, warehouseId, pageable);
 
-            Map<String, Object> response = new HashMap<>();
-            response.put("data", userList);
-            response.put("currentPage", userPage.getNumber());
-            response.put("totalItems", userPage.getTotalElements());
-            response.put("totalPages", userPage.getTotalPages());
+        userList = userPage.getContent();
 
-            log.info("[End UserController - Get All Users In Warehouse]");
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", userList);
+        response.put("currentPage", userPage.getNumber());
+        response.put("totalItems", userPage.getTotalElements());
+        response.put("totalPages", userPage.getTotalPages());
+        if (!userPage.isEmpty()) {
+            response.put("message", HttpStatus.OK);
+        } else {
+            response.put("message", "EMPTY_RESULT");
         }
+        log.info("[End UserController - Get All Users In Warehouse]");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long userId) {
         log.info("[Start UserController - Get User By User ID]");
-        try {
-            UserDto userDto = iUserService.getUserById(userId);
-            log.info("[End UserController - Get User By User ID]");
-            return status(HttpStatus.OK).body(userDto);
-        } catch (NullPointerException ex) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SOME_DATA_NOT_EXIST");
-        }
+        UserDto userDto = iUserService.getUserById(userId);
+        log.info("[End UserController - Get User By User ID]");
+        return status(HttpStatus.OK).body(userDto);
     }
 
     @PutMapping("/{userId}")
@@ -131,26 +126,21 @@ public class UserController {
     @ApiOperation(value = "Requires ADMIN or MANAGER Access")
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         log.info("[Start UserController - Delete User with userid = " + userId + "]");
-        try {
-            iUserService.deleteUser(userId);
-            log.info("[End UserController - Delete User with userid " + userId + "]");
-            return new ResponseEntity<>("User Deleted Successfully", OK);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "DELETE_USER_FAIL");
+        if (!iUserService.checkUserExistByUserId(userId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
+        iUserService.deleteUser(userId);
+        log.info("[End UserController - Delete User with userid " + userId + "]");
+        return new ResponseEntity<>("User Deleted Successfully", OK);
     }
 
     @PutMapping("/change-password")
     @ApiOperation(value = "Required login again when change pw successfully")
     public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
         log.info("[Start UserController - Change Password with username " + userCommon.getCurrentUser().getUsername() + "]");
-        try {
-            iUserService.changePassword(changePasswordRequest);
-            log.info("[End UserController - Change Password with username " + userCommon.getCurrentUser().getUsername() + "]");
-            return new ResponseEntity<>("Password Change Successfully", OK);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "UPDATE_PASSWORD_FAIL");
-        }
+        iUserService.changePassword(changePasswordRequest);
+        log.info("[End UserController - Change Password with username " + userCommon.getCurrentUser().getUsername() + "]");
+        return new ResponseEntity<>("Password Change Successfully", OK);
     }
 
     @GetMapping("/list-role")

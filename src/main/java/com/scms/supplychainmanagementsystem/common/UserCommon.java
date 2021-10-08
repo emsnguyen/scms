@@ -33,11 +33,13 @@ public class UserCommon {
     public boolean checkResourcesInWarehouse(Long userId) {
         User u = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
         User current = getCurrentUser();
-        if (u.getWarehouse() != null && current != null) {
-            if (u.getWarehouse().getWarehouseID() != current.getWarehouse().getWarehouseID()) {
-                return false;
-            }
+        if (current.getRole().getRoleID() == 1) {
+            return true;
         }
-        return true;
+        if (u.getWarehouse() != null && current.getWarehouse() != null) {
+            return u.getWarehouse().getWarehouseID().equals(current.getWarehouse().getWarehouseID());
+        } else {
+            throw new AppException("Register warehouse first");
+        }
     }
 }

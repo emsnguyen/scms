@@ -22,5 +22,7 @@ public interface IUserService {
 
     List<RoleDto> getAllRoles();
 
-    Page<User> getAllUsers(Pageable pageble);
+    Page<User> getAllUsers(String username, Long roleId, Long warehouseId, Pageable pageble);
+
+    boolean checkUserExistByUserId(Long userId);
 }
