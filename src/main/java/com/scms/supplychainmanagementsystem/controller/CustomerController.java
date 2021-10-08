@@ -84,7 +84,7 @@ public class CustomerController {
 
 
     @PostMapping("/create")
-//    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     public ResponseEntity<String> createCustomer(@Valid @RequestBody CustomerDto customerDto) {
         log.info("[Start CustomerController -  createCustomer " + customerDto.getEmail() + "]");
         iCustomerService.saveCustomer(customerDto);
@@ -103,7 +103,7 @@ public class CustomerController {
     }
 
     @PutMapping("/{customerId}")
-//    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @ApiOperation(value = "Requires ADMIN or MANAGER Access")
     public ResponseEntity<String> updateCustomer(@PathVariable Long customerId, @Valid @RequestBody CustomerDto customerDto) {
         log.info("[Start CustomerController - Update Customer with email " + customerDto.getEmail() + "]");
@@ -113,6 +113,7 @@ public class CustomerController {
     }
 
     @DeleteMapping ("/delete/{customerid}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     public ResponseEntity<String> DeleteCustomer(@PathVariable Long customerid) {
         log.info("[Start CustomerController - Get Customer By ID]");
          iCustomerService.deleteCustomer(customerid);
