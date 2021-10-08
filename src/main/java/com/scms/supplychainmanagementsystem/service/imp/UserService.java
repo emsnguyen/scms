@@ -10,6 +10,7 @@ import com.scms.supplychainmanagementsystem.entity.Warehouse;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.RoleRepository;
 import com.scms.supplychainmanagementsystem.repository.UserRepository;
+import com.scms.supplychainmanagementsystem.repository.WarehouseRepository;
 import com.scms.supplychainmanagementsystem.service.IUserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ public class UserService implements IUserService {
     private final RoleRepository roleRepository;
     private final UserCommon userCommon;
     private final PasswordEncoder passwordEncoder;
+    private final WarehouseRepository warehouseRepository;
 
     @Override
     public void updateUser(UserDto userDto) {
@@ -46,30 +48,27 @@ public class UserService implements IUserService {
         }
         if (userDto.getRoleId() == 1) {
             if (currentUser.getRole().getRoleID() != 1) {
-                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You are not allow to update role ADMIN");
+                throw new AppException("You are not allow to update role ADMIN");
             }
         }
-        Warehouse warehouse = new Warehouse();
+        User user = userRepository.findById(userDto.getUserId()).orElseThrow(() -> new AppException("User not Found"));
+        user.setEmail(userDto.getEmail());
+        user.setRole(roleRepository.findById(userDto.getRoleId())
+                .orElseThrow(() -> new AppException("Not found role")));
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setActive(userDto.isActive());
+        user.setPhone(userDto.getPhone());
+        user.setDateOfBirth(userDto.getDateOfBirth());
+        user.setDistrict(District.builder().districtID(userDto.getDistrictId()).build());
+        user.setStreetAddress(userDto.getStreetAddress());
+        user.setLastModifiedBy(currentUser);
+        user.setLastModifiedDate(Instant.now());
+
         if (currentUser.getRole().getRoleID() == 1) {
-            if (userDto.getRoleId() != 1) {
-                warehouse.setWarehouseID(userDto.getWarehouseId());
-            }
+            user.setWarehouse(warehouseRepository.findById(userDto.getWarehouseId())
+                    .orElseThrow(() -> new AppException("Not found warehouse")));
         }
-        User user = User.builder()
-                .email(userDto.getEmail())
-                .role(roleRepository.findById(userDto.getRoleId())
-                        .orElseThrow(() -> new AppException("Not found role")))
-                .warehouse(warehouse)
-                .firstName(userDto.getFirstName())
-                .lastName(userDto.getLastName())
-                .isActive(userDto.isActive())
-                .phone(userDto.getPhone())
-                .dateOfBirth(userDto.getDateOfBirth())
-                .district(District.builder().districtID(userDto.getDistrictId()).build())
-                .streetAddress(userDto.getStreetAddress())
-                .lastModifiedBy(currentUser)
-                .lastModifiedDate(Instant.now())
-                .build();
         log.info("[Start save user " + user.getUsername() + " to database]");
         userRepository.save(user);
         log.info("[End save user " + user.getUsername() + " to database]");
@@ -90,19 +89,12 @@ public class UserService implements IUserService {
                 throw new AppException("You are not allow to create role ADMIN");
             }
         }
-        Warehouse warehouse = new Warehouse();
-        // if (currentUser.getRole().getRoleID() == 1) {
-        //   if (userDto.getRoleId() != 1) {
-        warehouse.setWarehouseID(userDto.getWarehouseId());
-        // }
-        //}
         User user = User.builder()
                 .username(userDto.getUsername())
                 .password(passwordEncoder.encode("123@456"))
                 .email(userDto.getEmail())
                 .role(roleRepository.findById(userDto.getRoleId())
                         .orElseThrow(() -> new AppException("Not found role")))
-                .warehouse(warehouse)
                 .firstName(userDto.getFirstName())
                 .lastName(userDto.getLastName())
                 .isActive(userDto.isActive())
@@ -113,6 +105,13 @@ public class UserService implements IUserService {
                 .createdDate(Instant.now())
                 .createdBy(currentUser)
                 .build();
+
+        if (currentUser.getRole().getRoleID() == 1) {
+            user.setWarehouse(warehouseRepository.findById(userDto.getWarehouseId())
+                    .orElseThrow(() -> new AppException("Not found warehouse")));
+        } else {
+            user.setWarehouse(currentUser.getWarehouse());
+        }
         log.info("[Start save user " + user.getUsername() + " to database]");
         userRepository.saveAndFlush(user);
         log.info("[End save user " + user.getUsername() + " to database]");
