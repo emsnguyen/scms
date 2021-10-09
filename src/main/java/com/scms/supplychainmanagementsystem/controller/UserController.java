@@ -166,8 +166,8 @@ public class UserController {
         return status(HttpStatus.OK).body(result);
     }
 
-    @PutMapping("/status/{userId}")
-    public ResponseEntity<String> updateUserActive(@PathVariable Long userId, @RequestParam Boolean isActive) {
+    @PutMapping("/{userId}/{isActive}")
+    public ResponseEntity<String> updateUserActive(@PathVariable Long userId, @PathVariable Boolean isActive) {
         log.info("[Start UserController - Update User Active " + userId + "]");
         if (!iUserService.checkUserExistByUserId(userId)) {
             throw new AppException("User not found");
