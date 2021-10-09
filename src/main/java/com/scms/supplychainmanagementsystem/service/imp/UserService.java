@@ -70,7 +70,7 @@ public class UserService implements IUserService {
                     .orElseThrow(() -> new AppException("Not found warehouse")));
         }
         log.info("[Start save user " + user.getUsername() + " to database]");
-        userRepository.save(user);
+        userRepository.saveAndFlush(user);
         log.info("[End save user " + user.getUsername() + " to database]");
         log.info("[End UserService - updateUser with username: " + userDto.getUsername() + "]");
     }
