@@ -70,7 +70,7 @@ public class UserService implements IUserService {
                     .orElseThrow(() -> new AppException("Not found warehouse")));
         }
         log.info("[Start save user " + user.getUsername() + " to database]");
-        userRepository.save(user);
+        userRepository.saveAndFlush(user);
         log.info("[End save user " + user.getUsername() + " to database]");
         log.info("[End UserService - updateUser with username: " + userDto.getUsername() + "]");
     }
@@ -204,5 +204,17 @@ public class UserService implements IUserService {
     @Override
     public boolean checkUserExistByUserId(Long userId) {
         return userRepository.existsById(userId);
+    }
+
+    @Override
+    public void updateUserActive(Long userId, Boolean isActive) {
+        log.info("[Start UserService - Update User Active " + userId + "]");
+        if (!userCommon.checkResourcesInWarehouse(userId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You are not allow access this resource");
+        }
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
+        user.setActive(isActive);
+        userRepository.saveAndFlush(user);
+        log.info("[End UserService - Update User Active " + userId + "]");
     }
 }
