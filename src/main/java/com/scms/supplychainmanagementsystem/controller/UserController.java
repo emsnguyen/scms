@@ -119,7 +119,8 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    @ApiOperation(value = "Disable field [userId, username,createdBy, createdDate,lastModifiedBy,lastModifiedDate]")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
+    @ApiOperation(value = "Requires ADMIN or MANAGER Access. Disable field [userId, username,createdBy, createdDate,lastModifiedBy,lastModifiedDate]")
     public ResponseEntity<String> updateUser(@PathVariable Long userId, @Valid @RequestBody UserDto userDto) {
         log.info("[Start UserController - Update User with username " + userDto.getUsername() + "]");
         if (iUserService.checkUserExistByUserId(userId)) {
@@ -165,9 +166,7 @@ public class UserController {
         return status(HttpStatus.OK).body(result);
     }
 
-    @PutMapping("/{userId}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    @ApiOperation(value = "Requires ADMIN or MANAGER Access")
+    @PutMapping("/status/{userId}")
     public ResponseEntity<String> updateUserActive(@PathVariable Long userId, @RequestParam Boolean isActive) {
         log.info("[Start UserController - Update User Active " + userId + "]");
         if (!iUserService.checkUserExistByUserId(userId)) {
