@@ -62,10 +62,7 @@ public class AuthService implements IAuthService {
     @Override
     public void verifyAccount(String token) {
         Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
-        String username = verificationToken.orElseThrow(() -> new AppException("Invalid Token")).getUser().getUsername();
-        if (!userRepository.existsByUsername(username)) {
-            throw new AppException("User not found");
-        }
+        fetchUserAndResetPassword(verificationToken.orElseThrow(() -> new AppException("Invalid Token")));
     }
 
     @Override
@@ -125,6 +122,13 @@ public class AuthService implements IAuthService {
         verificationToken.setUser(user);
         verificationTokenRepository.save(verificationToken);
         return token;
+    }
+
+    private void fetchUserAndResetPassword(VerificationToken verificationToken) {
+        String username = verificationToken.getUser().getUsername();
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new AppException("User not found"));
+        user.setPassword(passwordEncoder.encode("123@456"));
+        userRepository.save(user);
     }
 
 }
