@@ -43,18 +43,18 @@ public class UserService implements IUserService {
         log.info("[Start get current user]");
         User currentUser = userCommon.getCurrentUser();
         log.info("[End get current user : " + currentUser.getUsername() + "]");
-        if (!userCommon.checkResourcesInWarehouse(userDto.getUserId())) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You are not allow access this resource");
+        if (!userCommon.checkAccessUserInfoInWarehouse(userDto.getUserId())) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Not allow access this warehouse's resource");
         }
         if (userDto.getRoleId() == 1) {
             if (currentUser.getRole().getRoleID() != 1) {
-                throw new AppException("You are not allow to update role ADMIN");
+                throw new AppException("Not allow to update role ADMIN");
             }
         }
-        User user = userRepository.findById(userDto.getUserId()).orElseThrow(() -> new AppException("User not Found"));
+        User user = userRepository.findById(userDto.getUserId()).orElseThrow(() -> new AppException("User not found"));
         user.setEmail(userDto.getEmail());
         user.setRole(roleRepository.findById(userDto.getRoleId())
-                .orElseThrow(() -> new AppException("Not found role")));
+                .orElseThrow(() -> new AppException("Role not found")));
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
         user.setActive(userDto.isActive());
@@ -64,11 +64,8 @@ public class UserService implements IUserService {
         user.setStreetAddress(userDto.getStreetAddress());
         user.setLastModifiedBy(currentUser);
         user.setLastModifiedDate(Instant.now());
-
-        if (currentUser.getRole().getRoleID() == 1) {
-            user.setWarehouse(warehouseRepository.findById(userDto.getWarehouseId())
-                    .orElseThrow(() -> new AppException("Not found warehouse")));
-        }
+        user.setWarehouse(warehouseRepository.findById(userDto.getWarehouseId())
+                .orElseThrow(() -> new AppException("Warehouse not found")));
         log.info("[Start save user " + user.getUsername() + " to database]");
         userRepository.saveAndFlush(user);
         log.info("[End save user " + user.getUsername() + " to database]");
@@ -84,17 +81,21 @@ public class UserService implements IUserService {
         log.info("[Start get current user]");
         User currentUser = userCommon.getCurrentUser();
         log.info("[End get current user : " + currentUser.getUsername() + "]");
-        if (userDto.getRoleId() == 1) {
-            if (currentUser.getRole().getRoleID() != 1) {
-                throw new AppException("You are not allow to create role ADMIN");
-            }
+        if (userDto.getWarehouseId() == null || userDto.getRoleId() == null || userDto.getDistrictId() == null) {
+            throw new AppException("Not fill in all required fields");
+        }
+        if (currentUser.getRole().getRoleID() != 1 && !userDto.getWarehouseId().equals(currentUser.getWarehouse().getWarehouseID())) {
+            throw new AppException("Not allow to choose this warehouse");
+        }
+        if (currentUser.getRole().getRoleID() != 1 && userDto.getRoleId() == 1) {
+            throw new AppException("Not allow to create role ADMIN");
         }
         User user = User.builder()
                 .username(userDto.getUsername())
                 .password(passwordEncoder.encode("123@456"))
                 .email(userDto.getEmail())
                 .role(roleRepository.findById(userDto.getRoleId())
-                        .orElseThrow(() -> new AppException("Not found role")))
+                        .orElseThrow(() -> new AppException("Role not found")))
                 .firstName(userDto.getFirstName())
                 .lastName(userDto.getLastName())
                 .isActive(userDto.isActive())
@@ -104,14 +105,9 @@ public class UserService implements IUserService {
                 .streetAddress(userDto.getStreetAddress())
                 .createdDate(Instant.now())
                 .createdBy(currentUser)
+                .warehouse(warehouseRepository.findById(userDto.getWarehouseId())
+                        .orElseThrow(() -> new AppException("Warehouse not found")))
                 .build();
-
-        if (currentUser.getRole().getRoleID() == 1) {
-            user.setWarehouse(warehouseRepository.findById(userDto.getWarehouseId())
-                    .orElseThrow(() -> new AppException("Not found warehouse")));
-        } else {
-            user.setWarehouse(currentUser.getWarehouse());
-        }
         log.info("[Start save user " + user.getUsername() + " to database]");
         userRepository.saveAndFlush(user);
         log.info("[End save user " + user.getUsername() + " to database]");
@@ -124,21 +120,20 @@ public class UserService implements IUserService {
     public UserDto getUserById(Long userId) {
         log.info("[Start UserService - find user by userID = " + userId + "]");
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
-        if (!userCommon.checkResourcesInWarehouse(userId)) {
-            throw new AppException("You are not allow access this resource");
+        if (!userCommon.checkAccessUserInfoInWarehouse(userId)) {
+            throw new AppException("Not allow access this warehouse's resource");
         }
         UserDto userDto = UserDto.builder()
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .roleId(roleRepository.findById(user.getRole().getRoleID())
-                        .orElseThrow(() -> new AppException("Not found role")).getRoleID())
-                .warehouseId(user.getWarehouse() != null ? user.getWarehouse().getWarehouseID() : null)
+                .roleId(user.getRole().getRoleID())
+                .warehouseId(user.getWarehouse().getWarehouseID())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .isActive(user.isActive())
                 .phone(user.getPhone())
                 .dateOfBirth(user.getDateOfBirth())
-                .districtId(user.getDistrict() != null ? user.getDistrict().getDistrictID() : null)
+                .districtId(user.getDistrict().getDistrictID())
                 .streetAddress(user.getStreetAddress())
                 .createdDate(Instant.now())
                 .createdBy(user.getCreatedBy() != null ? user.getCreatedBy().getUsername() : null)
@@ -165,8 +160,8 @@ public class UserService implements IUserService {
     @Override
     public void deleteUser(Long userId) {
         log.info("[Start UserService - Delete User By userID = " + userId + "]");
-        if (!userCommon.checkResourcesInWarehouse(userId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You are not allow access this resource");
+        if (!userCommon.checkAccessUserInfoInWarehouse(userId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Not allow access this warehouse's resource");
         }
         userRepository.deleteById(userId);
         log.info("[End UserService - Delete User By userID = " + userId + "]");
@@ -185,18 +180,14 @@ public class UserService implements IUserService {
     public Page<User> getAllUsers(String username, Long roleId, Long warehouseId, Pageable pageable) {
         log.info("[Start UserService - Get All Users]");
         Page<User> userPage;
-        Warehouse wh = userCommon.getCurrentUser().getWarehouse();
-        Long userId = userCommon.getCurrentUser().getUserId();
-        if (wh != null) {
-            if (wh.getWarehouseID() == 0) {
-                userPage = userRepository.filterAllWarehouses(username, roleId, warehouseId, userId, pageable);
-            } else {
-                userPage = userRepository.filterInOneWarehouse(username, roleId, wh.getWarehouseID(), userId, pageable);
-            }
+        User current = userCommon.getCurrentUser();
+        Warehouse wh = current.getWarehouse();
+        Long userId = current.getUserId();
+        if (current.getRole().getRoleID() == 1) {
+            userPage = userRepository.filterAllWarehouses(username, roleId, warehouseId, userId, pageable);
         } else {
-            throw new AppException("Current user have not register warehouse yet");
+            userPage = userRepository.filterInOneWarehouse(username, roleId, wh.getWarehouseID(), userId, pageable);
         }
-
         log.info("[End UserService - Get All Users]");
         return userPage;
     }
@@ -209,8 +200,8 @@ public class UserService implements IUserService {
     @Override
     public void updateUserActive(Long userId, Boolean isActive) {
         log.info("[Start UserService - Update User Active " + userId + "]");
-        if (!userCommon.checkResourcesInWarehouse(userId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You are not allow access this resource");
+        if (!userCommon.checkAccessUserInfoInWarehouse(userId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Not allow update user activation");
         }
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
         user.setActive(isActive);

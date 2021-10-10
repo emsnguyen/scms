@@ -22,7 +22,7 @@ public class UserCommon {
                 = (org.springframework.security.core.userdetails.User) SecurityContextHolder
                 .getContext().getAuthentication().getPrincipal();
         return userRepository.findByUsername(principal.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User name not found - " + principal.getUsername()));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     public boolean isLoggedIn() {
@@ -30,16 +30,16 @@ public class UserCommon {
         return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
     }
 
-    public boolean checkResourcesInWarehouse(Long userId) {
+    public boolean checkAccessUserInfoInWarehouse(Long userId) {
         User u = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
         User current = getCurrentUser();
         if (current.getRole().getRoleID() == 1) {
             return true;
         }
-        if (u.getWarehouse() != null && current.getWarehouse() != null) {
-            return u.getWarehouse().getWarehouseID().equals(current.getWarehouse().getWarehouseID());
+        if (u.getWarehouse() == null || u.getRole() == null || u.getDistrict() == null) {
+            throw new AppException("Not fill in all required fields");
         } else {
-            throw new AppException("Register warehouse first");
+            return u.getWarehouse().getWarehouseID().equals(current.getWarehouse().getWarehouseID());
         }
     }
 }
