@@ -1,0 +1,22 @@
+package com.scms.supplychainmanagementsystem.service;
+
+import com.scms.supplychainmanagementsystem.dto.CustomerDto;
+import com.scms.supplychainmanagementsystem.dto.MaterialDto;
+import com.scms.supplychainmanagementsystem.entity.Customer;
+import com.scms.supplychainmanagementsystem.entity.Material;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+public interface IMaterialService {
+
+//    Page<Customer> getAllCustomerInWarehouse(Pageable pageable);
+
+    Material getMaterialByIdInWarehouse(Long MaterialId);
+
+    void updateMaterial(Long materialId, MaterialDto materialDto);
+
+    void saveMaterial(MaterialDto materialDto);
+
+    void deleteMaterial(Long materialDto);
+
+}

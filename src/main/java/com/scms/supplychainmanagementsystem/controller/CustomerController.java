@@ -51,7 +51,7 @@ public class CustomerController {
     @GetMapping("/list")
     public ResponseEntity<Map<String, Object>> getAllCustomerInWarehouse(@RequestParam(required = false) String customername,
                                                                          @RequestParam(required = false) Long warehouseId,
-                                                                         @RequestParam(defaultValue = "1") int page,
+                                                                         @RequestParam(defaultValue = "0") int page,
                                                                          @RequestParam(defaultValue = "10") int size) {
         log.info("[Start CustomerController - Get All Customer In Warehouse]");
         List<Customer> customerList;
