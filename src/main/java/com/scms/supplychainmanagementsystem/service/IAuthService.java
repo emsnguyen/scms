@@ -6,7 +6,7 @@ public interface IAuthService {
 
     void signup(RegisterRequest registerRequest);
 
-    NotificationEmail forgotPassword(ForgotPasswordRequest forgotPasswordRequest);
+    void forgotPassword(ForgotPasswordRequest forgotPasswordRequest);
 
     void verifyAccount(String token);
 

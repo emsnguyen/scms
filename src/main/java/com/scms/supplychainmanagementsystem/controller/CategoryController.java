@@ -37,7 +37,7 @@ public class CategoryController {
         log.info("[Start CategoryController -  createCategory " + categoryDto.getCategoryName() + "]");
         iCategoryService.createCategory(categoryDto);
         log.info("[End CategoryController -  createCategory " + categoryDto.getCategoryName() + "]");
-        return new ResponseEntity<>("Category Created Successfully", CREATED);
+        return new ResponseEntity<>("User Account Created Successfully", CREATED);
     }
 
     @GetMapping
