@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -45,39 +48,38 @@ public class CustomerController {
         return status(HttpStatus.OK).body(listDto);
     }
 
-//    @GetMapping("/list1")
-//    public ResponseEntity<Map<String, Object>> getAllCustomerInWarehouse(@RequestParam(required = false) String username,
-//                                                                      @RequestParam(required = false) Long roleId,
-//                                                                      @RequestParam(required = false) Long warehouseId,
-//                                                                      @RequestParam(defaultValue = "1") int page,
-//                                                                      @RequestParam(defaultValue = "10") int size) {
-//        log.info("[Start UserController - Get All Users In Warehouse]");
-//        List<User> userList;
-//        Page<User> userPage;
-//        Pageable pageable = PageRequest.of(page, size);
-//
-//        userPage = iUserService.getAllUsers(username, roleId, warehouseId, pageable);
-//
-//        userList = userPage.getContent();
-//
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("data", userList);
-//        response.put("currentPage", userPage.getNumber());
-//        response.put("totalItems", userPage.getTotalElements());
-//        response.put("totalPages", userPage.getTotalPages());
-//        if (!userPage.isEmpty()) {
-//            response.put("message", HttpStatus.OK);
-//        } else {
-//            response.put("message", "EMPTY_RESULT");
-//        }
-//        log.info("[End UserController - Get All Users In Warehouse]");
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
+    @GetMapping("/list")
+    public ResponseEntity<Map<String, Object>> getAllCustomerInWarehouse(@RequestParam(required = false) String customername,
+                                                                         @RequestParam(required = false) Long warehouseId,
+                                                                         @RequestParam(defaultValue = "1") int page,
+                                                                         @RequestParam(defaultValue = "10") int size) {
+        log.info("[Start CustomerController - Get All Customer In Warehouse]");
+        List<Customer> customerList;
+        Page<Customer> customerPage;
+        Pageable pageable = PageRequest.of(page, size);
+
+        customerPage = iCustomerService.getAllCustomer(customername,warehouseId, pageable);
+
+        customerList = customerPage.getContent();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", customerList);
+        response.put("currentPage", customerPage.getNumber());
+        response.put("totalItems", customerPage.getTotalElements());
+        response.put("totalPages", customerPage.getTotalPages());
+        if (!customerPage.isEmpty()) {
+            response.put("message", HttpStatus.OK);
+        } else {
+            response.put("message", "EMPTY_RESULT");
+        }
+        log.info("[End CustomerController - Get All Customer In Warehouse]");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    @ApiOperation(value = "Requires ADMIN or MANAGER Access")
+    @ApiOperation(value = "Requires ADMIN or MANAGER Access . Disable [createdBy,createdDate,customerId,lastModifiedBy,warehouseId]")
     public ResponseEntity<String> createCustomer(@Valid @RequestBody CustomerDto customerDto) {
         log.info("[Start CustomerController -  createCustomer " + customerDto.getEmail() + "]");
         iCustomerService.saveCustomer(customerDto);
@@ -100,7 +102,7 @@ public class CustomerController {
 
     @PutMapping("/{customerId}")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    @ApiOperation(value = "Requires ADMIN or MANAGER Access")
+    @ApiOperation(value = "Requires ADMIN or MANAGER Access. Disable [createdBy,createdDate,customerId,lastModifiedBy,warehouseId]")
     public ResponseEntity<String> updateCustomer(@PathVariable Long customerId, @Valid @RequestBody CustomerDto customerDto) {
         log.info("[Start CustomerController - Update Customer with email " + customerDto.getEmail() + "]");
         iCustomerService.updateCustomer(customerId, customerDto);

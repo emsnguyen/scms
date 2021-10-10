@@ -126,6 +126,22 @@ public class CustomerServiceImpl implements ICustomerService {
     public void deleteCustomer(Long customerid) {
         customerRepository.deleteCustomer(customerid, userCommon.getCurrentUser().getWarehouse().getWarehouseID());
     }
+
+    @Override
+    public Page<Customer> getAllCustomer(String customername, Long warehouseId, Pageable pageable) {
+        log.info("[Start CustomerService - Get All Customer]");
+        Page<Customer> customerPage;
+        User current = userCommon.getCurrentUser();
+        Warehouse wh = current.getWarehouse();
+        Long userId = current.getUserId();
+        if (current.getRole().getRoleID() == 1) {
+            customerPage = customerRepository.filterAllWarehouses(customername, warehouseId, pageable);
+        } else {
+            customerPage = customerRepository.filterInOneWarehouse(customername, wh.getWarehouseID(), pageable);
+        }
+        log.info("[End CustomerService - Get All Customer]");
+        return customerPage;
+    }
 }
 
 
