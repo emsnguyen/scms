@@ -1,9 +1,6 @@
 package com.scms.supplychainmanagementsystem.service.imp;
 
-import com.scms.supplychainmanagementsystem.dto.AuthenticationResponse;
-import com.scms.supplychainmanagementsystem.dto.LoginRequest;
-import com.scms.supplychainmanagementsystem.dto.RefreshTokenRequest;
-import com.scms.supplychainmanagementsystem.dto.RegisterRequest;
+import com.scms.supplychainmanagementsystem.dto.*;
 import com.scms.supplychainmanagementsystem.entity.User;
 import com.scms.supplychainmanagementsystem.entity.VerificationToken;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
@@ -40,6 +37,7 @@ public class AuthService implements IAuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
     private final IRefreshTokenService iRefreshTokenService;
+    private final MailService mailService;
 
     @Override
     public void signup(RegisterRequest registerRequest) {
@@ -54,7 +52,7 @@ public class AuthService implements IAuthService {
         user.setCreatedDate(Instant.now());
         user.setActive(true);
         user.setRole(roleRepository.findByRoleName(registerRequest.getRoleName())
-                .orElseThrow(() -> new AppException("Not found role")));
+                .orElseThrow(() -> new AppException("Role not found")));
         log.info("[Start save user " + user.getUsername() + " to database]");
         userRepository.save(user);
         log.info("[End save user " + user.getUsername() + " to database]");
@@ -62,28 +60,9 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public void fetchUserAndEnable(VerificationToken verificationToken) {
-        String username = verificationToken.getUser().getUsername();
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new AppException("User not found with name - " + username));
-        user.setActive(true);
-        userRepository.save(user);
-    }
-
-    @Override
-    public String generateVerificationToken(User user) {
-        String token = UUID.randomUUID().toString();
-        VerificationToken verificationToken = new VerificationToken();
-        verificationToken.setToken(token);
-        verificationToken.setUser(user);
-        verificationTokenRepository.save(verificationToken);
-        return token;
-    }
-
-    @Override
     public void verifyAccount(String token) {
         Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
-        fetchUserAndEnable(verificationToken.orElseThrow(() -> new AppException("Invalid Token")));
+        fetchUserAndResetPassword(verificationToken.orElseThrow(() -> new AppException("Invalid Token")));
     }
 
     @Override
@@ -117,6 +96,39 @@ public class AuthService implements IAuthService {
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
                 .username(refreshTokenRequest.getUsername())
                 .build();
+    }
+
+    @Override
+    public void forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
+        log.info("[Start AuthService - Forgot Password Username " + forgotPasswordRequest.getUsername() + "]");
+        User user = userRepository.findByUsername(forgotPasswordRequest.getUsername())
+                .orElseThrow(() -> new AppException("User not found"));
+        if (user.getEmail().equals(forgotPasswordRequest.getEmail())) {
+            String token = generateVerificationToken(user);
+            mailService.sendMail(new NotificationEmail("[Request password change]Please verify your account",
+                    user.getEmail(), "If you did not make this request then please ignore this email." +
+                    "Please click on the below url to verify your account : " +
+                    "http://localhost:8080/api/auth/accountVerification/" + token + ""));
+        } else {
+            throw new AppException("Email not match with username");
+        }
+        log.info("[End AuthService - Forgot Password Username " + forgotPasswordRequest.getUsername() + "]");
+    }
+
+    public String generateVerificationToken(User user) {
+        String token = UUID.randomUUID().toString();
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setToken(token);
+        verificationToken.setUser(user);
+        verificationTokenRepository.save(verificationToken);
+        return token;
+    }
+
+    private void fetchUserAndResetPassword(VerificationToken verificationToken) {
+        String username = verificationToken.getUser().getUsername();
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new AppException("User not found"));
+        user.setPassword(passwordEncoder.encode("123@456"));
+        userRepository.save(user);
     }
 
 }

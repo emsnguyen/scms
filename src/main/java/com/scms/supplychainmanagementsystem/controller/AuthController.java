@@ -1,9 +1,6 @@
 package com.scms.supplychainmanagementsystem.controller;
 
-import com.scms.supplychainmanagementsystem.dto.AuthenticationResponse;
-import com.scms.supplychainmanagementsystem.dto.LoginRequest;
-import com.scms.supplychainmanagementsystem.dto.RefreshTokenRequest;
-import com.scms.supplychainmanagementsystem.dto.RegisterRequest;
+import com.scms.supplychainmanagementsystem.dto.*;
 import com.scms.supplychainmanagementsystem.service.IAuthService;
 import com.scms.supplychainmanagementsystem.service.IRefreshTokenService;
 import io.swagger.annotations.ApiOperation;
@@ -57,5 +54,13 @@ public class AuthController {
     public ResponseEntity<String> logout(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         iRefreshTokenService.deleteRefreshToken(refreshTokenRequest.getRefreshToken());
         return ResponseEntity.status(OK).body("Refresh Token Deleted Successfully");
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+        log.info("[Start AuthController - Forgot Password Username " + forgotPasswordRequest.getUsername() + "]");
+        iAuthService.forgotPassword(forgotPasswordRequest);
+        log.info("[End AuthController - Forgot Password Username " + forgotPasswordRequest.getUsername() + "]");
+        return ResponseEntity.status(OK).body("Send Request Successfully");
     }
 }

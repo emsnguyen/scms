@@ -50,7 +50,7 @@ public class User {
 
     private LocalDate dateOfBirth;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JoinColumn(name = "DistrictID", referencedColumnName = "DistrictID")
     private District district;
 
