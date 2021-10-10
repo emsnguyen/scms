@@ -99,20 +99,23 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public void forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
+    public NotificationEmail forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
         log.info("[Start AuthService - Forgot Password Username " + forgotPasswordRequest.getUsername() + "]");
         User user = userRepository.findByUsername(forgotPasswordRequest.getUsername())
                 .orElseThrow(() -> new AppException("User not found"));
+        NotificationEmail noti;
         if (user.getEmail().equals(forgotPasswordRequest.getEmail())) {
             String token = generateVerificationToken(user);
-            mailService.sendMail(new NotificationEmail("[Request password change]Please verify your account",
+            noti = new NotificationEmail("[Request password change] Please verify your account",
                     user.getEmail(), "If you did not make this request then please ignore this email." +
                     "Please click on the below url to verify your account : " +
-                    "http://localhost:8080/api/auth/accountVerification/" + token + ""));
+                    "http://localhost:8080/api/auth/accountVerification/" + token);
+            mailService.sendMail(noti);
         } else {
             throw new AppException("Email not match with username");
         }
         log.info("[End AuthService - Forgot Password Username " + forgotPasswordRequest.getUsername() + "]");
+        return noti;
     }
 
     public String generateVerificationToken(User user) {

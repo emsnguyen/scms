@@ -6,12 +6,16 @@ import com.scms.supplychainmanagementsystem.service.IRefreshTokenService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.ResponseEntity.status;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -32,17 +36,24 @@ public class AuthController {
     }
 
     @GetMapping("accountVerification/{token}")
-    public ResponseEntity<String> verifyAccount(@PathVariable String token) {
+    public ResponseEntity<Map<String, Object>> verifyAccount(@PathVariable String token) {
+        log.info("[Start AuthController - accountVerification]");
+        Map<String, Object> result = new HashMap<>();
         iAuthService.verifyAccount(token);
-        return new ResponseEntity<>("Account Activated Successfully", OK);
+        result.put("message", "Verify account successfully");
+        log.info("[Start AuthController - accountVerification]");
+        return status(HttpStatus.OK).body(result);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequest loginRequest) {
         log.info("[Start AuthController - login with username: " + loginRequest.getUsername() + "]");
+        Map<String, Object> result = new HashMap<>();
         AuthenticationResponse authenticationResponse = iAuthService.login(loginRequest);
+        result.put("data", authenticationResponse);
+        result.put("message", OK);
         log.info("[End AuthController - login with username: " + loginRequest.getUsername() + "]");
-        return ResponseEntity.status(OK).body(authenticationResponse);
+        return status(HttpStatus.OK).body(result);
     }
 
     @PostMapping("/refresh/token")
@@ -57,10 +68,13 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+    public ResponseEntity<Map<String, Object>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
         log.info("[Start AuthController - Forgot Password Username " + forgotPasswordRequest.getUsername() + "]");
-        iAuthService.forgotPassword(forgotPasswordRequest);
+        NotificationEmail noti = iAuthService.forgotPassword(forgotPasswordRequest);
+        Map<String, Object> result = new HashMap<>();
+        result.put("data", noti);
+        result.put("message", OK);
         log.info("[End AuthController - Forgot Password Username " + forgotPasswordRequest.getUsername() + "]");
-        return ResponseEntity.status(OK).body("Send Request Successfully");
+        return status(HttpStatus.OK).body(result);
     }
 }
