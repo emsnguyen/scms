@@ -52,7 +52,7 @@ public class AuthService implements IAuthService {
         user.setCreatedDate(Instant.now());
         user.setActive(true);
         user.setRole(roleRepository.findByRoleName(registerRequest.getRoleName())
-                .orElseThrow(() -> new AppException("Not found role")));
+                .orElseThrow(() -> new AppException("Role not found")));
         log.info("[Start save user " + user.getUsername() + " to database]");
         userRepository.save(user);
         log.info("[End save user " + user.getUsername() + " to database]");
