@@ -29,7 +29,8 @@ public class CategoryService implements ICategoryService {
     public void updateCategory(CategoryDto categoryDto) {
         log.info("[Start CategoryService - Update Category : " + categoryDto.getCategoryName() + "]");
         if (checkAccessCategory(categoryDto.getCategoryId())) {
-            Category category = categoryRepository.getById(categoryDto.getCategoryId());
+            Category category = categoryRepository.findById(categoryDto.getCategoryId())
+                    .orElseThrow(() -> new AppException("Category not found"));
             category.setCategoryName(categoryDto.getCategoryName());
             User current = userCommon.getCurrentUser();
             if (current.getRole().getRoleID() != 1
@@ -83,10 +84,12 @@ public class CategoryService implements ICategoryService {
     public CategoryDto getCategoryById(Long categoryId) {
         log.info("[Start CategoryService - Get Category ID = : " + categoryId + "]");
         CategoryDto categoryDto = new CategoryDto();
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new AppException("Category not found"));
         if (checkAccessCategory(categoryId)) {
             categoryDto.setCategoryId(categoryId);
-            categoryDto.setCategoryName(categoryDto.getCategoryName());
-            categoryDto.setWarehouseId(categoryRepository.getById(categoryId).getWarehouse().getWarehouseID());
+            categoryDto.setCategoryName(category.getCategoryName());
+            categoryDto.setWarehouseId(category.getWarehouse().getWarehouseID());
         } else {
             throw new AppException("Not allow to access this resource");
         }
