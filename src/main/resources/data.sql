@@ -7,13 +7,13 @@ VALUES (3, 'STAFF');
 
 
 INSERT INTO `warehouse` (warehouseid, address, warehouse_name)
-VALUES (0, '', 'ALL');
-INSERT INTO `warehouse` (warehouseid, address, warehouse_name)
 VALUES (1, 'Thach That - Ha Noi', 'CSSX Ha Noi 01');
 INSERT INTO `warehouse` (warehouseid, address, warehouse_name)
 VALUES (2, 'Binh Duong', 'CSSX Binh Duong 01');
 INSERT INTO `warehouse` (warehouseid, address, warehouse_name)
 VALUES (3, 'Quan 1 - Ho Chi Minh', 'CSSX Ho Chi Minh 01');
+INSERT INTO `warehouse` (warehouseid, address, warehouse_name)
+VALUES (0, '', 'ALL');
 
 INSERT INTO `province`
 VALUES ('01', 'Thành phố Hà Nội', 'Thành phố Trung ương');

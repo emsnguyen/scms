@@ -13,7 +13,7 @@ public class ProductDto {
     private String productName;
     private Long categoryId;
     private String quantityUnitOfMeasure;
-    private boolean isActive;
+    private Boolean isActive;
     private String createdBy;
     private String lastModifiedBy;
 }

@@ -1519,6 +1519,8 @@ CREATE TABLE `product`
     PRIMARY KEY (`product_id`),
     KEY `FK4ort9abhumpx4t2mlngljr1vi` (`categoryid`),
     KEY `FKelarb1m1p9maeiwfbawmw0m1m` (`warehouseid`),
+    KEY `FKrjh52y9ob5vyeiuxvvht404s6` (`last_modified_by`),
+    KEY `FKtnjhc9s7k2hp0e9iyhebd8sn9` (`created_by`),
     CONSTRAINT `FK4ort9abhumpx4t2mlngljr1vi` FOREIGN KEY (`categoryid`) REFERENCES `category` (`category_id`),
     CONSTRAINT `FKelarb1m1p9maeiwfbawmw0m1m` FOREIGN KEY (`warehouseid`) REFERENCES `warehouse` (`warehouseid`),
     CONSTRAINT `FKrjh52y9ob5vyeiuxvvht404s6` FOREIGN KEY (`last_modified_by`) REFERENCES `user` (`user_id`),
