@@ -1,12 +1,14 @@
 package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.dto.MaterialDto;
+import com.scms.supplychainmanagementsystem.entity.Customer;
 import com.scms.supplychainmanagementsystem.entity.Material;
 import com.scms.supplychainmanagementsystem.service.IMaterialService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -29,48 +33,35 @@ public class MaterialController {
     private IMaterialService iMaterialService;
 
 
-//    @GetMapping
-//    public ResponseEntity<List<MaterialDto>> getAllMaterial(Pageable page) {
-//        log.info("[Start Material - list]");
-//        Page<Customer> customerslist = iCustomerService.getAllCustomerInWarehouse(page);
-//        log.info("[End Material - list]");
-//        List<Customer> listcus = customerslist.getContent();
-//        List<CustomerDto> listDto = new ArrayList<>();
-//        for (Customer customer : listcus) {
-//            CustomerDto cuss = new CustomerDto(customer);
-//            listDto.add(cuss);
-//        }
-//        return status(HttpStatus.OK).body(listDto);
-//    }
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> getAllMaterialInWarehouse(@RequestParam(required = false) String materialName,
+                                                                         @RequestParam(required = false) Long warehouseId,
+                                                                         @RequestParam(defaultValue = "0") int page,
+                                                                         @RequestParam(defaultValue = "10") int size) {
+        log.info("[Start MaterialController - Get All Material In Warehouse]");
+        List<Material> MaterialList;
+        Page<Material> MaterialPage;
+        Pageable pageable = PageRequest.of(page, size);
 
-//    @GetMapping("/list1")
-//    public ResponseEntity<Map<String, Object>> getAllCustomerInWarehouse(@RequestParam(required = false) String username,
-//                                                                      @RequestParam(required = false) Long roleId,
-//                                                                      @RequestParam(required = false) Long warehouseId,
-//                                                                      @RequestParam(defaultValue = "1") int page,
-//                                                                      @RequestParam(defaultValue = "10") int size) {
-//        log.info("[Start UserController - Get All Users In Warehouse]");
-//        List<User> userList;
-//        Page<User> userPage;
-//        Pageable pageable = PageRequest.of(page, size);
-//
-//        userPage = iUserService.getAllUsers(username, roleId, warehouseId, pageable);
-//
-//        userList = userPage.getContent();
-//
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("data", userList);
-//        response.put("currentPage", userPage.getNumber());
-//        response.put("totalItems", userPage.getTotalElements());
-//        response.put("totalPages", userPage.getTotalPages());
-//        if (!userPage.isEmpty()) {
-//            response.put("message", HttpStatus.OK);
-//        } else {
-//            response.put("message", "EMPTY_RESULT");
-//        }
-//        log.info("[End UserController - Get All Users In Warehouse]");
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
+        MaterialPage = iMaterialService.getAllMaterial(materialName,warehouseId, pageable);
+
+        MaterialList = MaterialPage.getContent();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", MaterialList);
+        response.put("currentPage", MaterialPage.getNumber());
+        response.put("totalItems", MaterialPage.getTotalElements());
+        response.put("totalPages", MaterialPage.getTotalPages());
+        if (!MaterialPage.isEmpty()) {
+            response.put("message", HttpStatus.OK);
+        } else {
+            response.put("message", "EMPTY_RESULT");
+        }
+        log.info("[End CustomerController - Get All Customer In Warehouse]");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
 
 
     @PostMapping

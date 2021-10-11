@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface IMaterialService {
 
-//    Page<Customer> getAllCustomerInWarehouse(Pageable pageable);
+    Page<Material> getAllMaterial(String materialname, Long warehouseId, Pageable pageble);
 
     Material getMaterialByIdInWarehouse(Long MaterialId);
 

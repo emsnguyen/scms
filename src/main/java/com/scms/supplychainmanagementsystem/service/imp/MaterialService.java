@@ -8,6 +8,8 @@ import com.scms.supplychainmanagementsystem.repository.MaterialRepository;
 import com.scms.supplychainmanagementsystem.service.IMaterialService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,5 +88,21 @@ public class MaterialService implements IMaterialService {
     @Override
     public void deleteMaterial(Long materialId) {
         materialRepository.deleteMaterial(materialId, userCommon.getCurrentUser().getWarehouse().getWarehouseID());
+    }
+
+    @Override
+    public Page<Material> getAllMaterial(String materialname, Long warehouseId, Pageable pageable) {
+        log.info("[Start CustomerService - Get All Customer]");
+        Page<Material> materialPage;
+        User current = userCommon.getCurrentUser();
+        Warehouse wh = current.getWarehouse();
+        Long userId = current.getUserId();
+        if (current.getRole().getRoleID() == 1) {
+            materialPage = materialRepository.filterAllWarehouses(materialname, warehouseId, pageable);
+        } else {
+            materialPage = materialRepository.filterInOneWarehouse(materialname, wh.getWarehouseID(), pageable);
+        }
+        log.info("[End CustomerService - Get All Customer]");
+        return materialPage;
     }
 }

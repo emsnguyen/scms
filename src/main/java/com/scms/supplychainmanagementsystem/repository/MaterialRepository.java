@@ -33,4 +33,17 @@ public interface MaterialRepository extends JpaRepository<Material, Long>  {
 
     @Query(value = "select material_name FROM test.material where material_name= :materialName ",nativeQuery = true)
     boolean existsByMaterialName(@Param("materialName")String materialName);
+
+    @Query(value = "select u from Material u where u.warehouse.warehouseID =:warehouseId " +
+            " and (:materialname is null or u.MaterialName like %:materialname%) " +
+            " order by u.createdDate desc")
+    Page<Material> filterInOneWarehouse(@Param("materialname") String materialname,
+                                        @Param("warehouseId") Long warehouseId, Pageable pageable);
+
+    @Query(value = "select u from Material u where (:warehouseId is null or u.warehouse.warehouseID = :warehouseId) " +
+            " and (:materialname is null or u.MaterialName like %:materialname%) " +
+            " order by u.createdDate desc")
+    Page<Material> filterAllWarehouses(@Param("materialname") String materialname,
+                                       @Param("warehouseId") Long warehouseId, Pageable pageable);
 }
+
