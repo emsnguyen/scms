@@ -45,7 +45,7 @@ public class Customer {
 
     private String Facebook;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @JoinColumn(name = "DistrictID", referencedColumnName = "DistrictID")
     private District district;
 

@@ -1,8 +1,6 @@
 package com.scms.supplychainmanagementsystem.repository;
 
-import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.entity.Customer;
-import com.scms.supplychainmanagementsystem.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CustomerRepository extends JpaRepository<Customer, Long> , PagingAndSortingRepository<Customer, Long> {
+public interface CustomerRepository extends JpaRepository<Customer, Long>  {
 
 
 
@@ -37,4 +35,16 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> , Pagi
     void deleteCustomer(@Param("customerid") Long customerId ,@Param("warehouseid") Long warehouseId);
 
     boolean existsByEmail(String email);
+
+    @Query(value = "select u from Customer u where u.warehouse.warehouseID =:warehouseId " +
+            " and (:customername is null or u.customerName like %:customername%) " +
+            " order by u.createdDate desc")
+    Page<Customer> filterInOneWarehouse(@Param("customername") String customername,
+                                    @Param("warehouseId") Long warehouseId, Pageable pageable);
+
+    @Query(value = "select u from Customer u where (:warehouseId is null or u.warehouse.warehouseID = :warehouseId) " +
+            " and (:customername is null or u.customerName like %:customername%) " +
+            " order by u.createdDate desc")
+    Page<Customer> filterAllWarehouses(@Param("customername") String customername,
+                                   @Param("warehouseId") Long warehouseId, Pageable pageable);
 }
