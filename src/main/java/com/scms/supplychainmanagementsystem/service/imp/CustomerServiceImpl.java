@@ -2,12 +2,15 @@ package com.scms.supplychainmanagementsystem.service.imp;
 
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.CustomerDto;
+import com.scms.supplychainmanagementsystem.dto.RoleDto;
+import com.scms.supplychainmanagementsystem.dto.WarehouseDto;
 import com.scms.supplychainmanagementsystem.entity.Customer;
 import com.scms.supplychainmanagementsystem.entity.District;
 import com.scms.supplychainmanagementsystem.entity.User;
 import com.scms.supplychainmanagementsystem.entity.Warehouse;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.CustomerRepository;
+import com.scms.supplychainmanagementsystem.repository.WarehouseRepository;
 import com.scms.supplychainmanagementsystem.service.ICustomerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.plaf.basic.BasicIconFactory;
 import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @AllArgsConstructor
@@ -31,6 +36,7 @@ public class CustomerServiceImpl implements ICustomerService {
     @Autowired
     private CustomerRepository customerRepository;
     private final UserCommon userCommon;
+    private final WarehouseRepository warehouseRepository;
 
 
     @Override
@@ -42,7 +48,12 @@ public class CustomerServiceImpl implements ICustomerService {
 
     @Override
     public Customer getCustomerByIdInWarehouse(Long customerId) {
-        Customer customer = customerRepository.findByCustomerIdAnhInWarehouse(customerId, userCommon.getCurrentUser().getWarehouse().getWarehouseID());
+        User currentUser = userCommon.getCurrentUser();
+        Customer customer = new Customer();
+        if(currentUser.getRole().getRoleID()!=1){
+         customer = customerRepository.findByCustomerIdAnhInWarehouse(customerId, userCommon.getCurrentUser().getWarehouse().getWarehouseID());}
+        else{ customer = customerRepository.findByCustomerId(customerId);
+        }
         return customer;
     }
 
@@ -95,7 +106,11 @@ public class CustomerServiceImpl implements ICustomerService {
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
         Warehouse warehouse = new Warehouse();
-        warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+        if(currentUser.getRole().getRoleID()!=1){
+            warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+        }else{
+            warehouse.setWarehouseID(customerDto.getWarehouseId());
+        }
 
         Customer customer = Customer.builder()
                 .customerCode(customerDto.getCustomerCode())
@@ -134,13 +149,23 @@ public class CustomerServiceImpl implements ICustomerService {
         User current = userCommon.getCurrentUser();
         Warehouse wh = current.getWarehouse();
         Long userId = current.getUserId();
-        if (current.getRole().getRoleID() == 1) {
-            customerPage = customerRepository.filterAllWarehouses(customername, warehouseId, pageable);
-        } else {
+        if (current.getRole().getRoleID() != 1) {
             customerPage = customerRepository.filterInOneWarehouse(customername, wh.getWarehouseID(), pageable);
+
+        } else {
+            customerPage = customerRepository.filterAllWarehouses(customername, warehouseId, pageable);
         }
         log.info("[End CustomerService - Get All Customer]");
         return customerPage;
+    }
+
+    @Override
+    public List<WarehouseDto> getAllWarehouse() {
+        log.info("[Start CustomerService - Get All Warehouse]");
+        List<WarehouseDto> warehouseList = warehouseRepository.findAll()
+                .stream().map(x -> new WarehouseDto(x.getWarehouseID(), x.getWarehouseName(), x.getAddress())).collect(Collectors.toList());
+        log.info("[End UserService - Get All Roles]");
+        return warehouseList;
     }
 }
 

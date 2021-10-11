@@ -25,6 +25,9 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>  {
     @Query(value = "SELECT * FROM test.customer where customer_id= :customerid and warehouseid= :warehouseid",nativeQuery = true)
     Customer findByCustomerIdAnhInWarehouse(@Param("customerid") Long customerId ,@Param("warehouseid") Long warehouseId);
 
+    @Query(value = "SELECT * FROM test.customer where customer_id= :customerid ",nativeQuery = true)
+    Customer findByCustomerId(@Param("customerid") Long customerId );
+
 
     @Query(value = "SELECT * FROM test.customer where warehouseid= :warehouseid",nativeQuery = true)
     Page<Customer> findByWarehouse(@Param("warehouseid") Long warehouseId,Pageable pageable);
