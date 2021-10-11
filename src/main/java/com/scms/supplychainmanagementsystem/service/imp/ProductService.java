@@ -34,15 +34,20 @@ public class ProductService implements IProductService {
             Product product = productRepository.findById(productDto.getProductId())
                     .orElseThrow(() -> new AppException("Product not found"));
             User current = userCommon.getCurrentUser();
-            if (current.getRole().getRoleID() != 1
-                    && !productDto.getWarehouseId().equals(current.getWarehouse().getWarehouseID())) {
-                throw new AppException("Not allow to choose warehouse");
+//            if (current.getRole().getRoleID() != 1
+//                    && !productDto.getWarehouseId().equals(current.getWarehouse().getWarehouseID())) {
+//                throw new AppException("Not allow to choose warehouse");
+//            }
+            if (current.getRole().getRoleID() == 1) {
+                product.setWarehouse(warehouseRepository.findById(productDto.getWarehouseId())
+                        .orElseThrow(() -> new AppException("Warehouse not found")));
+            } else {
+                product.setWarehouse(current.getWarehouse());
             }
             product.setProductName(productDto.getProductName());
             product.setCategory(categoryRepository.findById(productDto.getCategoryId())
                     .orElseThrow(() -> new AppException("Category not found")));
-            product.setWarehouse(warehouseRepository.findById(productDto.getWarehouseId())
-                    .orElseThrow(() -> new AppException("Warehouse not found")));
+
             product.setIsActive(productDto.getIsActive());
             product.setQuantityUnitOfMeasure(productDto.getQuantityUnitOfMeasure());
             product.setLastModifiedBy(current);
@@ -61,18 +66,22 @@ public class ProductService implements IProductService {
         log.info("[Start ProductService - createProduct " + productDto.getProductName() + "]");
         User current = userCommon.getCurrentUser();
         Product product = new Product();
-        if (productDto.getWarehouseId() == null || productDto.getCategoryId() == null) {
+        if (productDto.getCategoryId() == null) {
             throw new AppException("Not fill in all required fields");
         }
-        if (current.getRole().getRoleID() != 1
-                && !productDto.getWarehouseId().equals(current.getWarehouse().getWarehouseID())) {
-            throw new AppException("Not allow to choose warehouse");
+//        if (current.getRole().getRoleID() != 1
+//                && !productDto.getWarehouseId().equals(current.getWarehouse().getWarehouseID())) {
+//            throw new AppException("Not allow to choose warehouse");
+//        }
+        if (current.getRole().getRoleID() == 1) {
+            product.setWarehouse(warehouseRepository.findById(productDto.getWarehouseId())
+                    .orElseThrow(() -> new AppException("Warehouse not found")));
+        } else {
+            product.setWarehouse(current.getWarehouse());
         }
         product.setProductName(productDto.getProductName());
         product.setCategory(categoryRepository.findById(productDto.getCategoryId())
                 .orElseThrow(() -> new AppException("Category not found")));
-        product.setWarehouse(warehouseRepository.findById(productDto.getWarehouseId())
-                .orElseThrow(() -> new AppException("Warehouse not found")));
         product.setIsActive(productDto.getIsActive());
         product.setQuantityUnitOfMeasure(productDto.getQuantityUnitOfMeasure());
         product.setCreatedBy(current);

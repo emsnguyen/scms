@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -139,7 +138,7 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         log.info("[Start UserController - Delete User with userid = " + userId + "]");
         if (!iUserService.checkUserExistByUserId(userId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new AppException("User not found");
         }
         iUserService.deleteUser(userId);
         log.info("[End UserController - Delete User with userid " + userId + "]");
