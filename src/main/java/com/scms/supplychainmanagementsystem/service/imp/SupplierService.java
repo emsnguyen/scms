@@ -48,7 +48,7 @@ public class SupplierService implements ISupplierService {
 
     @Override
     public void updateSupplier(Long supplierId, SupplierDto supplierDto) {
-        log.info("[Start SupplierService - saveSupplier with upplierName: " + supplierDto.getSupplierName() + "]");
+        log.info("[Start SupplierService - saveSupplier with SupplierName: " + supplierDto.getSupplierName() + "]");
         log.info("[Start get current user]");
         User currentUser = userCommon.getCurrentUser();
         log.info("[End get current user : " + currentUser.getUsername() + "]");
@@ -107,7 +107,7 @@ public class SupplierService implements ISupplierService {
     }
 
     @Override
-    public void deleteSupplier(Long supplierDto) {
-
+    public void deleteSupplier(Long supplierId) {
+        supplierRepository.deleteSupplier(supplierId, userCommon.getCurrentUser().getWarehouse().getWarehouseID());
     }
 }

@@ -30,8 +30,8 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     @Query(value = "Delete  FROM test.supplier where supplier_id= :supplierid and warehouseid= :warehouseid",nativeQuery = true)
     void deleteSupplier(@Param("supplierid") Long supplierId ,@Param("warehouseid") Long warehouseId);
 
-    @Query(value = "select supplier_name FROM test.supplier where supplier_name= :supplier_name ",nativeQuery = true)
-    boolean existsBySupplierName(@Param("supplier_name")String suppliername);
+    @Query(value = "select supplier_name FROM test.supplier where supplier_name= :suppliername ",nativeQuery = true)
+    boolean existsBySupplierName(@Param("suppliername")String suppliername);
 
     @Query(value = "select u from Supplier u where u.warehouse.warehouseID =:warehouseId " +
             " and (:suppliername is null or u.SupplierName like %:suppliername%) " +

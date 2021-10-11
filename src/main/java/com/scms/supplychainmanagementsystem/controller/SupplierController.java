@@ -1,7 +1,9 @@
 package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.dto.MaterialDto;
+import com.scms.supplychainmanagementsystem.dto.SupplierDto;
 import com.scms.supplychainmanagementsystem.entity.Material;
+import com.scms.supplychainmanagementsystem.entity.Supplier;
 import com.scms.supplychainmanagementsystem.service.IMaterialService;
 import com.scms.supplychainmanagementsystem.service.ISupplierService;
 import io.swagger.annotations.ApiOperation;
@@ -29,80 +31,80 @@ import static org.springframework.http.ResponseEntity.status;
 @RestController
 @RequestMapping("/api/manage/supplier")
 public class SupplierController {
-//    private ISupplierService iSupplierService;
-//
-//
-//    @GetMapping
-//    public ResponseEntity<Map<String, Object>> getAllMaterialInWarehouse(@RequestParam(required = false) String materialName,
-//                                                                         @RequestParam(required = false) Long warehouseId,
-//                                                                         @RequestParam(defaultValue = "0") int page,
-//                                                                         @RequestParam(defaultValue = "10") int size) {
-//        log.info("[Start MaterialController - Get All Material In Warehouse]");
-//        List<Material> MaterialList;
-//        Page<Material> MaterialPage;
-//        Pageable pageable = PageRequest.of(page, size);
-//
-//        MaterialPage = iMaterialService.getAllMaterial(materialName,warehouseId, pageable);
-//
-//        MaterialList = MaterialPage.getContent();
-//
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("data", MaterialList);
-//        response.put("currentPage", MaterialPage.getNumber());
-//        response.put("totalItems", MaterialPage.getTotalElements());
-//        response.put("totalPages", MaterialPage.getTotalPages());
-//        if (!MaterialPage.isEmpty()) {
-//            response.put("message", HttpStatus.OK);
-//        } else {
-//            response.put("message", "EMPTY_RESULT");
-//        }
-//        log.info("[End CustomerController - Get All Customer In Warehouse]");
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
-//
-//
-//
-//
-//    @PostMapping
-//    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-//    @ApiOperation(value = "Requires ADMIN or MANAGER Access")
-//    public ResponseEntity<String> createMaterial(@Valid @RequestBody MaterialDto materialDto) {
-//        log.info("[Start MaterialController -  createMaterial " + materialDto.getMaterialName() + "]");
-//        iMaterialService.saveMaterial(materialDto);
-//        log.info("[End MaterialController -  createMaterial " + materialDto.getMaterialName() + "]");
-//        return new ResponseEntity<>("Created Successfully", CREATED);
-//    }
-//
-//    @GetMapping("/{materialId}")
-//    public ResponseEntity<MaterialDto> getMaterialByIdInWareHouse(@PathVariable Long materialId) {
-//        log.info("[Start MaterialController - Get Material By ID]");
-//        Material material = iMaterialService.getMaterialByIdInWarehouse(materialId);
-//        if (material != null) {
-//            MaterialDto materialDto = new MaterialDto(material);
-//            log.info("[End MaterialController - Get Material By ID]");
-//            return status(HttpStatus.OK).body(materialDto);
-//        } else {
-//            return null;
-//        }
-//    }
-//
-//    @PutMapping("/{materialId}")
-//    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-//    @ApiOperation(value = "Requires ADMIN or MANAGER Access")
-//    public ResponseEntity<String> updateMaterial(@PathVariable Long materialId, @Valid @RequestBody MaterialDto materialDto) {
-//        log.info("[Start MaterialController - Update Material with name " + materialDto.getMaterialName() + "]");
-//        iMaterialService.updateMaterial(materialId, materialDto);
-//        log.info("[End MaterialController - Update material with name " + materialDto.getMaterialName() + "]");
-//        return new ResponseEntity<>("Update Material Successfully", OK);
-//    }
-//
-//    @DeleteMapping("/{materialId}")
-//    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-//    @ApiOperation(value = "Requires ADMIN or MANAGER Access")
-//    public ResponseEntity<String> DeleteMaterial(@PathVariable Long materialId) {
-//        log.info("[Start MaterialController - Get Material By ID]");
-//        iMaterialService.deleteMaterial(materialId);
-//        log.info("[End MaterialController - Get Material By ID]");
-//        return new ResponseEntity<>("Delete Material Successfully", OK);
-//    }
+    private ISupplierService iSupplierService;
+
+
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> getAllSupplierInWarehouse(@RequestParam(required = false) String SupplierName,
+                                                                         @RequestParam(required = false) Long warehouseId,
+                                                                         @RequestParam(defaultValue = "0") int page,
+                                                                         @RequestParam(defaultValue = "10") int size) {
+        log.info("[Start SupplierController - Get All Supplier In Warehouse]");
+        List<Supplier> supplierlList;
+        Page<Supplier> supplierPage;
+        Pageable pageable = PageRequest.of(page, size);
+
+        supplierPage = iSupplierService.getAllSupplier(SupplierName,warehouseId, pageable);
+
+        supplierlList = supplierPage.getContent();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", supplierlList);
+        response.put("currentPage", supplierPage.getNumber());
+        response.put("totalItems", supplierPage.getTotalElements());
+        response.put("totalPages", supplierPage.getTotalPages());
+        if (!supplierPage.isEmpty()) {
+            response.put("message", HttpStatus.OK);
+        } else {
+            response.put("message", "EMPTY_RESULT");
+        }
+        log.info("[End CustomerController - Get All Customer In Warehouse]");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+
+
+    @PostMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
+    @ApiOperation(value = "Requires ADMIN or MANAGER Access")
+    public ResponseEntity<String> createSupplier(@Valid @RequestBody SupplierDto supplierDto) {
+        log.info("[Start SupplierController -  createSupplier " + supplierDto.getSupplierName() + "]");
+        iSupplierService.saveSupplier(supplierDto);
+        log.info("[End SupplierController -  createSupplier " + supplierDto.getSupplierName() + "]");
+        return new ResponseEntity<>("Created Successfully", CREATED);
+    }
+
+    @GetMapping("/{supplierid}")
+    public ResponseEntity<SupplierDto> getMaterialByIdInWareHouse(@PathVariable Long supplierid) {
+        log.info("[Start SupplierController - Get Supplier By ID]");
+        Supplier supplier = iSupplierService.getSupplierByIdInWarehouse(supplierid);
+        if (supplier != null) {
+            SupplierDto supplierDto = new SupplierDto(supplier);
+            log.info("[End SupplierController - Get Material By ID]");
+            return status(HttpStatus.OK).body(supplierDto);
+        } else {
+            return null;
+        }
+    }
+
+    @PutMapping("/{supplierId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
+    @ApiOperation(value = "Requires ADMIN or MANAGER Access")
+    public ResponseEntity<String> updateSupplier(@PathVariable Long supplierId, @Valid @RequestBody SupplierDto supplierDto) {
+        log.info("[Start SupplierController - Update Supplier with name " + supplierDto.getSupplierName() + "]");
+        iSupplierService.updateSupplier(supplierId, supplierDto);
+        log.info("[End SupplierController - Update Supplier with name " + supplierDto.getSupplierName() + "]");
+        return new ResponseEntity<>("Update Supplier Successfully", OK);
+    }
+
+    @DeleteMapping("/{supplierId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
+    @ApiOperation(value = "Requires ADMIN or MANAGER Access")
+    public ResponseEntity<String> DeleteSupplier(@PathVariable Long supplierId) {
+        log.info("[Start SupplierController - Get Supplier By ID]");
+        iSupplierService.deleteSupplier(supplierId);
+        log.info("[End SupplierController - Get Supplier By ID]");
+        return new ResponseEntity<>("Delete Supplier Successfully", OK);
+    }
 }
