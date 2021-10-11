@@ -34,21 +34,21 @@ public class CustomerController {
     private ICustomerService iCustomerService;
 
 
-    @GetMapping
-    public ResponseEntity<List<CustomerDto>> getAllCustomer(Pageable page) {
-        log.info("[Start Customer - list]");
-        Page<Customer> customerslist = iCustomerService.getAllCustomerInWarehouse(page);
-        log.info("[End Customer - list]");
-        List<Customer> listcus = customerslist.getContent();
-        List<CustomerDto> listDto = new ArrayList<>();
-        for (Customer customer : listcus) {
-            CustomerDto cuss = new CustomerDto(customer);
-            listDto.add(cuss);
-        }
-        return status(HttpStatus.OK).body(listDto);
-    }
+//    @GetMapping
+//    public ResponseEntity<List<CustomerDto>> getAllCustomer(Pageable page) {
+//        log.info("[Start Customer - list]");
+//        Page<Customer> customerslist = iCustomerService.getAllCustomerInWarehouse(page);
+//        log.info("[End Customer - list]");
+//        List<Customer> listcus = customerslist.getContent();
+//        List<CustomerDto> listDto = new ArrayList<>();
+//        for (Customer customer : listcus) {
+//            CustomerDto cuss = new CustomerDto(customer);
+//            listDto.add(cuss);
+//        }
+//        return status(HttpStatus.OK).body(listDto);
+//    }
 
-    @GetMapping("/list")
+    @GetMapping()
     public ResponseEntity<Map<String, Object>> getAllCustomerInWarehouse(@RequestParam(required = false) String customername,
                                                                          @RequestParam(required = false) Long warehouseId,
                                                                          @RequestParam(defaultValue = "0") int page,
