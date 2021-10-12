@@ -59,7 +59,7 @@ public class ProductController {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    @ApiOperation(value = "Requires ADMIN or MANAGER Access")
+    @ApiOperation(value = "Requires ADMIN or MANAGER Access. Not required [productId]")
     public ResponseEntity<String> createProduct(@RequestBody ProductDto productDto) {
         log.info("[Start ProductController - createProduct " + productDto.getProductName() + "]");
         iProductService.createProduct(productDto);
