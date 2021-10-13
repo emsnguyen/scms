@@ -46,11 +46,11 @@ public class Supplier {
     private District district;
 
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @JoinColumn(name = "createdBy", referencedColumnName = "userID")
     private User createdBy;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID")
     private User lastModifiedBy;
 

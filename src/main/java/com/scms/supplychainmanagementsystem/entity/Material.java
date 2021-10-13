@@ -37,11 +37,11 @@ public class Material {
     @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
     private Warehouse warehouse;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @JoinColumn(name = "createdBy", referencedColumnName = "userID")
     private User createdBy;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID")
     private User lastModifiedBy;
 

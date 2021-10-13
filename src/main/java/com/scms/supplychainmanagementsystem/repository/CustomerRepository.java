@@ -37,6 +37,11 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>  {
     @Query(value = "Delete  FROM test.customer where customer_id= :customerid and warehouseid= :warehouseid",nativeQuery = true)
     void deleteCustomer(@Param("customerid") Long customerId ,@Param("warehouseid") Long warehouseId);
 
+    @Modifying
+    @Transactional
+    @Query(value = "Delete  FROM test.customer where customer_id= :customerid ",nativeQuery = true)
+    void deleteCustomerAdmin(@Param("customerid") Long customerId );
+
     boolean existsByEmail(String email);
 
     @Query(value = "select u from Customer u where u.warehouse.warehouseID =:warehouseId " +

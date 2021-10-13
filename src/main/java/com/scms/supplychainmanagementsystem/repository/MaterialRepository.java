@@ -22,6 +22,8 @@ public interface MaterialRepository extends JpaRepository<Material, Long>  {
     @Query(value = "SELECT * FROM test.material where materialid= :materialid and warehouseid= :warehouseid",nativeQuery = true)
     Material findByMaterialIdAnhInWarehouse(@Param("materialid") Long materialId , @Param("warehouseid") Long warehouseId);
 
+    @Query(value = "SELECT * FROM test.material where materialid= :materialid ",nativeQuery = true)
+    Material findByMaterialId(@Param("materialid") Long materialId );
 
 //    @Query(value = "SELECT * FROM test.customer where warehouseid= :warehouseid",nativeQuery = true)
 //    Page<Customer> findByWarehouse(@Param("warehouseid") Long warehouseId, Pageable pageable);
@@ -30,6 +32,12 @@ public interface MaterialRepository extends JpaRepository<Material, Long>  {
     @Transactional
     @Query(value = "Delete  FROM test.material where materialid= :materialid and warehouseid= :warehouseid",nativeQuery = true)
     void deleteMaterial(@Param("materialid") Long customerId ,@Param("warehouseid") Long warehouseId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "Delete  FROM test.material where materialid= :materialid ",nativeQuery = true)
+    void deleteMaterialAdmin(@Param("materialid") Long customerId );
+
 
     @Query(value = "select material_name FROM test.material where material_name= :materialName ",nativeQuery = true)
     boolean existsByMaterialName(@Param("materialName")String materialName);

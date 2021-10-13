@@ -21,6 +21,9 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     @Query(value = "SELECT * FROM test.supplier where supplier_id= :supplierid and warehouseid= :warehouseid",nativeQuery = true)
     Supplier findBySupplierIdAnhInWarehouse(@Param("supplierid") Long materialId , @Param("warehouseid") Long warehouseId);
 
+    @Query(value = "SELECT * FROM test.supplier where supplier_id= :supplierid",nativeQuery = true)
+    Supplier findBySupplierId(@Param("supplierid") Long materialId );
+
 
 //    @Query(value = "SELECT * FROM test.customer where warehouseid= :warehouseid",nativeQuery = true)
 //    Page<Customer> findByWarehouse(@Param("warehouseid") Long warehouseId, Pageable pageable);
@@ -29,6 +32,11 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     @Transactional
     @Query(value = "Delete  FROM test.supplier where supplier_id= :supplierid and warehouseid= :warehouseid",nativeQuery = true)
     void deleteSupplier(@Param("supplierid") Long supplierId ,@Param("warehouseid") Long warehouseId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "Delete  FROM test.supplier where supplier_id= :supplierid ",nativeQuery = true)
+    void deleteSupplierAdmin(@Param("supplierid") Long supplierId );
 
     @Query(value = "select supplier_name FROM test.supplier where supplier_name= :suppliername ",nativeQuery = true)
     boolean existsBySupplierName(@Param("suppliername")String suppliername);

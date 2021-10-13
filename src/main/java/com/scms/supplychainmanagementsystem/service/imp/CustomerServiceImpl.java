@@ -63,11 +63,22 @@ public class CustomerServiceImpl implements ICustomerService {
         log.info("[Start CustomerService - UpdateCustomer with email: " + customerDto.getEmail() + "]");
 
         log.info("[Start get current user]");
+
         User currentUser = userCommon.getCurrentUser();
+
+
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
+
         Warehouse warehouse = new Warehouse();
-        warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+        if(currentUser.getRole().getRoleID()!=1){
+            warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+            if(currentUser.getWarehouse().getWarehouseID()!=customerRepository.findByCustomerId(customerid).getWarehouse().getWarehouseID()){
+                throw new AppException("you cant update in another Warehouse");
+        }
+        }else{
+            warehouse.setWarehouseID(customerDto.getWarehouseId());
+        }
 
         Customer customer = Customer.builder()
                 .customerId(customerid)
@@ -139,7 +150,12 @@ public class CustomerServiceImpl implements ICustomerService {
 
     @Override
     public void deleteCustomer(Long customerid) {
-        customerRepository.deleteCustomer(customerid, userCommon.getCurrentUser().getWarehouse().getWarehouseID());
+        User currentUser = userCommon.getCurrentUser();
+        if(currentUser.getRole().getRoleID()!=1){
+        customerRepository.deleteCustomer(customerid, userCommon.getCurrentUser().getWarehouse().getWarehouseID());}
+        else{
+            customerRepository.deleteCustomerAdmin(customerid);
+        }
     }
 
     @Override
