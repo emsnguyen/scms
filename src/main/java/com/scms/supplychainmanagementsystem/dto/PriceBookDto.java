@@ -16,8 +16,6 @@ public class PriceBookDto {
 
     private Boolean isStandardPriceBook;
 
-    private Boolean isActive;
-
     private Long warehouseId;
 
 }

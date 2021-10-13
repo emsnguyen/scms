@@ -31,13 +31,11 @@ public class PriceBookService implements IPriceBookService {
         log.info("[Start PriceBookService - Update PriceBook : " + priceBookDto.getPriceBookName() + "]");
         if (checkAccessPriceBook(priceBookDto.getPriceBookId())) {
             PriceBook priceBook = priceBookRepository.findById(priceBookDto.getPriceBookId())
-                    .orElseThrow(() -> new AppException("PriceBook Not Found"));
+                    .orElseThrow(() -> new AppException("PriceBook not dound"));
             priceBook.setPriceBookName(priceBookDto.getPriceBookName());
-            priceBook.setIsStandardPriceBook(priceBookDto.getIsActive());
             checkStandardPriceBook();
-            priceBook.setIsActive(priceBookDto.getIsActive());
+            priceBook.setIsStandardPriceBook(priceBookDto.getIsStandardPriceBook());
             User current = userCommon.getCurrentUser();
-
             if (current.getRole().getRoleID() == 1) {
                 priceBook.setWarehouse(warehouseRepository.getById(priceBookDto.getWarehouseId()));
             } else {
@@ -58,10 +56,8 @@ public class PriceBookService implements IPriceBookService {
         User current = userCommon.getCurrentUser();
         PriceBook priceBook = new PriceBook();
         priceBook.setPriceBookName(priceBookDto.getPriceBookName());
-        priceBook.setIsStandardPriceBook(priceBookDto.getIsActive());
         checkStandardPriceBook();
-        priceBook.setIsActive(priceBookDto.getIsActive());
-
+        priceBook.setIsStandardPriceBook(priceBookDto.getIsStandardPriceBook());
         if (current.getRole().getRoleID() == 1) {
             priceBook.setWarehouse(warehouseRepository.findById(priceBookDto.getWarehouseId())
                     .orElseThrow(() -> new AppException("Warehouse not found")));
@@ -90,13 +86,12 @@ public class PriceBookService implements IPriceBookService {
         log.info("[Start PriceBookService - Get PriceBook ID = : " + priceBookId + "]");
         PriceBookDto priceBookDto = new PriceBookDto();
         PriceBook priceBook = priceBookRepository.findById(priceBookId)
-                .orElseThrow(() -> new AppException("PriceBook Not Found"));
+                .orElseThrow(() -> new AppException("PriceBook not found"));
         if (checkAccessPriceBook(priceBookId)) {
             priceBookDto.setPriceBookId(priceBookId);
             priceBookDto.setPriceBookName(priceBook.getPriceBookName());
+            priceBookDto.setIsStandardPriceBook(priceBook.getIsStandardPriceBook());
             priceBookDto.setWarehouseId(priceBook.getWarehouse().getWarehouseID());
-            priceBook.setIsStandardPriceBook(priceBookDto.getIsActive());
-            priceBook.setIsActive(priceBookDto.getIsActive());
         } else {
             throw new AppException("Not allow to access this resource");
         }
@@ -107,21 +102,21 @@ public class PriceBookService implements IPriceBookService {
     @Override
     public Page<PriceBook> getAllPriceBooks(String priceBookName, Long warehouseId, Pageable pageable) {
         log.info("[Start PriceBookService - Get All PriceBooks]");
-        Page<PriceBook> categoryPage;
+        Page<PriceBook> priceBookPage;
         User current = userCommon.getCurrentUser();
         Warehouse wh = current.getWarehouse();
         if (current.getRole().getRoleID() == 1) {
-            categoryPage = priceBookRepository.filterAllWarehouses(priceBookName, warehouseId, pageable);
+            priceBookPage = priceBookRepository.filterAllWarehouses(priceBookName, warehouseId, pageable);
         } else {
-            categoryPage = priceBookRepository.filterInOneWarehouse(priceBookName, wh.getWarehouseID(), pageable);
+            priceBookPage = priceBookRepository.filterInOneWarehouse(priceBookName, wh.getWarehouseID(), pageable);
         }
         log.info("[End PriceBookService - Get All PriceBooks]");
-        return categoryPage;
+        return priceBookPage;
     }
 
     public boolean checkAccessPriceBook(Long priceBookId) {
         PriceBook priceBook = priceBookRepository.findById(priceBookId)
-                .orElseThrow(() -> new AppException("PriceBook Not Found"));
+                .orElseThrow(() -> new AppException("PriceBook not found"));
         User current = userCommon.getCurrentUser();
         if (current.getRole().getRoleID() == 1) {
             return true;

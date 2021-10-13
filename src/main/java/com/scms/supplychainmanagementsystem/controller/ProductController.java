@@ -2,6 +2,7 @@ package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.dto.ProductDto;
 import com.scms.supplychainmanagementsystem.entity.Product;
+import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.service.IProductService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -60,11 +61,13 @@ public class ProductController {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @ApiOperation(value = "Requires ADMIN or MANAGER Access. Not required [productId]")
-    public ResponseEntity<String> createProduct(@RequestBody ProductDto productDto) {
+    public ResponseEntity<Map<String, Object>> createProduct(@RequestBody ProductDto productDto) {
         log.info("[Start ProductController - createProduct " + productDto.getProductName() + "]");
+        Map<String, Object> result = new HashMap<>();
         iProductService.createProduct(productDto);
+        result.put("message", "Product Created Successfully");
         log.info("[End ProductController - createProduct " + productDto.getProductName() + "]");
-        return new ResponseEntity<>("Product Created Successfully", CREATED);
+        return status(CREATED).body(result);
     }
 
     @GetMapping("/{productId}")
@@ -81,22 +84,39 @@ public class ProductController {
     @PutMapping("/{productId}")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @ApiOperation(value = "Requires ADMIN or MANAGER Access.")
-    public ResponseEntity<String> updateProduct(@PathVariable Long productId, @Valid @RequestBody ProductDto productDto) {
+    public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable Long productId, @Valid @RequestBody ProductDto productDto) {
         log.info("[Start ProductController - Update Product By Product ID = " + productId + "]");
+        Map<String, Object> result = new HashMap<>();
         productDto.setProductId(productId);
         iProductService.updateProduct(productDto);
+        result.put("message", "Product Updated Successfully");
         log.info("[End ProductController - Update Product By Product ID = " + productId + "]");
-        return new ResponseEntity<>("Product Updated Successfully", OK);
+        return status(HttpStatus.OK).body(result);
     }
 
     @DeleteMapping("/{productId}")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @ApiOperation(value = "Requires ADMIN or MANAGER Access")
-    public ResponseEntity<String> deleteProductByProductId(@PathVariable Long productId) {
+    public ResponseEntity<Map<String, Object>> deleteProductByProductId(@PathVariable Long productId) {
         log.info("[Start ProductController - Delete Product By Product ID = " + productId + "]");
+        Map<String, Object> result = new HashMap<>();
         iProductService.deleteProductByProductId(productId);
+        result.put("message", "Product Deleted Successfully");
         log.info("[End ProductController - Delete Product By Product ID = " + productId + "]");
-        return new ResponseEntity<>("Product Deleted Successfully", OK);
+        return status(HttpStatus.OK).body(result);
+    }
+
+    @PutMapping("/{productId}/{isActive}")
+    public ResponseEntity<Map<String, Object>> updateProductActive(@PathVariable Long productId, @PathVariable Boolean isActive) {
+        log.info("[Start ProductController - Update Product Active " + productId + "]");
+        Map<String, Object> result = new HashMap<>();
+        if (!iProductService.checkProductExist(productId)) {
+            throw new AppException("Product not found");
+        }
+        iProductService.updateProductActive(productId, isActive);
+        result.put("message", "Update Product Active Status Successfully");
+        log.info("[EndProductController - Update Product Active " + productId + "]");
+        return status(HttpStatus.OK).body(result);
     }
 
 }

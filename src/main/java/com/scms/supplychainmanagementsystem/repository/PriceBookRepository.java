@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PriceBookRepository extends JpaRepository<PriceBook, Long> {
-    boolean existsByIsStandardPriceBook(Boolean isActive);
+    boolean existsByIsStandardPriceBook(Boolean isStandard);
 
     @Query(value = "select p from PriceBook p where p.warehouse.warehouseID =:warehouseId " +
             " and (:priceBookName is null or p.priceBookName like %:priceBookName%) " +

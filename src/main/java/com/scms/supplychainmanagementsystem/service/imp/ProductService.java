@@ -14,8 +14,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @AllArgsConstructor
@@ -138,6 +140,24 @@ public class ProductService implements IProductService {
         }
         log.info("[End ProductService - Get All Products]");
         return productPage;
+    }
+
+    @Override
+    public boolean checkProductExist(Long productId) {
+        return productRepository.existsById(productId);
+    }
+
+    @Override
+    public void updateProductActive(Long productId, Boolean isActive) {
+        log.info("[Start ProductService - Update Product Active " + productId + "]");
+        if (!checkAccessProduct(productId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Not allow update user activation");
+        }
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new AppException("Product not found"));
+        product.setIsActive(isActive);
+        productRepository.saveAndFlush(product);
+        log.info("[End ProductService - Update Product Active " + productId + "]");
     }
 
     public boolean checkAccessProduct(Long productId) {

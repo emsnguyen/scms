@@ -16,4 +16,8 @@ public interface IProductService {
 
     Page<Product> getAllProducts(String productName, Long categoryId, Long warehouseId, Pageable pageable);
 
+    boolean checkProductExist(Long productId);
+
+    void updateProductActive(Long productId, Boolean isActive);
+
 }
