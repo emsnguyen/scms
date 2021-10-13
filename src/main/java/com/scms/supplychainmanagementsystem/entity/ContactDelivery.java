@@ -1,9 +1,6 @@
 package com.scms.supplychainmanagementsystem.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -19,6 +16,7 @@ import static javax.persistence.FetchType.LAZY;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 public class ContactDelivery {
     @Id
@@ -41,13 +39,13 @@ public class ContactDelivery {
 
     private  Instant createedDate;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @JoinColumn(name = "DistrictID", referencedColumnName = "DistrictID")
     private District district;
 
 
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @JoinColumn(name = "createdBy", referencedColumnName = "userID")
     private User createdBy;
 
