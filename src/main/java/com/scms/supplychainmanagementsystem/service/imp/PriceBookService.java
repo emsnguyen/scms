@@ -33,7 +33,9 @@ public class PriceBookService implements IPriceBookService {
             PriceBook priceBook = priceBookRepository.findById(priceBookDto.getPriceBookId())
                     .orElseThrow(() -> new AppException("PriceBook not found"));
             priceBook.setPriceBookName(priceBookDto.getPriceBookName());
-            checkStandardPriceBook();
+            if (priceBookDto.getIsStandardPriceBook()) {
+                checkStandardPriceBook();
+            }
             priceBook.setIsStandardPriceBook(priceBookDto.getIsStandardPriceBook());
             User current = userCommon.getCurrentUser();
             if (current.getRole().getRoleID() == 1) {
@@ -56,7 +58,9 @@ public class PriceBookService implements IPriceBookService {
         User current = userCommon.getCurrentUser();
         PriceBook priceBook = new PriceBook();
         priceBook.setPriceBookName(priceBookDto.getPriceBookName());
-        checkStandardPriceBook();
+        if (priceBookDto.getIsStandardPriceBook()) {
+            checkStandardPriceBook();
+        }
         priceBook.setIsStandardPriceBook(priceBookDto.getIsStandardPriceBook());
         if (current.getRole().getRoleID() == 1) {
             priceBook.setWarehouse(warehouseRepository.findById(priceBookDto.getWarehouseId())
