@@ -75,16 +75,13 @@ public class PriceBookEntryService implements IPriceBookEntryService {
     @Override
     public PriceBookEntryDto getPriceBookEntryById(Long priceBookEntryId) {
         log.info("[Start PriceBookEntryService - Get PriceBookEntry ID = : " + priceBookEntryId + "]");
-        PriceBookEntryDto priceBookEntryDto = new PriceBookEntryDto();
         PriceBookEntry priceBookEntry = priceBookEntryRepository.findById(priceBookEntryId)
                 .orElseThrow(() -> new AppException("PriceBookEntry not found"));
-        priceBookEntry.setPriceBook(priceBookRepository.findById(priceBookEntryDto.getPriceBookEntryId())
-                .orElseThrow(() -> new AppException("PriceBook Entry not found")));
 
-        priceBookEntry.setPrice(priceBookEntryDto.getPrice());
-
-        priceBookEntry.setProduct(productRepository.findById(priceBookEntryDto.getProductId())
-                .orElseThrow(() -> new AppException("Product not found")));
+        PriceBookEntryDto priceBookEntryDto = new PriceBookEntryDto();
+        priceBookEntryDto.setPriceBookEntryId(priceBookEntry.getPriceBookEntryID());
+        priceBookEntryDto.setProductId(priceBookEntry.getProduct().getProductId());
+        priceBookEntryDto.setPrice(priceBookEntry.getPrice());
 
         log.info("[End  PriceBookEntryService - Get PriceBookEntry ID = : " + priceBookEntryId + "]");
         return priceBookEntryDto;
