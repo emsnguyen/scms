@@ -107,6 +107,8 @@ public class ProductController {
     }
 
     @PutMapping("/{productId}/{isActive}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
+    @ApiOperation(value = "Requires ADMIN or MANAGER Access")
     public ResponseEntity<Map<String, Object>> updateProductActive(@PathVariable Long productId, @PathVariable Boolean isActive) {
         log.info("[Start ProductController - Update Product Active " + productId + "]");
         Map<String, Object> result = new HashMap<>();

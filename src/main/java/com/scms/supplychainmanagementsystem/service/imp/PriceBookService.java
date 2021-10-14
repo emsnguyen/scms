@@ -31,7 +31,7 @@ public class PriceBookService implements IPriceBookService {
         log.info("[Start PriceBookService - Update PriceBook : " + priceBookDto.getPriceBookName() + "]");
         if (checkAccessPriceBook(priceBookDto.getPriceBookId())) {
             PriceBook priceBook = priceBookRepository.findById(priceBookDto.getPriceBookId())
-                    .orElseThrow(() -> new AppException("PriceBook not dound"));
+                    .orElseThrow(() -> new AppException("PriceBook not found"));
             priceBook.setPriceBookName(priceBookDto.getPriceBookName());
             checkStandardPriceBook();
             priceBook.setIsStandardPriceBook(priceBookDto.getIsStandardPriceBook());

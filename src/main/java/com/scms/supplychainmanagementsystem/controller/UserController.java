@@ -166,6 +166,8 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/{isActive}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
+    @ApiOperation(value = "Requires ADMIN or MANAGER Access")
     public ResponseEntity<String> updateUserActive(@PathVariable Long userId, @PathVariable Boolean isActive) {
         log.info("[Start UserController - Update User Active " + userId + "]");
         if (!iUserService.checkUserExistByUserId(userId)) {
