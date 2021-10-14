@@ -2,7 +2,9 @@ package com.scms.supplychainmanagementsystem.service.imp;
 
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.MaterialDto;
-import com.scms.supplychainmanagementsystem.entity.*;
+import com.scms.supplychainmanagementsystem.entity.Material;
+import com.scms.supplychainmanagementsystem.entity.User;
+import com.scms.supplychainmanagementsystem.entity.Warehouse;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.MaterialRepository;
 import com.scms.supplychainmanagementsystem.service.IMaterialService;
@@ -26,7 +28,13 @@ public class MaterialService implements IMaterialService {
 
     @Override
     public Material getMaterialByIdInWarehouse(Long MaterialId) {
-        Material material = materialRepository.findByMaterialIdAnhInWarehouse(MaterialId, userCommon.getCurrentUser().getWarehouse().getWarehouseID());
+        User currentUser = userCommon.getCurrentUser();
+        Material material = new Material();
+        if (currentUser.getRole().getRoleID() != 1) {
+            material = materialRepository.findByMaterialIdAnhInWarehouse(MaterialId, userCommon.getCurrentUser().getWarehouse().getWarehouseID());
+        } else {
+            material = materialRepository.findByMaterialId(MaterialId);
+        }
         return material;
     }
 
@@ -38,7 +46,14 @@ public class MaterialService implements IMaterialService {
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
         Warehouse warehouse = new Warehouse();
-        warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+        if (currentUser.getRole().getRoleID() != 1) {
+            warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+            if (currentUser.getWarehouse().getWarehouseID() != materialRepository.findByMaterialId(materialId).getWarehouse().getWarehouseID()) {
+                throw new AppException("you cant update in another Warehouse");
+            }
+        } else {
+            warehouse.setWarehouseID(materialDto.getWarehouseId());
+        }
 
         Material material = Material.builder()
                 .materialID(materialId)
@@ -66,11 +81,14 @@ public class MaterialService implements IMaterialService {
         User currentUser = userCommon.getCurrentUser();
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
-        Warehouse warehouse = new Warehouse();
-        warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
 
+        Warehouse warehouse = new Warehouse();
+        if (currentUser.getRole().getRoleID() != 1) {
+            warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+        } else {
+            warehouse.setWarehouseID(materialDto.getWarehouseId());
+        }
         Material material = Material.builder()
-                .materialID(materialDto.getMaterialID())
                 .MaterialName(materialDto.getMaterialName())
                 .quantityUnitOfMeasure(materialDto.getQuantityUnitOfMeasure())
                 .warehouse(warehouse)
@@ -87,7 +105,13 @@ public class MaterialService implements IMaterialService {
 
     @Override
     public void deleteMaterial(Long materialId) {
-        materialRepository.deleteMaterial(materialId, userCommon.getCurrentUser().getWarehouse().getWarehouseID());
+        User currentUser = userCommon.getCurrentUser();
+        if (currentUser.getRole().getRoleID() != 1) {
+            materialRepository.deleteMaterial(materialId, userCommon.getCurrentUser().getWarehouse().getWarehouseID());
+        } else {
+            materialRepository.deleteMaterialAdmin(materialId);
+        }
+
     }
 
     @Override

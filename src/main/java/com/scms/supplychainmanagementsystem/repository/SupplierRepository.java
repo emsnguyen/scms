@@ -1,6 +1,5 @@
 package com.scms.supplychainmanagementsystem.repository;
 
-import com.scms.supplychainmanagementsystem.entity.Material;
 import com.scms.supplychainmanagementsystem.entity.Supplier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,8 +17,11 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     //    Optional<Material> findByMaterialName(String materialName);
 
 
-    @Query(value = "SELECT * FROM test.supplier where supplier_id= :supplierid and warehouseid= :warehouseid",nativeQuery = true)
-    Supplier findBySupplierIdAnhInWarehouse(@Param("supplierid") Long materialId , @Param("warehouseid") Long warehouseId);
+    @Query(value = "SELECT * FROM test.supplier where supplier_id= :supplierid and warehouseid= :warehouseid", nativeQuery = true)
+    Supplier findBySupplierIdAnhInWarehouse(@Param("supplierid") Long materialId, @Param("warehouseid") Long warehouseId);
+
+    @Query(value = "SELECT * FROM test.supplier where supplier_id= :supplierid", nativeQuery = true)
+    Supplier findBySupplierId(@Param("supplierid") Long materialId);
 
 
 //    @Query(value = "SELECT * FROM test.customer where warehouseid= :warehouseid",nativeQuery = true)
@@ -27,11 +29,16 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "Delete  FROM test.supplier where supplier_id= :supplierid and warehouseid= :warehouseid",nativeQuery = true)
-    void deleteSupplier(@Param("supplierid") Long supplierId ,@Param("warehouseid") Long warehouseId);
+    @Query(value = "Delete  FROM test.supplier where supplier_id= :supplierid and warehouseid= :warehouseid", nativeQuery = true)
+    void deleteSupplier(@Param("supplierid") Long supplierId, @Param("warehouseid") Long warehouseId);
 
-    @Query(value = "select supplier_name FROM test.supplier where supplier_name= :suppliername ",nativeQuery = true)
-    boolean existsBySupplierName(@Param("suppliername")String suppliername);
+    @Modifying
+    @Transactional
+    @Query(value = "Delete  FROM test.supplier where supplier_id= :supplierid ", nativeQuery = true)
+    void deleteSupplierAdmin(@Param("supplierid") Long supplierId);
+
+    @Query(value = "select supplier_name FROM test.supplier where supplier_name= :suppliername ", nativeQuery = true)
+    boolean existsBySupplierName(@Param("suppliername") String suppliername);
 
     @Query(value = "select u from Supplier u where u.warehouse.warehouseID =:warehouseId " +
             " and (:suppliername is null or u.SupplierName like %:suppliername%) " +

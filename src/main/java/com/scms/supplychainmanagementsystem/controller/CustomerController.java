@@ -1,6 +1,7 @@
 package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.dto.CustomerDto;
+import com.scms.supplychainmanagementsystem.dto.WarehouseDto;
 import com.scms.supplychainmanagementsystem.entity.Customer;
 import com.scms.supplychainmanagementsystem.service.ICustomerService;
 import io.swagger.annotations.ApiOperation;
@@ -15,7 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +79,7 @@ public class CustomerController {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    @ApiOperation(value = "Requires ADMIN or MANAGER Access . Disable [createdBy,createdDate,customerId,lastModifiedBy,warehouseId]")
+    @ApiOperation(value = "Requires ADMIN or MANAGER Access . Disable [createdBy,createdDate,customerId,lastModifiedBy] ,Disable warehouseId for MANAGER ,warehouseId NOT NULL for ADMIN")
     public ResponseEntity<String> createCustomer(@Valid @RequestBody CustomerDto customerDto) {
         log.info("[Start CustomerController -  createCustomer " + customerDto.getEmail() + "]");
         iCustomerService.saveCustomer(customerDto);
@@ -118,6 +118,17 @@ public class CustomerController {
         iCustomerService.deleteCustomer(customerId);
         log.info("[End CustomerController - Get Customer By ID]");
         return new ResponseEntity<>("Delete Customer Successfully", OK);
+    }
+
+    @GetMapping("/list-warehouse")
+    public ResponseEntity<Map<String, Object>> getAllWarehouse() {
+        log.info("[Start CustomerController - Get All Warehouse]");
+        Map<String, Object> result = new HashMap<>();
+        List<WarehouseDto> warehouseDtos = iCustomerService.getAllWarehouse();
+        result.put("data", warehouseDtos);
+        result.put("message", OK);
+        log.info("[End CustomerController - Get All Warehouse]");
+        return status(HttpStatus.OK).body(result);
     }
 
 }
