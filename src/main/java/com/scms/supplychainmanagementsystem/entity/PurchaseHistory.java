@@ -39,7 +39,9 @@ public class PurchaseHistory {
     @JoinColumn(name = "MaterialId", referencedColumnName = "MaterialId")
     private Material material;
 
-
+    @ManyToOne
+    @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
+    private Warehouse warehouse;
 
     @ManyToOne
     @JoinColumn(name = "createdBy", referencedColumnName = "userID")

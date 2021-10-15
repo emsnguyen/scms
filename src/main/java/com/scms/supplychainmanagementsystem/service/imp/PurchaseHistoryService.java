@@ -35,14 +35,9 @@ public class PurchaseHistoryService implements IPurchaseHistory {
         User currentUser = userCommon.getCurrentUser();
         PurchaseHistory purchaseHistory = new PurchaseHistory();
         if(currentUser.getRole().getRoleID()!=1){
-            if(currentUser.getWarehouse().getWarehouseID()!=purchaseHistoryRepostory.findByPurchaseId(PurchaseHistoryId).getCreatedBy().getWarehouse().getWarehouseID()){
-                throw new AppException("Not Found Id");
+            purchaseHistory=purchaseHistoryRepostory.findByPurchaseIdInWarehouse(PurchaseHistoryId,currentUser.getWarehouse().getWarehouseID());
             }else{
                 purchaseHistory= purchaseHistoryRepostory.findByPurchaseId(PurchaseHistoryId);}
-          }
-        else{
-            purchaseHistory=purchaseHistoryRepostory.findByPurchaseId(PurchaseHistoryId);
-        }
         return purchaseHistory;
     }
 
@@ -53,11 +48,15 @@ public class PurchaseHistoryService implements IPurchaseHistory {
         User currentUser = userCommon.getCurrentUser();
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
+        Warehouse warehouse = new Warehouse();
 
         if(currentUser.getRole().getRoleID()!=1){
-            if(currentUser.getWarehouse().getWarehouseID()!=purchaseHistoryRepostory.findByPurchaseId(PurchaseHistoryId).getCreatedBy().getWarehouse().getWarehouseID()){
+            warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+            if(currentUser.getWarehouse().getWarehouseID()!=purchaseHistoryRepostory.findByPurchaseId(PurchaseHistoryId).getWarehouse().getWarehouseID()){
                 throw new AppException("you cant update in another Warehouse");
             }
+        }else{
+            warehouse.setWarehouseID(purchaseHistoryDto.getWarehouseId());
         }
 
         Material material = new Material();
@@ -69,6 +68,7 @@ public class PurchaseHistoryService implements IPurchaseHistory {
                 .purchaseID(PurchaseHistoryId)
                 .material(material)
                 .supplier(supplier)
+                .warehouse(warehouse)
                 .PurchaseDate(purchaseHistoryDto.getPurchaseDate())
                 .createdBy(currentUser)
                 .lastModifiedBy(currentUser)
@@ -91,10 +91,19 @@ public class PurchaseHistoryService implements IPurchaseHistory {
         material.setMaterialID(purchaseHistoryDto.getMaterialId());
         Supplier supplier = new Supplier();
         supplier.setSupplierId(purchaseHistoryDto.getSupplierId());
+        Warehouse warehouse = new Warehouse();
+
+
+        if(currentUser.getRole().getRoleID()!=1){
+            warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+        }else{
+            warehouse.setWarehouseID(purchaseHistoryDto.getWarehouseId());
+        }
 
         PurchaseHistory purchaseHistory = PurchaseHistory.builder()
                 .material(material)
                 .supplier(supplier)
+                .warehouse(warehouse)
                 .PurchaseDate(purchaseHistoryDto.getPurchaseDate())
                 .createdBy(currentUser)
                 .lastModifiedBy(currentUser)
@@ -111,12 +120,9 @@ public class PurchaseHistoryService implements IPurchaseHistory {
     public void deletePurchaseHistory(Long PurchaseHistoryId) {
         User currentUser = userCommon.getCurrentUser();
         if(currentUser.getRole().getRoleID()!=1){
-            if(currentUser.getWarehouse().getWarehouseID()!=purchaseHistoryRepostory.findByPurchaseId(PurchaseHistoryId).getCreatedBy().getWarehouse().getWarehouseID()){
-                throw new AppException("Not Found Id");
-            }else{
-            purchaseHistoryRepostory.deletePurchase(PurchaseHistoryId);}}
+            purchaseHistoryRepostory.deletePurchase(PurchaseHistoryId,currentUser.getWarehouse().getWarehouseID());}
         else{
-            purchaseHistoryRepostory.deletePurchase(PurchaseHistoryId);
+            purchaseHistoryRepostory.deletePurchaseAdmin(PurchaseHistoryId);
         }
     }
 }

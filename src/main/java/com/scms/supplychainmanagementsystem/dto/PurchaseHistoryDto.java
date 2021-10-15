@@ -29,11 +29,15 @@ public class PurchaseHistoryDto {
 
     private String lastModifiedBy;
 
+    private Long warehouseId;
+
+
     public PurchaseHistoryDto(PurchaseHistory purchaseHistory) {
         this.purchaseID = purchaseHistory.getPurchaseID();
         PurchaseDate = purchaseHistory.getPurchaseDate();
         UnitPrice = purchaseHistory.getUnitPrice();
         Quantity = purchaseHistory.getQuantity();
+        this.warehouseId=purchaseHistory.getWarehouse().getWarehouseID();
         this.supplierId = purchaseHistory.getSupplier().getSupplierId();
         this.materialId = purchaseHistory.getMaterial().getMaterialID();
         this.createdBy = purchaseHistory.getCreatedBy().getUsername();
