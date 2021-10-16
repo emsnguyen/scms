@@ -34,7 +34,7 @@ public class PriceBookService implements IPriceBookService {
                     .orElseThrow(() -> new AppException("PriceBook not found"));
             priceBook.setPriceBookName(priceBookDto.getPriceBookName());
             if (priceBookDto.getIsStandardPriceBook()) {
-                checkStandardPriceBook();
+                checkStandardPriceBookUpdate(priceBookDto.getPriceBookId());
             }
             priceBook.setIsStandardPriceBook(priceBookDto.getIsStandardPriceBook());
             User current = userCommon.getCurrentUser();
@@ -134,6 +134,14 @@ public class PriceBookService implements IPriceBookService {
     public void checkStandardPriceBook() {
         if (priceBookRepository.existsByIsStandardPriceBook(true)) {
             throw new AppException("Exist Standard PriceBook");
+        }
+    }
+
+    public void checkStandardPriceBookUpdate(Long priceBookId) {
+        if (priceBookRepository.existsByIsStandardPriceBook(true)) {
+            if (!priceBookRepository.getById(priceBookId).getIsStandardPriceBook()) {
+                throw new AppException("Exist Standard PriceBook");
+            }
         }
     }
 }
