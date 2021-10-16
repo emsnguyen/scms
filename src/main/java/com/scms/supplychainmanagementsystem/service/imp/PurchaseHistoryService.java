@@ -6,6 +6,8 @@ import com.scms.supplychainmanagementsystem.entity.*;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.MaterialRepository;
 import com.scms.supplychainmanagementsystem.repository.PurchaseHistoryRepostory;
+import com.scms.supplychainmanagementsystem.repository.SupplierRepository;
+import com.scms.supplychainmanagementsystem.repository.WarehouseRepository;
 import com.scms.supplychainmanagementsystem.service.IPurchaseHistory;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 
 @AllArgsConstructor
 @Transactional
@@ -23,12 +26,27 @@ import java.time.Instant;
 public class PurchaseHistoryService implements IPurchaseHistory {
 
     private PurchaseHistoryRepostory purchaseHistoryRepostory;
+    private WarehouseRepository warehouseRepository;
+    private SupplierRepository supplierRepository;
+    private MaterialRepository materialRepository;
     private final UserCommon userCommon;
 
     @Override
-    public Page<PurchaseHistory> getAllPurchaseHistory(String PurchaseHistoryName, Long warehouseId, Pageable pageble) {
-        return null;
+    public Page<PurchaseHistory> getAllPurchaseHistory(Long warehouseId, Pageable pageable) {
+        log.info("[Start PurchaseHistoryService - Get All Purchase]");
+        Page<PurchaseHistory> PurchasePage;
+        User current = userCommon.getCurrentUser();
+        Warehouse wh = current.getWarehouse();
+        Long userId = current.getUserId();
+        if (current.getRole().getRoleID() == 1) {
+            PurchasePage = purchaseHistoryRepostory.filterAllWarehouses(warehouseId, pageable);
+        } else {
+            PurchasePage = purchaseHistoryRepostory.filterInOneWarehouse(wh.getWarehouseID(), pageable);
+        }
+        log.info("[End CustomerService - Get All Customer]");
+        return PurchasePage;
     }
+
 
     @Override
     public PurchaseHistory getPurchaseHistoryByIdInWarehouse(Long PurchaseHistoryId) {
@@ -39,6 +57,21 @@ public class PurchaseHistoryService implements IPurchaseHistory {
             }else{
                 purchaseHistory= purchaseHistoryRepostory.findByPurchaseId(PurchaseHistoryId);}
         return purchaseHistory;
+    }
+
+    @Override
+    public List<Warehouse> getAllWarehouse() {
+        return warehouseRepository.findAll();
+    }
+
+    @Override
+    public List<Supplier> getSupplierInWareHouse(Long warehouseid) {
+        return supplierRepository.findAllByWarehouse(warehouseid);
+    }
+
+    @Override
+    public List<Material> getMaterialInWareHouse(Long warehouseid) {
+        return materialRepository.findAllByWarehouse(warehouseid);
     }
 
     @Override

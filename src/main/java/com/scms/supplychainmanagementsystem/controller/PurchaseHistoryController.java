@@ -35,33 +35,32 @@ public class PurchaseHistoryController {
     private IPurchaseHistory iPurchaseHistory;
 
 
-//    @GetMapping
-//    public ResponseEntity<Map<String, Object>> getAllPurchase(@RequestParam(required = false) String materialName,
-//                                                                         @RequestParam(required = false) Long warehouseId,
-//                                                                         @RequestParam(defaultValue = "0") int page,
-//                                                                         @RequestParam(defaultValue = "10") int size) {
-//        log.info("[Start MaterialController - Get All Material In Warehouse]");
-//        List<Material> MaterialList;
-//        Page<Material> MaterialPage;
-//        Pageable pageable = PageRequest.of(page, size);
-//
-//        MaterialPage = iMaterialService.getAllMaterial(materialName,warehouseId, pageable);
-//
-//        MaterialList = MaterialPage.getContent();
-//
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("data", MaterialList);
-//        response.put("currentPage", MaterialPage.getNumber());
-//        response.put("totalItems", MaterialPage.getTotalElements());
-//        response.put("totalPages", MaterialPage.getTotalPages());
-//        if (!MaterialPage.isEmpty()) {
-//            response.put("message", HttpStatus.OK);
-//        } else {
-//            response.put("message", "EMPTY_RESULT");
-//        }
-//        log.info("[End CustomerController - Get All Customer In Warehouse]");
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> getAllPurchase(@RequestParam(required = false) Long warehouseId,
+                                                                         @RequestParam(defaultValue = "0") int page,
+                                                                         @RequestParam(defaultValue = "10") int size) {
+        log.info("[Start PurchaseHistoryController - Get All PurchaseHistory In Warehouse]");
+        List<PurchaseHistory> PurchaselList;
+        Page<PurchaseHistory> PurchasePage;
+        Pageable pageable = PageRequest.of(page, size);
+
+        PurchasePage = iPurchaseHistory.getAllPurchaseHistory(warehouseId, pageable);
+
+        PurchaselList = PurchasePage.getContent();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", PurchaselList);
+        response.put("currentPage", PurchasePage.getNumber());
+        response.put("totalItems", PurchasePage.getTotalElements());
+        response.put("totalPages", PurchasePage.getTotalPages());
+        if (!PurchasePage.isEmpty()) {
+            response.put("message", HttpStatus.OK);
+        } else {
+            response.put("message", "EMPTY_RESULT");
+        }
+        log.info("[End CustomerController - Get All Customer In Warehouse]");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 
 

@@ -2,6 +2,7 @@ package com.scms.supplychainmanagementsystem.repository;
 
 import com.scms.supplychainmanagementsystem.entity.Customer;
 import com.scms.supplychainmanagementsystem.entity.Material;
+import com.scms.supplychainmanagementsystem.entity.Supplier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,6 +20,7 @@ public interface MaterialRepository extends JpaRepository<Material, Long>  {
 
 //    Optional<Material> findByMaterialName(String materialName);
 
+    List<Material> findAllByWarehouse(Long warehouseId);
 
     @Query(value = "SELECT * FROM test.material where materialid= :materialid and warehouseid= :warehouseid",nativeQuery = true)
     Material findByMaterialIdAnhInWarehouse(@Param("materialid") Long materialId , @Param("warehouseid") Long warehouseId);

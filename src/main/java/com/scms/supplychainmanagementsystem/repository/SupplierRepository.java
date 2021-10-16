@@ -11,12 +11,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public interface SupplierRepository extends JpaRepository<Supplier, Long> {
 
     //    Optional<Material> findByMaterialName(String materialName);
 
+    List<Supplier> findAllByWarehouse(Long warehouseId);
 
     @Query(value = "SELECT * FROM test.supplier where supplier_id= :supplierid and warehouseid= :warehouseid",nativeQuery = true)
     Supplier findBySupplierIdAnhInWarehouse(@Param("supplierid") Long materialId , @Param("warehouseid") Long warehouseId);

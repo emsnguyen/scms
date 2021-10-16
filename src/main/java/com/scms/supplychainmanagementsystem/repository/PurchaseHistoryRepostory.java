@@ -33,15 +33,11 @@ public interface PurchaseHistoryRepostory extends JpaRepository<PurchaseHistory,
     @Query(value = "Delete  FROM test.purchase_history where purchaseid= :purchaseid ",nativeQuery = true)
     void deletePurchaseAdmin(@Param("purchaseid") Long purchaseid );
 
-    @Query(value = "select u from Material u where u.warehouse.warehouseID =:warehouseId " +
-            " and (:materialname is null or u.MaterialName like %:materialname%) " +
-            " order by u.createdDate desc")
-    Page<PurchaseHistory> filterInOneWarehouse(@Param("materialname") String materialname,
-                                        @Param("warehouseId") Long warehouseId, Pageable pageable);
+    @Query(value = "select u from PurchaseHistory u where u.warehouse.warehouseID =:warehouseId " +
+            " order by u.PurchaseDate desc")
+    Page<PurchaseHistory> filterInOneWarehouse(@Param("warehouseId") Long warehouseId, Pageable pageable);
 
-    @Query(value = "select u from Material u where (:warehouseId is null or u.warehouse.warehouseID = :warehouseId) " +
-            " and (:materialname is null or u.MaterialName like %:materialname%) " +
-            " order by u.createdDate desc")
-    Page<PurchaseHistory> filterAllWarehouses(@Param("materialname") String materialname,
-                                       @Param("warehouseId") Long warehouseId, Pageable pageable);
+    @Query(value = "select u from PurchaseHistory u where (:warehouseId is null or u.warehouse.warehouseID = :warehouseId) " +
+            " order by u.PurchaseDate desc")
+    Page<PurchaseHistory> filterAllWarehouses(@Param("warehouseId") Long warehouseId, Pageable pageable);
 }
