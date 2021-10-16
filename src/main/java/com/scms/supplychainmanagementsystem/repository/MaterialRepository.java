@@ -10,12 +10,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public interface MaterialRepository extends JpaRepository<Material, Long> {
 
 //    Optional<Material> findByMaterialName(String materialName);
 
+    List<Material> findAllByWarehouse(Long warehouseId);
 
     @Query(value = "SELECT * FROM test.material where materialid= :materialid and warehouseid= :warehouseid", nativeQuery = true)
     Material findByMaterialIdAnhInWarehouse(@Param("materialid") Long materialId, @Param("warehouseid") Long warehouseId);
