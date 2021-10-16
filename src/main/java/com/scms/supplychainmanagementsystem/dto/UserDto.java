@@ -1,7 +1,6 @@
 package com.scms.supplychainmanagementsystem.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.micrometer.core.lang.Nullable;
 import lombok.*;
 
 import java.time.Instant;
@@ -32,7 +31,6 @@ public class UserDto {
 
     private String phone;
 
-    @Nullable
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
