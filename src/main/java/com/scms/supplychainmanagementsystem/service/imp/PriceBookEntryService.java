@@ -79,6 +79,7 @@ public class PriceBookEntryService implements IPriceBookEntryService {
                 .orElseThrow(() -> new AppException("PriceBookEntry not found"));
 
         PriceBookEntryDto priceBookEntryDto = new PriceBookEntryDto();
+        priceBookEntryDto.setPriceBookId(priceBookEntryId);
         priceBookEntryDto.setPriceBookEntryId(priceBookEntry.getPriceBookEntryID());
         priceBookEntryDto.setProductId(priceBookEntry.getProduct().getProductId());
         priceBookEntryDto.setPrice(priceBookEntry.getPrice());
