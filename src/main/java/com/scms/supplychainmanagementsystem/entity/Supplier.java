@@ -3,15 +3,6 @@ package com.scms.supplychainmanagementsystem.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Date;
-
-import static javax.persistence.FetchType.LAZY;
 
 @Getter
 @Setter

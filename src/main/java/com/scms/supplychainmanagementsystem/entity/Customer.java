@@ -5,8 +5,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.Instant;
 import java.time.LocalDate;
-
-import static javax.persistence.FetchType.LAZY;
 @Getter
 @Setter
 @AllArgsConstructor

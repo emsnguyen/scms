@@ -3,10 +3,9 @@ package com.scms.supplychainmanagementsystem.service.imp;
 import com.scms.supplychainmanagementsystem.dto.*;
 import com.scms.supplychainmanagementsystem.entity.User;
 import com.scms.supplychainmanagementsystem.entity.VerificationToken;
+import com.scms.supplychainmanagementsystem.entity.Warehouse;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
-import com.scms.supplychainmanagementsystem.repository.RoleRepository;
-import com.scms.supplychainmanagementsystem.repository.UserRepository;
-import com.scms.supplychainmanagementsystem.repository.VerificationTokenRepository;
+import com.scms.supplychainmanagementsystem.repository.*;
 import com.scms.supplychainmanagementsystem.security.JwtProvider;
 import com.scms.supplychainmanagementsystem.service.IAuthService;
 import com.scms.supplychainmanagementsystem.service.IRefreshTokenService;
@@ -38,6 +37,8 @@ public class AuthService implements IAuthService {
     private final JwtProvider jwtProvider;
     private final IRefreshTokenService iRefreshTokenService;
     private final MailService mailService;
+    private final WarehouseRepository warehouseRepository;
+    private final DistrictRepository districtRepository;
 
     @Override
     public void signup(RegisterRequest registerRequest) {
@@ -53,6 +54,16 @@ public class AuthService implements IAuthService {
         user.setActive(true);
         user.setRole(roleRepository.findByRoleName(registerRequest.getRoleName())
                 .orElseThrow(() -> new AppException("Role not found")));
+        Warehouse warehouse = new Warehouse();
+        if (registerRequest.getRoleName().equals("ADMIN")) {
+            warehouse.setWarehouseID(0L);
+        } else {
+            warehouseRepository.findById(1L).orElseThrow(() -> new AppException("Warehouse 1 not found"));
+            warehouse.setWarehouseID(1L);
+        }
+        user.setWarehouse(warehouse);
+        user.setDistrict(districtRepository.findById(1L)
+                .orElseThrow(() -> new AppException("District 1 not found")));
         log.info("[Start save user " + user.getUsername() + " to database]");
         userRepository.save(user);
         log.info("[End save user " + user.getUsername() + " to database]");

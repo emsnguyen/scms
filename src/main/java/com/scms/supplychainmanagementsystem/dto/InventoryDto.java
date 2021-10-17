@@ -1,16 +1,6 @@
 package com.scms.supplychainmanagementsystem.dto;
 
-import com.scms.supplychainmanagementsystem.entity.InvProductStatus;
-import com.scms.supplychainmanagementsystem.entity.Product;
-import com.scms.supplychainmanagementsystem.entity.User;
-import com.scms.supplychainmanagementsystem.entity.Warehouse;
-
-import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import java.time.Instant;
-
-import static javax.persistence.FetchType.LAZY;
 
 public class InventoryDto {
     private Long inventoryId;

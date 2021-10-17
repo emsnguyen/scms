@@ -1,19 +1,22 @@
-INSERT INTO `role` (roleid, role_name)
+INSERT INTO `role`
 VALUES (1, 'ADMIN');
-INSERT INTO `role` (roleid, role_name)
+INSERT INTO `role`
 VALUES (2, 'MANAGER');
-INSERT INTO `role` (roleid, role_name)
+INSERT INTO `role`
 VALUES (3, 'STAFF');
 
 
-INSERT INTO `warehouse` (warehouseid, address, warehouse_name)
-VALUES (0, '', 'ALL');
-INSERT INTO `warehouse` (warehouseid, address, warehouse_name)
+INSERT INTO `warehouse`
 VALUES (1, 'Thach That - Ha Noi', 'CSSX Ha Noi 01');
-INSERT INTO `warehouse` (warehouseid, address, warehouse_name)
+INSERT INTO `warehouse`
 VALUES (2, 'Binh Duong', 'CSSX Binh Duong 01');
-INSERT INTO `warehouse` (warehouseid, address, warehouse_name)
+INSERT INTO `warehouse`
 VALUES (3, 'Quan 1 - Ho Chi Minh', 'CSSX Ho Chi Minh 01');
+INSERT INTO `warehouse`
+VALUES (4, '', 'ALL');
+UPDATE warehouse
+SET warehouseid = 0
+WHERE warehouseid = 4;
 
 INSERT INTO `province`
 VALUES ('01', 'Thành phố Hà Nội', 'Thành phố Trung ương');

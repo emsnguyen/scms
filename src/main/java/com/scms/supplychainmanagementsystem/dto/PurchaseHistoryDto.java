@@ -1,4 +1,5 @@
 package com.scms.supplychainmanagementsystem.dto;
+
 import com.scms.supplychainmanagementsystem.entity.PurchaseHistory;
 import lombok.*;
 
@@ -17,7 +18,7 @@ public class PurchaseHistoryDto {
 
     private Date PurchaseDate;
 
-    private String UnitPrice ;
+    private String UnitPrice;
 
     private Double Quantity;
 
@@ -37,7 +38,7 @@ public class PurchaseHistoryDto {
         PurchaseDate = purchaseHistory.getPurchaseDate();
         UnitPrice = purchaseHistory.getUnitPrice();
         Quantity = purchaseHistory.getQuantity();
-        this.warehouseId=purchaseHistory.getWarehouse().getWarehouseID();
+        this.warehouseId = purchaseHistory.getWarehouse().getWarehouseID();
         this.supplierId = purchaseHistory.getSupplier().getSupplierId();
         this.materialId = purchaseHistory.getMaterial().getMaterialID();
         this.createdBy = purchaseHistory.getCreatedBy().getUsername();

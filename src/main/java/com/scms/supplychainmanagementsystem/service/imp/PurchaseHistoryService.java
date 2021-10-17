@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.List;
 
 @AllArgsConstructor
@@ -25,11 +24,11 @@ import java.util.List;
 @Service
 public class PurchaseHistoryService implements IPurchaseHistory {
 
+    private final UserCommon userCommon;
     private PurchaseHistoryRepostory purchaseHistoryRepostory;
     private WarehouseRepository warehouseRepository;
     private SupplierRepository supplierRepository;
     private MaterialRepository materialRepository;
-    private final UserCommon userCommon;
 
     @Override
     public Page<PurchaseHistory> getAllPurchaseHistory(Long warehouseId, Pageable pageable) {
@@ -52,10 +51,11 @@ public class PurchaseHistoryService implements IPurchaseHistory {
     public PurchaseHistory getPurchaseHistoryByIdInWarehouse(Long PurchaseHistoryId) {
         User currentUser = userCommon.getCurrentUser();
         PurchaseHistory purchaseHistory = new PurchaseHistory();
-        if(currentUser.getRole().getRoleID()!=1){
-            purchaseHistory=purchaseHistoryRepostory.findByPurchaseIdInWarehouse(PurchaseHistoryId,currentUser.getWarehouse().getWarehouseID());
-            }else{
-                purchaseHistory= purchaseHistoryRepostory.findByPurchaseId(PurchaseHistoryId);}
+        if (currentUser.getRole().getRoleID() != 1) {
+            purchaseHistory = purchaseHistoryRepostory.findByPurchaseIdInWarehouse(PurchaseHistoryId, currentUser.getWarehouse().getWarehouseID());
+        } else {
+            purchaseHistory = purchaseHistoryRepostory.findByPurchaseId(PurchaseHistoryId);
+        }
         return purchaseHistory;
     }
 
@@ -69,12 +69,12 @@ public class PurchaseHistoryService implements IPurchaseHistory {
 
         Warehouse warehouse = new Warehouse();
 
-        if(currentUser.getRole().getRoleID()!=1){
+        if (currentUser.getRole().getRoleID() != 1) {
             warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
-            if(currentUser.getWarehouse().getWarehouseID()!=purchaseHistoryRepostory.findByPurchaseId(PurchaseHistoryId).getWarehouse().getWarehouseID()){
+            if (currentUser.getWarehouse().getWarehouseID() != purchaseHistoryRepostory.findByPurchaseId(PurchaseHistoryId).getWarehouse().getWarehouseID()) {
                 throw new AppException("you cant update in another Warehouse");
             }
-        }else{
+        } else {
             warehouse.setWarehouseID(purchaseHistoryDto.getWarehouseId());
         }
 
@@ -113,9 +113,9 @@ public class PurchaseHistoryService implements IPurchaseHistory {
         Warehouse warehouse = new Warehouse();
 
 
-        if(currentUser.getRole().getRoleID()!=1){
+        if (currentUser.getRole().getRoleID() != 1) {
             warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
-        }else{
+        } else {
             warehouse.setWarehouseID(purchaseHistoryDto.getWarehouseId());
         }
 
@@ -138,9 +138,9 @@ public class PurchaseHistoryService implements IPurchaseHistory {
     @Override
     public void deletePurchaseHistory(Long PurchaseHistoryId) {
         User currentUser = userCommon.getCurrentUser();
-        if(currentUser.getRole().getRoleID()!=1){
-            purchaseHistoryRepostory.deletePurchase(PurchaseHistoryId,currentUser.getWarehouse().getWarehouseID());}
-        else{
+        if (currentUser.getRole().getRoleID() != 1) {
+            purchaseHistoryRepostory.deletePurchase(PurchaseHistoryId, currentUser.getWarehouse().getWarehouseID());
+        } else {
             purchaseHistoryRepostory.deletePurchaseAdmin(PurchaseHistoryId);
         }
     }

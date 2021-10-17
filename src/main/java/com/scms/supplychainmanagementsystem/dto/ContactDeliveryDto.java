@@ -1,15 +1,10 @@
 package com.scms.supplychainmanagementsystem.dto;
 
 import com.scms.supplychainmanagementsystem.entity.ContactDelivery;
-import com.scms.supplychainmanagementsystem.entity.Customer;
-import com.scms.supplychainmanagementsystem.entity.District;
-import com.scms.supplychainmanagementsystem.entity.User;
 import lombok.*;
 
-import javax.persistence.*;
 import java.time.Instant;
 
-import static javax.persistence.FetchType.LAZY;
 @Getter
 @Setter
 @AllArgsConstructor

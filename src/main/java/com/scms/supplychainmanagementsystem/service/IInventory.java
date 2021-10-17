@@ -1,7 +1,6 @@
 package com.scms.supplychainmanagementsystem.service;
 
 import com.scms.supplychainmanagementsystem.dto.InventoryDto;
-import com.scms.supplychainmanagementsystem.dto.MaterialDto;
 import com.scms.supplychainmanagementsystem.entity.Inventory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

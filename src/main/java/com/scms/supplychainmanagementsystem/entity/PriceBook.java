@@ -6,15 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Date;
-
-import static javax.persistence.FetchType.LAZY;
 
 @Getter
 @Setter
@@ -26,12 +17,9 @@ public class PriceBook {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long priceBookId;
 
-
     private String priceBookName;
 
-    private Boolean isStandardPriceBook ;
-
-    private Boolean isActive;
+    private Boolean isStandardPriceBook;
 
     @ManyToOne
     @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")

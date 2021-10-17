@@ -1,11 +1,8 @@
 package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.dto.ContactDeliveryDto;
-import com.scms.supplychainmanagementsystem.dto.MaterialDto;
 import com.scms.supplychainmanagementsystem.entity.ContactDelivery;
-import com.scms.supplychainmanagementsystem.entity.Material;
 import com.scms.supplychainmanagementsystem.service.IContactDeliveryService;
-import com.scms.supplychainmanagementsystem.service.IMaterialService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,15 +33,15 @@ public class ContactDeliveryController {
 
     @GetMapping("/customer/{customerid}")
     public ResponseEntity<Map<String, Object>> getAllContact(@PathVariable(required = false) Long customerid,
-                                                                         @RequestParam(required = false) String contactname,
-                                                                         @RequestParam(defaultValue = "0") int page,
-                                                                         @RequestParam(defaultValue = "10") int size) {
+                                                             @RequestParam(required = false) String contactname,
+                                                             @RequestParam(defaultValue = "0") int page,
+                                                             @RequestParam(defaultValue = "10") int size) {
         log.info("[Start ContactdeliveryController - Get All Contact]");
         List<ContactDelivery> contactList;
         Page<ContactDelivery> contactPage;
         Pageable pageable = PageRequest.of(page, size);
 
-        contactPage = iContactDeliveryService.getAllContactDeliveryofcustomer(customerid,contactname, pageable);
+        contactPage = iContactDeliveryService.getAllContactDeliveryofcustomer(customerid, contactname, pageable);
 
         contactList = contactPage.getContent();
 
@@ -61,8 +58,6 @@ public class ContactDeliveryController {
         log.info("[End ContactDeliveryController - Get All Contact]");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-
 
 
     @PostMapping
