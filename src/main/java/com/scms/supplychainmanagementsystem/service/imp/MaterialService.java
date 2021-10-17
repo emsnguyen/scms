@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 
 @AllArgsConstructor
 @Transactional
@@ -112,6 +113,11 @@ public class MaterialService implements IMaterialService {
             materialRepository.deleteMaterialAdmin(materialId);
         }
 
+    }
+
+    @Override
+    public List<Material> getMaterialInWareHouse(Long warehouseid) {
+        return materialRepository.findAllByWarehouse(warehouseid);
     }
 
     @Override

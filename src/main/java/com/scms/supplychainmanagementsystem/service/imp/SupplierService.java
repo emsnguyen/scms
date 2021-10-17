@@ -2,11 +2,9 @@ package com.scms.supplychainmanagementsystem.service.imp;
 
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.SupplierDto;
-import com.scms.supplychainmanagementsystem.entity.District;
-import com.scms.supplychainmanagementsystem.entity.Supplier;
-import com.scms.supplychainmanagementsystem.entity.User;
-import com.scms.supplychainmanagementsystem.entity.Warehouse;
+import com.scms.supplychainmanagementsystem.entity.*;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
+import com.scms.supplychainmanagementsystem.repository.MaterialRepository;
 import com.scms.supplychainmanagementsystem.repository.SupplierRepository;
 import com.scms.supplychainmanagementsystem.service.ISupplierService;
 import lombok.AllArgsConstructor;
@@ -15,6 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
+import java.util.List;
 
 @AllArgsConstructor
 @Transactional
@@ -42,15 +43,18 @@ public class SupplierService implements ISupplierService {
     }
 
     @Override
+    public List<Supplier> getSupplierInWareHouse(Long warehouseid) {
+        return supplierRepository.findAllByWarehouse(warehouseid);
+    }
+
+    @Override
     public Supplier getSupplierByIdInWarehouse(Long supplierId) {
         User currentUser = userCommon.getCurrentUser();
 
         Supplier supplier = new Supplier();
-        if (currentUser.getRole().getRoleID() != 1) {
-            supplier = supplierRepository.findBySupplierIdAnhInWarehouse(supplierId, userCommon.getCurrentUser().getWarehouse().getWarehouseID());
-        } else {
-            supplier = supplierRepository.findBySupplierId(supplierId);
-            ;
+        if(currentUser.getRole().getRoleID()!=1){
+            supplier = supplierRepository.findBySupplierIdAnhInWarehouse(supplierId, userCommon.getCurrentUser().getWarehouse().getWarehouseID());}
+        else{supplier = supplierRepository.findBySupplierId(supplierId);;
         }
         return supplier;
     }
@@ -64,12 +68,12 @@ public class SupplierService implements ISupplierService {
 
 
         Warehouse warehouse = new Warehouse();
-        if (currentUser.getRole().getRoleID() != 1) {
+        if(currentUser.getRole().getRoleID()!=1){
             warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
-            if (currentUser.getWarehouse().getWarehouseID() != supplierRepository.findBySupplierId(supplierId).getWarehouse().getWarehouseID()) {
+            if(currentUser.getWarehouse().getWarehouseID()!=supplierRepository.findBySupplierId(supplierId).getWarehouse().getWarehouseID()){
                 throw new AppException("you cant update in another Warehouse");
             }
-        } else {
+        }else{
             warehouse.setWarehouseID(supplierDto.getWarehouseId());
         }
 
@@ -103,9 +107,9 @@ public class SupplierService implements ISupplierService {
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
         Warehouse warehouse = new Warehouse();
-        if (currentUser.getRole().getRoleID() != 1) {
+        if(currentUser.getRole().getRoleID()!=1){
             warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
-        } else {
+        }else{
             warehouse.setWarehouseID(supplierDto.getWarehouseId());
         }
 
@@ -131,11 +135,10 @@ public class SupplierService implements ISupplierService {
     public void deleteSupplier(Long supplierId) {
 
         User currentUser = userCommon.getCurrentUser();
-        if (currentUser.getRole().getRoleID() != 1) {
-            supplierRepository.deleteSupplier(supplierId, userCommon.getCurrentUser().getWarehouse().getWarehouseID());
-        } else {
-            supplierRepository.deleteSupplierAdmin(supplierId);
-            ;
+        if(currentUser.getRole().getRoleID()!=1){
+            supplierRepository.deleteSupplier(supplierId, userCommon.getCurrentUser().getWarehouse().getWarehouseID());}
+        else{
+            supplierRepository.deleteSupplierAdmin(supplierId);;
         }
     }
 }

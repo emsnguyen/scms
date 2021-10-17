@@ -62,6 +62,14 @@ public class MaterialController {
     }
 
 
+    @GetMapping("/warehouse/{warehouseid}")
+    public ResponseEntity<List<Material>> getMaterialInWarehouse(@PathVariable Long warehouseid) {
+        log.info("[Start PurchaseHistoryController - Get PurchaseHistory By ID]");
+
+        List<Material> materialArrayList = new ArrayList<>();
+        materialArrayList=iMaterialService.getMaterialInWareHouse(warehouseid);
+        return new ResponseEntity<>(materialArrayList, HttpStatus.OK);
+    }
 
 
     @PostMapping

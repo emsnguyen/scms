@@ -59,20 +59,6 @@ public class PurchaseHistoryService implements IPurchaseHistory {
         return purchaseHistory;
     }
 
-    @Override
-    public List<Warehouse> getAllWarehouse() {
-        return warehouseRepository.findAll();
-    }
-
-    @Override
-    public List<Supplier> getSupplierInWareHouse(Long warehouseid) {
-        return supplierRepository.findAllByWarehouse(warehouseid);
-    }
-
-    @Override
-    public List<Material> getMaterialInWareHouse(Long warehouseid) {
-        return materialRepository.findAllByWarehouse(warehouseid);
-    }
 
     @Override
     public void updatePurchaseHistory(Long PurchaseHistoryId, PurchaseHistoryDto purchaseHistoryDto) {

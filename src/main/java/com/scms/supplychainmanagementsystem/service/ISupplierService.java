@@ -7,6 +7,8 @@ import com.scms.supplychainmanagementsystem.entity.Supplier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface ISupplierService {
 
     Page<Supplier> getAllSupplier(String suppliername, Long warehouseId, Pageable pageble);
@@ -18,5 +20,7 @@ public interface ISupplierService {
     void saveSupplier(SupplierDto supplierDto);
 
     void deleteSupplier(Long supplierDto);
+
+    List<Supplier> getSupplierInWareHouse(Long warehouseid);
 
 }
