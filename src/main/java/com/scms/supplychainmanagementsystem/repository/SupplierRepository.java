@@ -17,8 +17,8 @@ import java.util.List;
 public interface SupplierRepository extends JpaRepository<Supplier, Long> {
 
     //    Optional<Material> findByMaterialName(String materialName);
-
-    List<Supplier> findAllByWarehouse(Long warehouseId);
+    @Query(value = "SELECT * FROM test.supplier where  warehouseid= :warehouseid",nativeQuery = true)
+    List<Supplier> findAllByWarehouse(@Param("warehouseid")  Long warehouseId);
 
     @Query(value = "SELECT * FROM test.supplier where supplier_id= :supplierid and warehouseid= :warehouseid",nativeQuery = true)
     Supplier findBySupplierIdAnhInWarehouse(@Param("supplierid") Long materialId , @Param("warehouseid") Long warehouseId);

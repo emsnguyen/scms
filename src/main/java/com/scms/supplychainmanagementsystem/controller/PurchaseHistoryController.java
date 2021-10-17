@@ -4,6 +4,8 @@ import com.scms.supplychainmanagementsystem.dto.MaterialDto;
 import com.scms.supplychainmanagementsystem.dto.PurchaseHistoryDto;
 import com.scms.supplychainmanagementsystem.entity.Material;
 import com.scms.supplychainmanagementsystem.entity.PurchaseHistory;
+import com.scms.supplychainmanagementsystem.entity.Supplier;
+import com.scms.supplychainmanagementsystem.entity.Warehouse;
 import com.scms.supplychainmanagementsystem.service.IMaterialService;
 import com.scms.supplychainmanagementsystem.service.IPurchaseHistory;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +66,31 @@ public class PurchaseHistoryController {
     }
 
 
+    @GetMapping("/warehouse")
+    public ResponseEntity<List<Warehouse>> getPurchaseidById() {
+        log.info("[Start PurchaseHistoryController - Get AllWarehouse]");
+        List<Warehouse> warehouses = new ArrayList<>();
+             warehouses = iPurchaseHistory.getAllWarehouse();
+        return new ResponseEntity<>(warehouses, HttpStatus.OK);
+    }
 
+    @GetMapping("/supplier/{warehouseid}")
+    public ResponseEntity<List<Supplier>> getSupplierInWarehouse(@PathVariable Long warehouseid) {
+        log.info("[Start PurchaseHistoryController - Get PurchaseHistory By ID]");
+
+        List<Supplier> supplierList = new ArrayList<>();
+        supplierList=iPurchaseHistory.getSupplierInWareHouse(warehouseid);
+        return new ResponseEntity<>(supplierList, HttpStatus.OK);
+    }
+
+    @GetMapping("/material/{warehouseid}")
+    public ResponseEntity<List<Material>> getMaterialInWarehouse(@PathVariable Long warehouseid) {
+        log.info("[Start PurchaseHistoryController - Get PurchaseHistory By ID]");
+
+        List<Material> materialArrayList = new ArrayList<>();
+        materialArrayList=iPurchaseHistory.getMaterialInWareHouse(warehouseid);
+        return new ResponseEntity<>(materialArrayList, HttpStatus.OK);
+    }
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")

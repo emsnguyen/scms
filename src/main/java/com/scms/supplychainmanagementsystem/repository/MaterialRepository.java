@@ -20,7 +20,8 @@ public interface MaterialRepository extends JpaRepository<Material, Long>  {
 
 //    Optional<Material> findByMaterialName(String materialName);
 
-    List<Material> findAllByWarehouse(Long warehouseId);
+    @Query(value = "SELECT * FROM test.material where  warehouseid= :warehouseid",nativeQuery = true)
+    List<Material> findAllByWarehouse(@Param("warehouseid") Long warehouseId);
 
     @Query(value = "SELECT * FROM test.material where materialid= :materialid and warehouseid= :warehouseid",nativeQuery = true)
     Material findByMaterialIdAnhInWarehouse(@Param("materialid") Long materialId , @Param("warehouseid") Long warehouseId);
