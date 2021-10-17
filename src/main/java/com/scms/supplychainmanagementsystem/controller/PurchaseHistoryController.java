@@ -66,31 +66,8 @@ public class PurchaseHistoryController {
     }
 
 
-    @GetMapping("/warehouse")
-    public ResponseEntity<List<Warehouse>> getPurchaseidById() {
-        log.info("[Start PurchaseHistoryController - Get AllWarehouse]");
-        List<Warehouse> warehouses = new ArrayList<>();
-             warehouses = iPurchaseHistory.getAllWarehouse();
-        return new ResponseEntity<>(warehouses, HttpStatus.OK);
-    }
 
-    @GetMapping("/supplier/{warehouseid}")
-    public ResponseEntity<List<Supplier>> getSupplierInWarehouse(@PathVariable Long warehouseid) {
-        log.info("[Start PurchaseHistoryController - Get PurchaseHistory By ID]");
 
-        List<Supplier> supplierList = new ArrayList<>();
-        supplierList=iPurchaseHistory.getSupplierInWareHouse(warehouseid);
-        return new ResponseEntity<>(supplierList, HttpStatus.OK);
-    }
-
-    @GetMapping("/material/{warehouseid}")
-    public ResponseEntity<List<Material>> getMaterialInWarehouse(@PathVariable Long warehouseid) {
-        log.info("[Start PurchaseHistoryController - Get PurchaseHistory By ID]");
-
-        List<Material> materialArrayList = new ArrayList<>();
-        materialArrayList=iPurchaseHistory.getMaterialInWareHouse(warehouseid);
-        return new ResponseEntity<>(materialArrayList, HttpStatus.OK);
-    }
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")

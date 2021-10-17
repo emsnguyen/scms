@@ -7,6 +7,8 @@ import com.scms.supplychainmanagementsystem.entity.Material;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface IMaterialService {
 
     Page<Material> getAllMaterial(String materialname, Long warehouseId, Pageable pageble);
@@ -18,5 +20,7 @@ public interface IMaterialService {
     void saveMaterial(MaterialDto materialDto);
 
     void deleteMaterial(Long materialDto);
+
+    List<Material> getMaterialInWareHouse(Long warehouseid);
 
 }

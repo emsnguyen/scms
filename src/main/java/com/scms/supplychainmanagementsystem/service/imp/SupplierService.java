@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 
 @AllArgsConstructor
 @Transactional
@@ -39,6 +40,11 @@ public class SupplierService implements ISupplierService {
         }
         log.info("[End CustomerService - Get All Customer]");
         return supplierPage;
+    }
+
+    @Override
+    public List<Supplier> getSupplierInWareHouse(Long warehouseid) {
+        return supplierRepository.findAllByWarehouse(warehouseid);
     }
 
     @Override

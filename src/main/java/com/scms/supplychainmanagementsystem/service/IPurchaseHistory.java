@@ -16,12 +16,6 @@ public interface IPurchaseHistory {
 
     PurchaseHistory getPurchaseHistoryByIdInWarehouse(Long PurchaseHistoryId);
 
-    List<Warehouse> getAllWarehouse();
-
-    List<Supplier> getSupplierInWareHouse(Long warehouseid);
-
-    List<Material> getMaterialInWareHouse(Long warehouseid);
-
     void updatePurchaseHistory(Long PurchaseHistoryId, PurchaseHistoryDto purchaseHistoryDto);
 
     void savePurchaseHistory( PurchaseHistoryDto purchaseHistoryDto);

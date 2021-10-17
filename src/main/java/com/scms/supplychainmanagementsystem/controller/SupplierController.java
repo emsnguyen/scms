@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,12 +59,18 @@ public class SupplierController {
         } else {
             response.put("message", "EMPTY_RESULT");
         }
-        log.info("[End CustomerController - Get All Customer In Warehouse]");
+        log.info("[End SupplierController - Get All Supplier In Warehouse]");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
-
+    @GetMapping("/warehouse/{warehouseid}")
+    public ResponseEntity<List<Supplier>> getSupplierInWarehouse(@PathVariable Long warehouseid) {
+        log.info("[Start SupplierController - Get PurchaseHistory By ID]");
+        List<Supplier> supplierList = new ArrayList<>();
+        supplierList=iSupplierService.getSupplierInWareHouse(warehouseid);
+        return new ResponseEntity<>(supplierList, HttpStatus.OK);
+    }
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
