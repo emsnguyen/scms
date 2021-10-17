@@ -69,7 +69,7 @@ public class CustomerController {
         Page<Customer> customerPage;
         Pageable pageable = PageRequest.of(page, size);
 
-        customerPage = iCustomerService.getAllCustomer(customername,warehouseId, pageable);
+        customerPage = iCustomerService.getAllCustomer(customername, warehouseId, pageable);
 
         customerList = customerPage.getContent();
 
@@ -148,49 +148,43 @@ public class CustomerController {
         XSSFWorkbook workbook = new XSSFWorkbook(reapExcelDataFile.getInputStream());
         XSSFSheet worksheet = workbook.getSheetAt(0);
 
-
         User currentUser = userCommon.getCurrentUser();
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
         Warehouse warehouse = new Warehouse();
-        if(currentUser.getRole().getRoleID()!=1){
+        if (currentUser.getRole().getRoleID() != 1) {
             warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
-        }else{
+        } else {
 //            warehouse.setWarehouseID(row.getCell(1).getCTCell().getS());
         }
-        Customer customer = new Customer();
-        System.out.println("ewfhwejhewufiewhfiewjfewjfwekfewmfkewmfkewmfewkfe");
-        XSSFRow row = worksheet.getRow(0);
-        customer.setCustomerName(row.getCell(1).getStringCellValue());
-        System.out.println("customerName="+customer.getCustomerName()+"and");
-         row = worksheet.getRow(1);
-        customer.setCustomerType(row.getCell(1).getStringCellValue());
-        System.out.println("customerType="+customer.getCustomerType()+"End");
-        System.out.println("ewfhwejhewufiewhfiewjfewjfwekfewmfkewmfkewmfewkfe");
-//        Customer customer = Customer.builder()
-//                .customerCode(row.getCell(2).getStringCellValue())
-//                .CustomerType(row.getCell(2).getStringCellValue())
-//                .customerName(row.getCell(2).getStringCellValue())
-//                .email(row.getCell(2).getStringCellValue())
-//                .warehouse(warehouse)
-//                .phone(row.getCell(2).getStringCellValue())
-//                .DateOfBirth(null)
-//                .Gender(row.getCell(2).getBooleanCellValue())
-//                .Facebook(row.getCell(2).getStringCellValue())
-//                .CompanyName(row.getCell(2).getStringCellValue())
-//                .Note(row.getCell(2).getStringCellValue())
-//                .TaxCode(row.getCell(2).getStringCellValue())
-//                .district(District.builder()
-//                        .districtID(row.getCell(2).getCTCell().getS())
-//                        .province(Province.builder().provinceID(row.getCell(2).getCTCell().getS()).build()).build())
-//                .streetAddress(row.getCell(2).getStringCellValue())
-//                .createdDate(Instant.now())
-//                .createdBy(currentUser)
-//                .lastModifiedBy(currentUser)
-//                .build();
-//        customerRepository.saveAndFlush(customer);
-
-
-
+        List<Customer> customerList = new ArrayList<>();
+        for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) {
+            XSSFRow row = worksheet.getRow(0);
+        Customer customer = Customer.builder()
+                .customerCode(row.getCell(2).getStringCellValue())
+                .CustomerType(row.getCell(2).getStringCellValue())
+                .customerName(row.getCell(2).getStringCellValue())
+                .email(row.getCell(2).getStringCellValue())
+                .warehouse(warehouse)
+                .phone(row.getCell(2).getStringCellValue())
+                .DateOfBirth(null)
+                .Gender(row.getCell(2).getBooleanCellValue())
+                .Facebook(row.getCell(2).getStringCellValue())
+                .CompanyName(row.getCell(2).getStringCellValue())
+                .Note(row.getCell(2).getStringCellValue())
+                .TaxCode(row.getCell(2).getStringCellValue())
+                .district(District.builder()
+                        .districtID(row.getCell(2).getCTCell().getS())
+                        .province(Province.builder().provinceID(row.getCell(2).getCTCell().getS()).build()).build())
+                .streetAddress(row.getCell(2).getStringCellValue())
+                .createdDate(Instant.now())
+                .createdBy(currentUser)
+                .lastModifiedBy(currentUser)
+                .build();
+        customerList.add(customer);
+        }
+        for (Customer customer:customerList) {
+            customerRepository.saveAndFlush(customer);
+        }
     }
 }
