@@ -1,7 +1,6 @@
 package com.scms.supplychainmanagementsystem.repository;
 
 import com.scms.supplychainmanagementsystem.entity.ContactDelivery;
-import com.scms.supplychainmanagementsystem.entity.Material;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,10 +14,10 @@ public interface ContactDeliveryRepository extends JpaRepository<ContactDelivery
     //    Optional<Material> findByMaterialName(String materialName);
 
 
-    @Query(value = "SELECT * FROM test.contact_delivery where contactid= :contactid ",nativeQuery = true)
-    ContactDelivery findByContactIDManager(@Param("contactid") Long contactid );
+    @Query(value = "SELECT * FROM test.contact_delivery where contactid= :contactid ", nativeQuery = true)
+    ContactDelivery findByContactIDManager(@Param("contactid") Long contactid);
 
-    @Query(value = "SELECT * FROM test.contact_delivery where contactid= :contactid",nativeQuery = true)
+    @Query(value = "SELECT * FROM test.contact_delivery where contactid= :contactid", nativeQuery = true)
     ContactDelivery findByContactIDAdmin(@Param("contactid") Long contactid);
 
 
@@ -27,8 +26,8 @@ public interface ContactDeliveryRepository extends JpaRepository<ContactDelivery
 
     @Modifying
     @Transactional
-    @Query(value = "Delete  FROM test.contact_delivery where contactid= :contactid ",nativeQuery = true)
-    void deleteContactDeliverie(@Param("contactid") Long contactId );
+    @Query(value = "Delete  FROM test.contact_delivery where contactid= :contactid ", nativeQuery = true)
+    void deleteContactDeliverie(@Param("contactid") Long contactId);
 
 
 //    @Query(value = "select material_name FROM test.contact_delivery where material_name= :materialName ",nativeQuery = true)
@@ -38,11 +37,11 @@ public interface ContactDeliveryRepository extends JpaRepository<ContactDelivery
             " and (:contactName is null or u.contactName like %:contactName%) " +
             " order by u.createedDate desc")
     Page<ContactDelivery> filterInOneCustomer(@Param("customerid") Long customerid,
-                                        @Param("contactName") String contactName, Pageable pageable);
+                                              @Param("contactName") String contactName, Pageable pageable);
 
     @Query(value = "select u from ContactDelivery u where (:customerid is null or u.customer.customerId = :customerid) " +
             " and (:contactName is null or u.contactName like %:contactName%) " +
             " order by u.createedDate desc")
     Page<ContactDelivery> filterAllCustomer(@Param("customerid") Long customerid,
-                                       @Param("contactName") String contactName, Pageable pageable);
+                                            @Param("contactName") String contactName, Pageable pageable);
 }

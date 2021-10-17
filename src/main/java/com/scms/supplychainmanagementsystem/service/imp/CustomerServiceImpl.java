@@ -2,7 +2,6 @@ package com.scms.supplychainmanagementsystem.service.imp;
 
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.CustomerDto;
-import com.scms.supplychainmanagementsystem.dto.RoleDto;
 import com.scms.supplychainmanagementsystem.dto.WarehouseDto;
 import com.scms.supplychainmanagementsystem.entity.Customer;
 import com.scms.supplychainmanagementsystem.entity.District;
@@ -20,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.plaf.basic.BasicIconFactory;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,9 +48,10 @@ public class CustomerServiceImpl implements ICustomerService {
     public Customer getCustomerByIdInWarehouse(Long customerId) {
         User currentUser = userCommon.getCurrentUser();
         Customer customer = new Customer();
-        if(currentUser.getRole().getRoleID()!=1){
-         customer = customerRepository.findByCustomerIdAnhInWarehouse(customerId, userCommon.getCurrentUser().getWarehouse().getWarehouseID());}
-        else{ customer = customerRepository.findByCustomerId(customerId);
+        if (currentUser.getRole().getRoleID() != 1) {
+            customer = customerRepository.findByCustomerIdAnhInWarehouse(customerId, userCommon.getCurrentUser().getWarehouse().getWarehouseID());
+        } else {
+            customer = customerRepository.findByCustomerId(customerId);
         }
         return customer;
     }
@@ -71,12 +70,12 @@ public class CustomerServiceImpl implements ICustomerService {
 
 
         Warehouse warehouse = new Warehouse();
-        if(currentUser.getRole().getRoleID()!=1){
+        if (currentUser.getRole().getRoleID() != 1) {
             warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
-            if(currentUser.getWarehouse().getWarehouseID()!=customerRepository.findByCustomerId(customerid).getWarehouse().getWarehouseID()){
+            if (currentUser.getWarehouse().getWarehouseID() != customerRepository.findByCustomerId(customerid).getWarehouse().getWarehouseID()) {
                 throw new AppException("you cant update in another Warehouse");
-        }
-        }else{
+            }
+        } else {
             warehouse.setWarehouseID(customerDto.getWarehouseId());
         }
 
@@ -117,9 +116,9 @@ public class CustomerServiceImpl implements ICustomerService {
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
         Warehouse warehouse = new Warehouse();
-        if(currentUser.getRole().getRoleID()!=1){
+        if (currentUser.getRole().getRoleID() != 1) {
             warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
-        }else{
+        } else {
             warehouse.setWarehouseID(customerDto.getWarehouseId());
         }
 
@@ -151,9 +150,9 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public void deleteCustomer(Long customerid) {
         User currentUser = userCommon.getCurrentUser();
-        if(currentUser.getRole().getRoleID()!=1){
-        customerRepository.deleteCustomer(customerid, userCommon.getCurrentUser().getWarehouse().getWarehouseID());}
-        else{
+        if (currentUser.getRole().getRoleID() != 1) {
+            customerRepository.deleteCustomer(customerid, userCommon.getCurrentUser().getWarehouse().getWarehouseID());
+        } else {
             customerRepository.deleteCustomerAdmin(customerid);
         }
     }

@@ -64,8 +64,12 @@ public class UserService implements IUserService {
         user.setStreetAddress(userDto.getStreetAddress());
         user.setLastModifiedBy(currentUser);
         user.setLastModifiedDate(Instant.now());
-        user.setWarehouse(warehouseRepository.findById(userDto.getWarehouseId())
-                .orElseThrow(() -> new AppException("Warehouse not found")));
+        if (currentUser.getRole().getRoleID() == 1) {
+            user.setWarehouse(warehouseRepository.findById(userDto.getWarehouseId())
+                    .orElseThrow(() -> new AppException("Warehouse not found")));
+        } else {
+            user.setWarehouse(currentUser.getWarehouse());
+        }
         log.info("[Start save user " + user.getUsername() + " to database]");
         userRepository.saveAndFlush(user);
         log.info("[End save user " + user.getUsername() + " to database]");
@@ -81,12 +85,12 @@ public class UserService implements IUserService {
         log.info("[Start get current user]");
         User currentUser = userCommon.getCurrentUser();
         log.info("[End get current user : " + currentUser.getUsername() + "]");
-        if (userDto.getWarehouseId() == null || userDto.getRoleId() == null || userDto.getDistrictId() == null) {
+        if (userDto.getRoleId() == null || userDto.getDistrictId() == null) {
             throw new AppException("Not fill in all required fields");
         }
-        if (currentUser.getRole().getRoleID() != 1 && !userDto.getWarehouseId().equals(currentUser.getWarehouse().getWarehouseID())) {
-            throw new AppException("Not allow to choose this warehouse");
-        }
+//        if (currentUser.getRole().getRoleID() != 1 && !userDto.getWarehouseId().equals(currentUser.getWarehouse().getWarehouseID())) {
+//            throw new AppException("Not allow to choose this warehouse");
+//        }
         if (currentUser.getRole().getRoleID() != 1 && userDto.getRoleId() == 1) {
             throw new AppException("Not allow to create role ADMIN");
         }
@@ -105,9 +109,13 @@ public class UserService implements IUserService {
                 .streetAddress(userDto.getStreetAddress())
                 .createdDate(Instant.now())
                 .createdBy(currentUser)
-                .warehouse(warehouseRepository.findById(userDto.getWarehouseId())
-                        .orElseThrow(() -> new AppException("Warehouse not found")))
                 .build();
+        if (currentUser.getRole().getRoleID() == 1) {
+            user.setWarehouse(warehouseRepository.findById(userDto.getWarehouseId())
+                    .orElseThrow(() -> new AppException("Warehouse not found")));
+        } else {
+            user.setWarehouse(currentUser.getWarehouse());
+        }
         log.info("[Start save user " + user.getUsername() + " to database]");
         userRepository.saveAndFlush(user);
         log.info("[End save user " + user.getUsername() + " to database]");

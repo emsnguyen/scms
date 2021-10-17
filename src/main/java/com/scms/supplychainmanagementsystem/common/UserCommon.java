@@ -36,7 +36,7 @@ public class UserCommon {
         if (current.getRole().getRoleID() == 1) {
             return true;
         }
-        if (u.getWarehouse() == null || u.getRole() == null || u.getDistrict() == null) {
+        if (u.getRole() == null || u.getDistrict() == null) {
             throw new AppException("Not fill in all required fields");
         } else {
             return u.getWarehouse().getWarehouseID().equals(current.getWarehouse().getWarehouseID());

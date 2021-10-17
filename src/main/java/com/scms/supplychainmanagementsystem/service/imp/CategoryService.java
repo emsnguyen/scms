@@ -29,14 +29,19 @@ public class CategoryService implements ICategoryService {
     public void updateCategory(CategoryDto categoryDto) {
         log.info("[Start CategoryService - Update Category : " + categoryDto.getCategoryName() + "]");
         if (checkAccessCategory(categoryDto.getCategoryId())) {
-            Category category = categoryRepository.getById(categoryDto.getCategoryId());
+            Category category = categoryRepository.findById(categoryDto.getCategoryId())
+                    .orElseThrow(() -> new AppException("Category not found"));
             category.setCategoryName(categoryDto.getCategoryName());
             User current = userCommon.getCurrentUser();
-            if (current.getRole().getRoleID() != 1
-                    && !categoryDto.getWarehouseId().equals(current.getWarehouse().getWarehouseID())) {
-                throw new AppException("Not allow to choose warehouse");
+//            if (current.getRole().getRoleID() != 1
+//                    && !categoryDto.getWarehouseId().equals(current.getWarehouse().getWarehouseID())) {
+//                throw new AppException("Not allow to choose warehouse");
+//            }
+            if (current.getRole().getRoleID() == 1) {
+                category.setWarehouse(warehouseRepository.getById(categoryDto.getWarehouseId()));
+            } else {
+                category.setWarehouse(current.getWarehouse());
             }
-            category.setWarehouse(warehouseRepository.getById(categoryDto.getWarehouseId()));
             log.info("[Start Save Category " + categoryDto.getCategoryName() + " to database]");
             categoryRepository.saveAndFlush(category);
             log.info("[End Save Category " + categoryDto.getCategoryName() + " to database]");
@@ -52,16 +57,19 @@ public class CategoryService implements ICategoryService {
         User current = userCommon.getCurrentUser();
         Category category = new Category();
         category.setCategoryName(categoryDto.getCategoryName());
-        if (categoryDto.getWarehouseId() == null) {
-            throw new AppException("Not fill in all required fields");
+//        if (categoryDto.getWarehouseId() == null) {
+//            throw new AppException("Not fill in all required fields");
+//        }
+//        if (current.getRole().getRoleID() != 1
+//                && !categoryDto.getWarehouseId().equals(current.getWarehouse().getWarehouseID())) {
+//            throw new AppException("Not allow to choose warehouse");
+//        }
+        if (current.getRole().getRoleID() == 1) {
+            category.setWarehouse(warehouseRepository.findById(categoryDto.getWarehouseId())
+                    .orElseThrow(() -> new AppException("Warehouse not found")));
+        } else {
+            category.setWarehouse(current.getWarehouse());
         }
-        if (current.getRole().getRoleID() != 1
-                && !categoryDto.getWarehouseId().equals(current.getWarehouse().getWarehouseID())) {
-            throw new AppException("Not allow to choose warehouse");
-        }
-        category.setWarehouse(warehouseRepository.findById(categoryDto.getWarehouseId())
-                .orElseThrow(() -> new AppException("Warehouse not found")));
-
         log.info("[Start Save Category " + categoryDto.getCategoryName() + " to database]");
         categoryRepository.saveAndFlush(category);
         log.info("[End Save Category " + categoryDto.getCategoryName() + " to database]");
@@ -83,10 +91,12 @@ public class CategoryService implements ICategoryService {
     public CategoryDto getCategoryById(Long categoryId) {
         log.info("[Start CategoryService - Get Category ID = : " + categoryId + "]");
         CategoryDto categoryDto = new CategoryDto();
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new AppException("Category not found"));
         if (checkAccessCategory(categoryId)) {
             categoryDto.setCategoryId(categoryId);
-            categoryDto.setCategoryName(categoryDto.getCategoryName());
-            categoryDto.setWarehouseId(categoryRepository.getById(categoryId).getWarehouse().getWarehouseID());
+            categoryDto.setCategoryName(category.getCategoryName());
+            categoryDto.setWarehouseId(category.getWarehouse().getWarehouseID());
         } else {
             throw new AppException("Not allow to access this resource");
         }

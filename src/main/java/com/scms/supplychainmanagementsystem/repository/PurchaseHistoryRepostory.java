@@ -1,6 +1,5 @@
 package com.scms.supplychainmanagementsystem.repository;
 
-import com.scms.supplychainmanagementsystem.entity.Material;
 import com.scms.supplychainmanagementsystem.entity.PurchaseHistory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,22 +15,22 @@ import javax.transaction.Transactional;
 public interface PurchaseHistoryRepostory extends JpaRepository<PurchaseHistory, Long> {
 
 
-    @Query(value = "SELECT * FROM test.purchase_history where purchaseid= :purchaseid  and warehouseid= :warehouseid",nativeQuery = true)
-    PurchaseHistory findByPurchaseIdInWarehouse(@Param("purchaseid") Long purchaseid , @Param("warehouseid") Long warehouseId);
+    @Query(value = "SELECT * FROM test.purchase_history where purchaseid= :purchaseid  and warehouseid= :warehouseid", nativeQuery = true)
+    PurchaseHistory findByPurchaseIdInWarehouse(@Param("purchaseid") Long purchaseid, @Param("warehouseid") Long warehouseId);
 
-    @Query(value = "SELECT * FROM test.purchase_history where purchaseid= :purchaseid ",nativeQuery = true)
-    PurchaseHistory findByPurchaseId(@Param("purchaseid") Long purchaseid );
+    @Query(value = "SELECT * FROM test.purchase_history where purchaseid= :purchaseid ", nativeQuery = true)
+    PurchaseHistory findByPurchaseId(@Param("purchaseid") Long purchaseid);
 
-
-    @Modifying
-    @Transactional
-    @Query(value = "Delete  FROM test.purchase_history where purchaseid= :purchaseid  and warehouseid= :warehouseid",nativeQuery = true)
-    void deletePurchase(@Param("purchaseid") Long purchaseid , @Param("warehouseid") Long warehouseId);
 
     @Modifying
     @Transactional
-    @Query(value = "Delete  FROM test.purchase_history where purchaseid= :purchaseid ",nativeQuery = true)
-    void deletePurchaseAdmin(@Param("purchaseid") Long purchaseid );
+    @Query(value = "Delete  FROM test.purchase_history where purchaseid= :purchaseid  and warehouseid= :warehouseid", nativeQuery = true)
+    void deletePurchase(@Param("purchaseid") Long purchaseid, @Param("warehouseid") Long warehouseId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "Delete  FROM test.purchase_history where purchaseid= :purchaseid ", nativeQuery = true)
+    void deletePurchaseAdmin(@Param("purchaseid") Long purchaseid);
 
     @Query(value = "select u from PurchaseHistory u where u.warehouse.warehouseID =:warehouseId " +
             " order by u.PurchaseDate desc")

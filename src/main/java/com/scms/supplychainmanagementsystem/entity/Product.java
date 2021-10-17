@@ -7,8 +7,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-import static javax.persistence.FetchType.LAZY;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,26 +18,26 @@ public class Product {
     private Long productId;
 
 
-    private String ProductName;
+    private String productName;
 
-    private String QuantityUnitOfMeasure;
+    private String quantityUnitOfMeasure;
 
     private Boolean isActive;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
     private Warehouse warehouse;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "categoryID", referencedColumnName = "categoryID")
     private Category category;
 
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "createdBy", referencedColumnName = "userID")
     private User createdBy;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID")
     private User lastModifiedBy;
 

@@ -10,7 +10,6 @@ import com.scms.supplychainmanagementsystem.service.IContactDeliveryService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,13 +21,13 @@ import java.time.Instant;
 @Slf4j
 @Service
 public class ContactDeliveryService implements IContactDeliveryService {
-    private ContactDeliveryRepository contactDeliveryRepository;
     private final UserCommon userCommon;
+    private ContactDeliveryRepository contactDeliveryRepository;
     private CustomerRepository customerRepository;
 
 
     @Override
-    public Page<ContactDelivery> getAllContactDeliveryofcustomer(Long customerId,String contactname, Pageable pageable) {
+    public Page<ContactDelivery> getAllContactDeliveryofcustomer(Long customerId, String contactname, Pageable pageable) {
         log.info("[Start ContactDeliveryService - Get All ContactDelivery]");
         Page<ContactDelivery> contactPage;
         User current = userCommon.getCurrentUser();
@@ -37,9 +36,10 @@ public class ContactDeliveryService implements IContactDeliveryService {
         if (current.getRole().getRoleID() == 1) {
             contactPage = contactDeliveryRepository.filterAllCustomer(customerId, contactname, pageable);
         } else {
-            if(current.getWarehouse().getWarehouseID()==customerRepository.findByCustomerId(customerId).getWarehouse().getWarehouseID()){
+            if (current.getWarehouse().getWarehouseID() == customerRepository.findByCustomerId(customerId).getWarehouse().getWarehouseID()) {
                 contactPage = contactDeliveryRepository.filterInOneCustomer(customerId, contactname, pageable);
-            }else{  throw new AppException("this Customer have no Contact");
+            } else {
+                throw new AppException("this Customer have no Contact");
 //                contactPage = contactDeliveryRepository.filterInOneCustomer(, contactname, pageable);
             }
 
@@ -53,30 +53,30 @@ public class ContactDeliveryService implements IContactDeliveryService {
     public ContactDelivery getContactDeliveryById(Long contactDeliveryId) {
         User currentUser = userCommon.getCurrentUser();
         ContactDelivery contactDelivery = new ContactDelivery();
-        if(currentUser.getRole().getRoleID()!=1){
+        if (currentUser.getRole().getRoleID() != 1) {
             contactDelivery = contactDeliveryRepository.findByContactIDManager(contactDeliveryId);
-        if(contactDelivery==null || currentUser.getWarehouse().getWarehouseID()!=contactDelivery.getCustomer().getWarehouse().getWarehouseID()){
-            throw new AppException("Not Found");
-        }
+            if (contactDelivery == null || currentUser.getWarehouse().getWarehouseID() != contactDelivery.getCustomer().getWarehouse().getWarehouseID()) {
+                throw new AppException("Not Found");
+            }
 
-        }
-        else{contactDelivery = contactDeliveryRepository.findByContactIDAdmin(contactDeliveryId);
+        } else {
+            contactDelivery = contactDeliveryRepository.findByContactIDAdmin(contactDeliveryId);
         }
         return contactDelivery;
     }
 
     @Override
     public void updateIContactDelivery(Long contactDeliveryId, ContactDeliveryDto contactDeliveryDto) {
-        log.info("[Start ContactDeliveryService - UpdateContact with ContactName: " + contactDeliveryDto.getContactName()+ "]");
+        log.info("[Start ContactDeliveryService - UpdateContact with ContactName: " + contactDeliveryDto.getContactName() + "]");
         log.info("[Start get current user]");
         User currentUser = userCommon.getCurrentUser();
         log.info("[End get current user : " + currentUser.getUsername() + "]");
         Customer customer = new Customer();
         customer.setCustomerId(contactDeliveryDto.getCustomerId());
 
-        if(currentUser.getRole().getRoleID()!=1){
+        if (currentUser.getRole().getRoleID() != 1) {
 
-            if(currentUser.getWarehouse().getWarehouseID()!=contactDeliveryRepository.findByContactIDAdmin(contactDeliveryId).getCustomer().getWarehouse().getWarehouseID()){
+            if (currentUser.getWarehouse().getWarehouseID() != contactDeliveryRepository.findByContactIDAdmin(contactDeliveryId).getCustomer().getWarehouse().getWarehouseID()) {
                 throw new AppException("you cant update in another Warehouse");
             }
         }
@@ -108,7 +108,7 @@ public class ContactDeliveryService implements IContactDeliveryService {
         User currentUser = userCommon.getCurrentUser();
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
-        Customer customer= new Customer();
+        Customer customer = new Customer();
         customer.setCustomerId(contactDeliveryDto.getCustomerId());
 
         ContactDelivery contactDelivery = ContactDelivery.builder()
@@ -130,12 +130,12 @@ public class ContactDeliveryService implements IContactDeliveryService {
     @Override
     public void deleteContactDelivery(Long contactDeliveryId) {
         User currentUser = userCommon.getCurrentUser();
-        if(currentUser.getRole().getRoleID()!=1){
-            if(currentUser.getWarehouse().getWarehouseID()!=contactDeliveryRepository.findByContactIDAdmin(contactDeliveryId).getCustomer().getWarehouse().getWarehouseID()){
+        if (currentUser.getRole().getRoleID() != 1) {
+            if (currentUser.getWarehouse().getWarehouseID() != contactDeliveryRepository.findByContactIDAdmin(contactDeliveryId).getCustomer().getWarehouse().getWarehouseID()) {
                 throw new AppException("you cant Delete in another Warehouse");
             }
-            contactDeliveryRepository.deleteContactDeliverie(contactDeliveryId);}
-        else{
+            contactDeliveryRepository.deleteContactDeliverie(contactDeliveryId);
+        } else {
             contactDeliveryRepository.deleteContactDeliverie(contactDeliveryId);
         }
     }

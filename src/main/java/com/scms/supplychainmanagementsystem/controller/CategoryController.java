@@ -32,12 +32,12 @@ public class CategoryController {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    @ApiOperation(value = "Requires ADMIN or MANAGER Access")
+    @ApiOperation(value = "Requires ADMIN or MANAGER Access. Not required fields[categoryId]")
     public ResponseEntity<String> createCategory(@RequestBody CategoryDto categoryDto) {
         log.info("[Start CategoryController -  createCategory " + categoryDto.getCategoryName() + "]");
         iCategoryService.createCategory(categoryDto);
         log.info("[End CategoryController -  createCategory " + categoryDto.getCategoryName() + "]");
-        return new ResponseEntity<>("User Account Created Successfully", CREATED);
+        return new ResponseEntity<>("Category Created Successfully", CREATED);
     }
 
     @GetMapping
@@ -80,7 +80,7 @@ public class CategoryController {
 
     @PutMapping("/{categoryId}")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    @ApiOperation(value = "Requires ADMIN or MANAGER Access. Disable field [userId, username,createdBy, createdDate,lastModifiedBy,lastModifiedDate]")
+    @ApiOperation(value = "Requires ADMIN or MANAGER Access. Not required fields[categoryId]")
     public ResponseEntity<String> updateCategory(@PathVariable Long categoryId, @Valid @RequestBody CategoryDto categoryDto) {
         log.info("[Start CategoryController - updateCategory " + categoryDto.getCategoryName() + "]");
         categoryDto.setCategoryId(categoryId);

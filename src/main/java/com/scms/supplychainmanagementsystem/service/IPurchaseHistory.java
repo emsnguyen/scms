@@ -1,6 +1,5 @@
 package com.scms.supplychainmanagementsystem.service;
 
-import com.scms.supplychainmanagementsystem.dto.MaterialDto;
 import com.scms.supplychainmanagementsystem.dto.PurchaseHistoryDto;
 import com.scms.supplychainmanagementsystem.entity.Material;
 import com.scms.supplychainmanagementsystem.entity.PurchaseHistory;
@@ -24,7 +23,7 @@ public interface IPurchaseHistory {
 
     void updatePurchaseHistory(Long PurchaseHistoryId, PurchaseHistoryDto purchaseHistoryDto);
 
-    void savePurchaseHistory( PurchaseHistoryDto purchaseHistoryDto);
+    void savePurchaseHistory(PurchaseHistoryDto purchaseHistoryDto);
 
     void deletePurchaseHistory(Long PurchaseHistoryId);
 }
