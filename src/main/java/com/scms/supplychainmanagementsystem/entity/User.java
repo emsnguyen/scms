@@ -10,8 +10,6 @@ import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.time.LocalDate;
 
-import static javax.persistence.FetchType.LAZY;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -34,12 +32,12 @@ public class User {
     private String email;
 
     @NotNull
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "RoleID", referencedColumnName = "RoleID")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "roleid", referencedColumnName = "roleid")
     private Role role;
 
-    @ManyToOne
-    @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "warehouseId", referencedColumnName = "warehouseId")
     private Warehouse warehouse;
 
     private String firstName;
@@ -52,7 +50,7 @@ public class User {
 
     private LocalDate dateOfBirth;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @JoinColumn(name = "DistrictID", referencedColumnName = "DistrictID")
     private District district;
 
@@ -60,11 +58,11 @@ public class User {
 
     private Instant createdDate;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "createdBy", referencedColumnName = "userID")
     private User createdBy;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID")
     private User lastModifiedBy;
 

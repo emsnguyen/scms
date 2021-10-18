@@ -18,6 +18,7 @@ public class RefreshTokenService implements IRefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
+    @Override
     public RefreshToken generateRefreshToken() {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setToken(UUID.randomUUID().toString());
@@ -26,11 +27,13 @@ public class RefreshTokenService implements IRefreshTokenService {
         return refreshTokenRepository.save(refreshToken);
     }
 
+    @Override
     public void validateRefreshToken(String token) {
         refreshTokenRepository.findByToken(token)
                 .orElseThrow(() -> new AppException("Invalid refresh Token"));
     }
 
+    @Override
     public void deleteRefreshToken(String token) {
         refreshTokenRepository.deleteByToken(token);
     }
