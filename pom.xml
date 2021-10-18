@@ -11,7 +11,7 @@
     <groupId>com.scms</groupId>
     <artifactId>scms</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+<!--    <packaging>jar</packaging>-->
     <name>supply-chain-management-system</name>
     <description>supply-chain-management-system</description>
     <properties>
