@@ -14,10 +14,10 @@ public interface ContactDeliveryRepository extends JpaRepository<ContactDelivery
     //    Optional<Material> findByMaterialName(String materialName);
 
 
-    @Query(value = "SELECT * FROM test.contact_delivery where contactid= :contactid ", nativeQuery = true)
+    @Query(value = "select u FROM ContactDelivery u where u.contactID = :contactid ")
     ContactDelivery findByContactIDManager(@Param("contactid") Long contactid);
 
-    @Query(value = "SELECT * FROM test.contact_delivery where contactid= :contactid", nativeQuery = true)
+    @Query(value = "SELECT u FROM ContactDelivery u where u.contactID = :contactid")
     ContactDelivery findByContactIDAdmin(@Param("contactid") Long contactid);
 
 
@@ -26,7 +26,7 @@ public interface ContactDeliveryRepository extends JpaRepository<ContactDelivery
 
     @Modifying
     @Transactional
-    @Query(value = "Delete  FROM test.contact_delivery where contactid= :contactid ", nativeQuery = true)
+    @Query(value = "Delete  FROM ContactDelivery u where u.contactID= :contactid ")
     void deleteContactDeliverie(@Param("contactid") Long contactId);
 
 

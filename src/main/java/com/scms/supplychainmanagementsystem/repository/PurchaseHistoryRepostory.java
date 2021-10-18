@@ -15,21 +15,21 @@ import javax.transaction.Transactional;
 public interface PurchaseHistoryRepostory extends JpaRepository<PurchaseHistory, Long> {
 
 
-    @Query(value = "SELECT * FROM test.purchase_history where purchaseid= :purchaseid  and warehouseid= :warehouseid", nativeQuery = true)
+    @Query(value = "SELECT u FROM PurchaseHistory u where u.purchaseID= :purchaseid  and u.warehouse.warehouseID= :warehouseid")
     PurchaseHistory findByPurchaseIdInWarehouse(@Param("purchaseid") Long purchaseid, @Param("warehouseid") Long warehouseId);
 
-    @Query(value = "SELECT * FROM test.purchase_history where purchaseid= :purchaseid ", nativeQuery = true)
+    @Query(value = "SELECT u FROM PurchaseHistory u where u.purchaseID= :purchaseid ")
     PurchaseHistory findByPurchaseId(@Param("purchaseid") Long purchaseid);
 
 
     @Modifying
     @Transactional
-    @Query(value = "Delete  FROM test.purchase_history where purchaseid= :purchaseid  and warehouseid= :warehouseid", nativeQuery = true)
+    @Query(value = "Delete  FROM PurchaseHistory u where u.purchaseID= :purchaseid  and u.warehouse.warehouseID= :warehouseid")
     void deletePurchase(@Param("purchaseid") Long purchaseid, @Param("warehouseid") Long warehouseId);
 
     @Modifying
     @Transactional
-    @Query(value = "Delete  FROM test.purchase_history where purchaseid= :purchaseid ", nativeQuery = true)
+    @Query(value = "Delete  FROM PurchaseHistory u where u.warehouse.warehouseID= :purchaseid ")
     void deletePurchaseAdmin(@Param("purchaseid") Long purchaseid);
 
     @Query(value = "select u from PurchaseHistory u where u.warehouse.warehouseID =:warehouseId " +

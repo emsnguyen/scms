@@ -16,13 +16,13 @@ import java.util.List;
 public interface SupplierRepository extends JpaRepository<Supplier, Long> {
 
     //    Optional<Material> findByMaterialName(String materialName);
-    @Query(value = "SELECT * FROM test.supplier where  warehouseid= :warehouseid", nativeQuery = true)
+    @Query(value = "SELECT u FROM Supplier u where  u.warehouse.warehouseID= :warehouseid")
     List<Supplier> findAllByWarehouse(@Param("warehouseid") Long warehouseId);
 
-    @Query(value = "SELECT * FROM test.supplier where supplier_id= :supplierid and warehouseid= :warehouseid", nativeQuery = true)
+    @Query(value = "SELECT u FROM Supplier u where u.supplierId= :supplierid and u.warehouse.warehouseID= :warehouseid")
     Supplier findBySupplierIdAnhInWarehouse(@Param("supplierid") Long materialId, @Param("warehouseid") Long warehouseId);
 
-    @Query(value = "SELECT * FROM test.supplier where supplier_id= :supplierid", nativeQuery = true)
+    @Query(value = "SELECT u FROM Supplier u where u.supplierId= :supplierid")
     Supplier findBySupplierId(@Param("supplierid") Long materialId);
 
 
@@ -31,15 +31,15 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "Delete  FROM test.supplier where supplier_id= :supplierid and warehouseid= :warehouseid", nativeQuery = true)
+    @Query(value = "Delete  FROM Supplier u where u.supplierId= :supplierid and u.warehouse.warehouseID= :warehouseid")
     void deleteSupplier(@Param("supplierid") Long supplierId, @Param("warehouseid") Long warehouseId);
 
     @Modifying
     @Transactional
-    @Query(value = "Delete  FROM test.supplier where supplier_id= :supplierid ", nativeQuery = true)
+    @Query(value = "Delete  FROM Supplier u where u.supplierId= :supplierid ")
     void deleteSupplierAdmin(@Param("supplierid") Long supplierId);
 
-    @Query(value = "select supplier_name FROM test.supplier where supplier_name= :suppliername ", nativeQuery = true)
+    @Query(value = "select u.SupplierName FROM Supplier u where u.SupplierName= :suppliername ")
     boolean existsBySupplierName(@Param("suppliername") String suppliername);
 
     @Query(value = "select u from Supplier u where u.warehouse.warehouseID =:warehouseId " +

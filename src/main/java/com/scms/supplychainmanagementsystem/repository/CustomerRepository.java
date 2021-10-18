@@ -19,24 +19,24 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Optional<Customer> findByEmail(String email);
 
 
-    @Query(value = "SELECT * FROM test.customer where customer_id= :customerid and warehouseid= :warehouseid", nativeQuery = true)
+    @Query(value = "SELECT u FROM Customer u where u.customerId= :customerid and u.warehouse.warehouseID= :warehouseid")
     Customer findByCustomerIdAnhInWarehouse(@Param("customerid") Long customerId, @Param("warehouseid") Long warehouseId);
 
-    @Query(value = "SELECT * FROM test.customer where customer_id= :customerid ", nativeQuery = true)
+    @Query(value = "SELECT u FROM Customer u where u.customerId= :customerid ")
     Customer findByCustomerId(@Param("customerid") Long customerId);
 
 
-    @Query(value = "SELECT * FROM test.customer where warehouseid= :warehouseid", nativeQuery = true)
+    @Query(value = "SELECT u FROM Customer u where u.warehouse.warehouseID= :warehouseid")
     Page<Customer> findByWarehouse(@Param("warehouseid") Long warehouseId, Pageable pageable);
 
     @Modifying
     @Transactional
-    @Query(value = "Delete  FROM test.customer where customer_id= :customerid and warehouseid= :warehouseid", nativeQuery = true)
+    @Query(value = "Delete  FROM Customer u where u.customerId= :customerid and u.warehouse.warehouseID= :warehouseid")
     void deleteCustomer(@Param("customerid") Long customerId, @Param("warehouseid") Long warehouseId);
 
     @Modifying
     @Transactional
-    @Query(value = "Delete  FROM test.customer where customer_id= :customerid ", nativeQuery = true)
+    @Query(value = "Delete  FROM Customer u where u.customerId = :customerid ")
     void deleteCustomerAdmin(@Param("customerid") Long customerId);
 
     boolean existsByEmail(String email);
