@@ -24,14 +24,16 @@ public class OrderDetails {
     private Double quantity;
 
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "orderId", referencedColumnName = "orderId")
     private Order order;
 
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "priceBookId", referencedColumnName = "priceBookId")
     private PriceBook priceBook;
 
-
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "orderDetailStatusId", referencedColumnName = "orderDetailStatusId")
+    private OrderDetailsStatus orderDetailsStatus;
 }

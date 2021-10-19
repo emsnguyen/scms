@@ -8,8 +8,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.Instant;
 
-import static javax.persistence.FetchType.LAZY;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -24,11 +22,7 @@ public class Inventory {
 
     private Instant dateCheck;
 
-    private Boolean isActive;
-
     private String description;
-
-    private double currentQuantity;
 
     private double shortageQuantity;
 
@@ -48,12 +42,12 @@ public class Inventory {
     @JoinColumn(name = "StatusId", referencedColumnName = "StatusId")
     private InvProductStatus status;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @JoinColumn(name = "createdBy", referencedColumnName = "userID")
     private User createdBy;
 
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID")
     private User lastModifiedBy;
 }
