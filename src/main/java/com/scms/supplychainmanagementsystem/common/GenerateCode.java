@@ -3,14 +3,16 @@ package com.scms.supplychainmanagementsystem.common;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
+import java.time.LocalDate;
 
 @Component
 @Slf4j
 public class GenerateCode {
-    public String genCodeByDate(String prefix) {
-        Instant now = Instant.now();
-
-        return null;
+    public static String genCodeByDate(String prefix) {
+        LocalDate currentDate = LocalDate.now();
+        int day = currentDate.getDayOfMonth();
+        int month = currentDate.getMonthValue();
+        int year = currentDate.getYear();
+        return prefix + year + month + day;
     }
 }

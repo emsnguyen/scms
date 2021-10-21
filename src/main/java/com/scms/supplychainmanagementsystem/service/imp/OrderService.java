@@ -81,13 +81,14 @@ public class OrderService implements IOrderService {
         } else {
             order.setWarehouse(current.getWarehouse());
         }
-        order.setOrderCode(generateCode.genCodeByDate("DH"));
         order.setNote(orderRequest.getNote());
         order.setCreatedDate(Instant.now());
 
         order.setOrderStatus(orderStatusRepository.getById(1L));
         order.setCreatedBy(current);
         log.info("[Start Save Order ID = " + orderRequest.getOrderId() + " to database]");
+        orderRepository.saveAndFlush(order);
+        order.setOrderCode(generateCode.genCodeByDate("DH") + order.getOrderId());
         orderRepository.saveAndFlush(order);
         log.info("[End Save Order ID = " + orderRequest.getOrderId() + " to database]");
         log.info("[End OrderService - createOrder]");
