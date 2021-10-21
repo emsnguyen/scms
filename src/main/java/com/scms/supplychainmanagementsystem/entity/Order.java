@@ -25,6 +25,10 @@ public class Order {
 
     private Instant lastModifiedDate;
 
+    private String note;
+
+    private String orderCode;
+
     @ManyToOne
     @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseId")
     private Warehouse warehouse;
