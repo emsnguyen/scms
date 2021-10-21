@@ -64,5 +64,27 @@ public class Customer {
     @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID")
     private User lastModifiedBy;
 
-
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customerId=" + customerId +
+                ", customerCode='" + customerCode + '\'' +
+                ", CustomerType='" + CustomerType + '\'' +
+                ", customerName='" + customerName + '\'' +
+                ", warehouse=" + warehouse +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", DateOfBirth=" + DateOfBirth +
+                ", Gender=" + Gender +
+                ", TaxCode='" + TaxCode + '\'' +
+                ", Facebook='" + Facebook + '\'' +
+                ", district=" + district +
+                ", streetAddress='" + streetAddress + '\'' +
+                ", CompanyName='" + CompanyName + '\'' +
+                ", Note='" + Note + '\'' +
+                ", createdDate=" + createdDate +
+                ", createdBy=" + createdBy +
+                ", lastModifiedBy=" + lastModifiedBy +
+                '}';
+    }
 }

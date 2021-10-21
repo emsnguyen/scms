@@ -22,4 +22,14 @@ public class District {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "provinceID", referencedColumnName = "provinceId")
     private Province province;
+
+    @Override
+    public String toString() {
+        return "District{" +
+                "districtID=" + districtID +
+                ", districtName='" + districtName + '\'' +
+                ", districtType='" + districtType + '\'' +
+                ", province=" + province +
+                '}';
+    }
 }

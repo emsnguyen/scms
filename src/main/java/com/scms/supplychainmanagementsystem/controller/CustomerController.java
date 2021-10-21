@@ -5,6 +5,7 @@ import com.scms.supplychainmanagementsystem.dto.CustomerDto;
 import com.scms.supplychainmanagementsystem.dto.RoleDto;
 import com.scms.supplychainmanagementsystem.dto.WarehouseDto;
 import com.scms.supplychainmanagementsystem.entity.*;
+import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.CustomerRepository;
 import com.scms.supplychainmanagementsystem.service.ICustomerService;
 import io.swagger.annotations.ApiOperation;
@@ -24,12 +25,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -157,34 +158,48 @@ public class CustomerController {
         } else {
 //            warehouse.setWarehouseID(row.getCell(1).getCTCell().getS());
         }
+        System.out.println("so hang" + worksheet.getPhysicalNumberOfRows());
         List<Customer> customerList = new ArrayList<>();
         for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) {
-            XSSFRow row = worksheet.getRow(0);
+            XSSFRow row = worksheet.getRow(i);
+
+            Date date = row.getCell(5).getDateCellValue();
+            DateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+            String convertedDate = parser.format(date);
+
         Customer customer = Customer.builder()
-                .customerCode(row.getCell(2).getStringCellValue())
-                .CustomerType(row.getCell(2).getStringCellValue())
+                .customerCode(row.getCell(0) != null ? row.getCell(0).getStringCellValue() :ex("customerCode",i+1))
+                .CustomerType(row.getCell(1) !=null?row.getCell(1).getStringCellValue():ex("customerType",i+1))
                 .customerName(row.getCell(2).getStringCellValue())
-                .email(row.getCell(2).getStringCellValue())
+                .email(row.getCell(3) != null ? row.getCell(3).getStringCellValue() :ex("Email",i+1))
                 .warehouse(warehouse)
-                .phone(row.getCell(2).getStringCellValue())
-                .DateOfBirth(null)
-                .Gender(row.getCell(2).getBooleanCellValue())
-                .Facebook(row.getCell(2).getStringCellValue())
-                .CompanyName(row.getCell(2).getStringCellValue())
-                .Note(row.getCell(2).getStringCellValue())
-                .TaxCode(row.getCell(2).getStringCellValue())
+                .phone(row.getCell(4).getStringCellValue())
+                .DateOfBirth(LocalDate.parse(convertedDate))
+                .Gender(row.getCell(6).getBooleanCellValue())
+                .Facebook(row.getCell(7).getStringCellValue())
+                .CompanyName(row.getCell(8).getStringCellValue())
+                .Note(row.getCell(9).getStringCellValue())
+                .TaxCode(row.getCell(10).getStringCellValue())
                 .district(District.builder()
-                        .districtID(row.getCell(2).getCTCell().getS())
-                        .province(Province.builder().provinceID(row.getCell(2).getCTCell().getS()).build()).build())
-                .streetAddress(row.getCell(2).getStringCellValue())
+                        .districtID(0L).build())
+                .streetAddress(row.getCell(11).getStringCellValue())
                 .createdDate(Instant.now())
                 .createdBy(currentUser)
                 .lastModifiedBy(currentUser)
                 .build();
         customerList.add(customer);
+
+            System.out.println(customer.toString());
         }
-        for (Customer customer:customerList) {
+        for (Customer customer: customerList ) {
             customerRepository.saveAndFlush(customer);
         }
+        }
+
+    public String ex (String loi ,int index) throws IOException {
+        throw new AppException("Lỗi nhận dữ liệu "+loi+ " tai hàng "+ index);
     }
-}
+
+
+    }
+
