@@ -11,7 +11,7 @@
     <groupId>com.scms</groupId>
     <artifactId>scms</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+<!--    <packaging>war</packaging>-->
     <name>supply-chain-management-system</name>
     <description>supply-chain-management-system</description>
     <properties>
@@ -141,6 +141,7 @@
     </dependencies>
 
     <build>
+        <finalName>scms</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

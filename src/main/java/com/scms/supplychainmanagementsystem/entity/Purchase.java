@@ -7,47 +7,38 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Inventory {
+public class Purchase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long inventoryId;
+    private Long purchaseID;
 
-    private Long personCheck;
-
-    private Instant dateCheck;
-
-    private String description;
-
-    private double shortageQuantity;
+    private LocalDate purchaseDate;
 
     private Instant createdDate;
 
     private Instant lastModifiedDate;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "SupplierID", referencedColumnName = "SupplierID")
+    private Supplier supplier;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseID")
     private Warehouse warehouse;
 
-    @ManyToOne
-    @JoinColumn(name = "ProductId", referencedColumnName = "ProductId")
-    private Product product;
-
-    @ManyToOne
-    @JoinColumn(name = "StatusId", referencedColumnName = "StatusId")
-    private InvProductStatus status;
-
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "createdBy", referencedColumnName = "userID")
     private User createdBy;
 
-
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userID")
     private User lastModifiedBy;
+
 }
