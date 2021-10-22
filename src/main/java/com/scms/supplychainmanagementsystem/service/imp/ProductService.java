@@ -3,11 +3,13 @@ package com.scms.supplychainmanagementsystem.service.imp;
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.ProductDto;
 import com.scms.supplychainmanagementsystem.entity.Product;
+import com.scms.supplychainmanagementsystem.entity.Stock;
 import com.scms.supplychainmanagementsystem.entity.User;
 import com.scms.supplychainmanagementsystem.entity.Warehouse;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.CategoryRepository;
 import com.scms.supplychainmanagementsystem.repository.ProductRepository;
+import com.scms.supplychainmanagementsystem.repository.StockRepository;
 import com.scms.supplychainmanagementsystem.repository.WarehouseRepository;
 import com.scms.supplychainmanagementsystem.service.IProductService;
 import lombok.AllArgsConstructor;
@@ -28,6 +30,7 @@ public class ProductService implements IProductService {
     private final UserCommon userCommon;
     private final WarehouseRepository warehouseRepository;
     private final CategoryRepository categoryRepository;
+    private final StockRepository stockRepository;
 
     @Override
     public void updateProduct(ProductDto productDto) {
@@ -88,6 +91,10 @@ public class ProductService implements IProductService {
         log.info("[Start Save Product " + productDto.getProductName() + " to database]");
         productRepository.saveAndFlush(product);
         log.info("[End Save Product " + productDto.getProductName() + " to database]");
+        Stock stock = Stock.builder().product(product).build();
+        log.info("[Start Save Stock for Product ID = " + productDto.getProductName() + " to database]");
+        stockRepository.saveAndFlush(stock);
+        log.info("[End Save Stock for Product ID = " + productDto.getProductName() + " to database]");
         log.info("[End ProductService - createProduct " + productDto.getProductName() + "]");
     }
 

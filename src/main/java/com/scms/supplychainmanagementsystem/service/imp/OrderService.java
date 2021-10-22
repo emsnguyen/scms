@@ -84,6 +84,7 @@ public class OrderService implements IOrderService {
 
         order.setOrderStatus(orderStatusRepository.getById(1L));
         order.setCreatedBy(current);
+        // TODO: set field orderCode
         log.info("[Start Save Order to database]");
         orderRepository.saveAndFlush(order);
         //log.info("Generate Order Code");
@@ -167,7 +168,7 @@ public class OrderService implements IOrderService {
         log.info("[Start OrderService - updateOrderStatus Order ID = " + orderId + "]");
     }
 
-    public boolean checkAccessOrder(Long orderId) {
+    private boolean checkAccessOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new AppException("Order not found"));
         User current = userCommon.getCurrentUser();
@@ -179,4 +180,10 @@ public class OrderService implements IOrderService {
         }
         return false;
     }
+
+    private boolean checkOrderStatus() {
+        // TODO: check stt
+        return true;
+    }
+
 }
