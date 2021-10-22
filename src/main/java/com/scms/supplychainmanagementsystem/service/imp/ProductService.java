@@ -91,7 +91,7 @@ public class ProductService implements IProductService {
         log.info("[Start Save Product " + productDto.getProductName() + " to database]");
         productRepository.saveAndFlush(product);
         log.info("[End Save Product " + productDto.getProductName() + " to database]");
-        Stock stock = Stock.builder().product(product).build();
+        Stock stock = Stock.builder().product(product).availableQuantity(0D).build();
         log.info("[Start Save Stock for Product ID = " + productDto.getProductName() + " to database]");
         stockRepository.saveAndFlush(stock);
         log.info("[End Save Stock for Product ID = " + productDto.getProductName() + " to database]");
