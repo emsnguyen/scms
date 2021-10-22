@@ -39,8 +39,6 @@ public class CategoryService implements ICategoryService {
 //            }
             if (current.getRole().getRoleID() == 1) {
                 category.setWarehouse(warehouseRepository.getById(categoryDto.getWarehouseId()));
-            } else {
-                category.setWarehouse(current.getWarehouse());
             }
             log.info("[Start Save Category " + categoryDto.getCategoryName() + " to database]");
             categoryRepository.saveAndFlush(category);

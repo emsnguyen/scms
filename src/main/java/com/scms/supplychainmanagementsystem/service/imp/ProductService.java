@@ -43,8 +43,6 @@ public class ProductService implements IProductService {
             if (current.getRole().getRoleID() == 1) {
                 product.setWarehouse(warehouseRepository.findById(productDto.getWarehouseId())
                         .orElseThrow(() -> new AppException("Warehouse not found")));
-            } else {
-                product.setWarehouse(current.getWarehouse());
             }
             product.setProductName(productDto.getProductName());
             product.setCategory(categoryRepository.findById(productDto.getCategoryId())

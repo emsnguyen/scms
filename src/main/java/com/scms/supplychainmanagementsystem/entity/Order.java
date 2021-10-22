@@ -38,7 +38,7 @@ public class Order {
     private ContactDelivery contactDelivery;
 
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "OrderStatusID", referencedColumnName = "orderStatusID")
     private OrderStatus orderStatus;
 

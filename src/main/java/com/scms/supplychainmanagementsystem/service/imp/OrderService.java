@@ -48,8 +48,6 @@ public class OrderService implements IOrderService {
             if (current.getRole().getRoleID() == 1) {
                 order.setWarehouse(warehouseRepository.findById(orderRequest.getWarehouseId())
                         .orElseThrow(() -> new AppException("Warehouse not found")));
-            } else {
-                order.setWarehouse(current.getWarehouse());
             }
             order.setContactDelivery(contactDeliveryRepository.findById(orderRequest.getContactId())
                     .orElseThrow(() -> new AppException("Contact Delivery not found")));
@@ -86,11 +84,12 @@ public class OrderService implements IOrderService {
 
         order.setOrderStatus(orderStatusRepository.getById(1L));
         order.setCreatedBy(current);
-        log.info("[Start Save Order ID = " + orderRequest.getOrderId() + " to database]");
+        log.info("[Start Save Order to database]");
         orderRepository.saveAndFlush(order);
-        order.setOrderCode(generateCode.genCodeByDate("DH") + order.getOrderId());
-        orderRepository.saveAndFlush(order);
-        log.info("[End Save Order ID = " + orderRequest.getOrderId() + " to database]");
+        //log.info("Generate Order Code");
+        //order.setOrderCode(generateCode.genCodeByDate("DH") + order.getOrderId());
+        //orderRepository.saveAndFlush(order);
+        log.info("[End Save Order ID to database]");
         log.info("[End OrderService - createOrder]");
 
     }
