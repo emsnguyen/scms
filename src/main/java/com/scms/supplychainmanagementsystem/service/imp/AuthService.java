@@ -9,6 +9,7 @@ import com.scms.supplychainmanagementsystem.repository.*;
 import com.scms.supplychainmanagementsystem.security.JwtProvider;
 import com.scms.supplychainmanagementsystem.service.IAuthService;
 import com.scms.supplychainmanagementsystem.service.IRefreshTokenService;
+import com.scms.supplychainmanagementsystem.util.MailService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
