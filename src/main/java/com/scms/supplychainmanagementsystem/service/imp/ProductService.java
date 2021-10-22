@@ -97,7 +97,7 @@ public class ProductService implements IProductService {
     public void deleteProductByProductId(Long productId) {
         log.info("[Start ProductService - deleteProductByProductId = " + productId + "]");
         if (checkAccessProduct(productId)) {
-            categoryRepository.deleteById(productId);
+            productRepository.deleteById(productId);
         } else {
             throw new AppException("Not allow to delete this resource");
         }

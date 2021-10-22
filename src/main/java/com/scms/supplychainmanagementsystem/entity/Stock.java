@@ -13,30 +13,18 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class StockHistory {
+public class Stock {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long stockHistoryID;
-
-    private Double stockInQuantity;
-
-    private Double unitCostPrice;
-
-    private Instant createdDate;
-
-    private Instant lastModifiedDate;
+    private Long stockId;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "ProductId", referencedColumnName = "ProductId")
     private Product product;
 
+    private Double availableQuantity;
 
-    @ManyToOne
-    @JoinColumn(name = "CreatedBy", referencedColumnName = "CreatedBy")
-    private Product createdBy;
-
-    @ManyToOne
-    @JoinColumn(name = "LastModifiedBy", referencedColumnName = "LastModifiedBy")
-    private Product lastModifiedBy;
+    private Instant lastModifiedDate;
 
 }

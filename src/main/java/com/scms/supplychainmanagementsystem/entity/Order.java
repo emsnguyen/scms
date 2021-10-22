@@ -8,13 +8,12 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.Instant;
 
-import static javax.persistence.FetchType.LAZY;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "`Order`")
 public class Order {
 
     @Id
@@ -26,13 +25,17 @@ public class Order {
 
     private Instant lastModifiedDate;
 
+    private String note;
+
+    private String orderCode;
+
     @ManyToOne
     @JoinColumn(name = "WarehouseID", referencedColumnName = "WarehouseId")
     private Warehouse warehouse;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "ContactID", referencedColumnName = "ContactID")
-    private ContactDelivery contact;
+    private ContactDelivery contactDelivery;
 
 
     @ManyToOne
@@ -40,11 +43,11 @@ public class Order {
     private OrderStatus orderStatus;
 
 
-    @ManyToOne
-    @JoinColumn(name = "CreatedBy", referencedColumnName = "userId")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "createdBy", referencedColumnName = "userId")
     private User createdBy;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userId")
     private User lastModifiedBy;
 
