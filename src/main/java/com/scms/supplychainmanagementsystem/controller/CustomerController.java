@@ -2,12 +2,12 @@ package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.CustomerDto;
-import com.scms.supplychainmanagementsystem.dto.RoleDto;
 import com.scms.supplychainmanagementsystem.dto.WarehouseDto;
 import com.scms.supplychainmanagementsystem.entity.*;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.CustomerRepository;
 import com.scms.supplychainmanagementsystem.service.ICustomerService;
+import com.scms.supplychainmanagementsystem.validation.MyValidation;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -46,19 +45,8 @@ public class CustomerController {
     private ICustomerService iCustomerService;
     private CustomerRepository customerRepository;
     private final UserCommon userCommon;
-//    @GetMapping
-//    public ResponseEntity<List<CustomerDto>> getAllCustomer(Pageable page) {
-//        log.info("[Start Customer - list]");
-//        Page<Customer> customerslist = iCustomerService.getAllCustomerInWarehouse(page);
-//        log.info("[End Customer - list]");
-//        List<Customer> listcus = customerslist.getContent();
-//        List<CustomerDto> listDto = new ArrayList<>();
-//        for (Customer customer : listcus) {
-//            CustomerDto cuss = new CustomerDto(customer);
-//            listDto.add(cuss);
-//        }
-//        return status(HttpStatus.OK).body(listDto);
-//    }
+    private MyValidation validation;
+
 
     @GetMapping()
     public ResponseEntity<Map<String, Object>> getAllCustomerInWarehouse(@RequestParam(required = false) String customername,
@@ -144,61 +132,14 @@ public class CustomerController {
     }
 
     @PostMapping("/import")
-    public void mapReapExcelDatatoDB(@RequestParam("file") MultipartFile reapExcelDataFile) throws IOException {
+    public ResponseEntity<String> mapReapExcelDatatoDB(@RequestParam("file") MultipartFile reapExcelDataFile) throws IOException {
+        log.info("[Start CustomerController -  AddCustomer from Excel  ");
+        iCustomerService.mapReapExcelDatatoDB(reapExcelDataFile);
+        log.info("[End CustomerController - AddCustomer from Excel  ");
+        return new ResponseEntity<>("Add Successfully", CREATED);
 
-        XSSFWorkbook workbook = new XSSFWorkbook(reapExcelDataFile.getInputStream());
-        XSSFSheet worksheet = workbook.getSheetAt(0);
-
-        User currentUser = userCommon.getCurrentUser();
-        log.info("[End get current user : " + currentUser.getUsername() + "]");
-
-        Warehouse warehouse = new Warehouse();
-        if (currentUser.getRole().getRoleID() != 1) {
-            warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
-        } else {
-//            warehouse.setWarehouseID(row.getCell(1).getCTCell().getS());
-        }
-        System.out.println("so hang" + worksheet.getPhysicalNumberOfRows());
-        List<Customer> customerList = new ArrayList<>();
-        for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) {
-            XSSFRow row = worksheet.getRow(i);
-
-            Date date = row.getCell(5).getDateCellValue();
-            DateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
-            String convertedDate = parser.format(date);
-
-        Customer customer = Customer.builder()
-                .customerCode(row.getCell(0) != null ? row.getCell(0).getStringCellValue() :ex("customerCode",i+1))
-                .CustomerType(row.getCell(1) !=null?row.getCell(1).getStringCellValue():ex("customerType",i+1))
-                .customerName(row.getCell(2).getStringCellValue())
-                .email(row.getCell(3) != null ? row.getCell(3).getStringCellValue() :ex("Email",i+1))
-                .warehouse(warehouse)
-                .phone(row.getCell(4).getStringCellValue())
-                .DateOfBirth(LocalDate.parse(convertedDate))
-                .Gender(row.getCell(6).getBooleanCellValue())
-                .Facebook(row.getCell(7).getStringCellValue())
-                .CompanyName(row.getCell(8).getStringCellValue())
-                .Note(row.getCell(9).getStringCellValue())
-                .TaxCode(row.getCell(10).getStringCellValue())
-                .district(District.builder()
-                        .districtID(0L).build())
-                .streetAddress(row.getCell(11).getStringCellValue())
-                .createdDate(Instant.now())
-                .createdBy(currentUser)
-                .lastModifiedBy(currentUser)
-                .build();
-        customerList.add(customer);
-
-            System.out.println(customer.toString());
-        }
-        for (Customer customer: customerList ) {
-            customerRepository.saveAndFlush(customer);
-        }
         }
 
-    public String ex (String loi ,int index) throws IOException {
-        throw new AppException("Lỗi nhận dữ liệu "+loi+ " tai hàng "+ index);
-    }
 
 
     }
