@@ -17,13 +17,13 @@ public interface MaterialRepository extends JpaRepository<Material, Long> {
 
 //    Optional<Material> findByMaterialName(String materialName);
 
-    @Query(value = "SELECT * FROM test.material where  warehouseid= :warehouseid", nativeQuery = true)
+    @Query(value = "SELECT u FROM Material  u where u.warehouse.warehouseID = :warehouseid")
     List<Material> findAllByWarehouse(@Param("warehouseid") Long warehouseId);
 
-    @Query(value = "SELECT * FROM test.material where materialid= :materialid and warehouseid= :warehouseid", nativeQuery = true)
+    @Query(value = "SELECT u FROM Material  u where u.materialID = :materialid and u.warehouse.warehouseID= :warehouseid")
     Material findByMaterialIdAnhInWarehouse(@Param("materialid") Long materialId, @Param("warehouseid") Long warehouseId);
 
-    @Query(value = "SELECT * FROM test.material where materialid= :materialid ", nativeQuery = true)
+    @Query(value = "SELECT u FROM Material  u where u.materialID= :materialid ")
     Material findByMaterialId(@Param("materialid") Long materialId);
 
 //    @Query(value = "SELECT * FROM test.customer where warehouseid= :warehouseid",nativeQuery = true)
@@ -31,16 +31,16 @@ public interface MaterialRepository extends JpaRepository<Material, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "Delete  FROM test.material where materialid= :materialid and warehouseid= :warehouseid", nativeQuery = true)
+    @Query(value = "Delete  FROM Material u where u.materialID= :materialid and u.warehouse.warehouseID= :warehouseid")
     void deleteMaterial(@Param("materialid") Long customerId, @Param("warehouseid") Long warehouseId);
 
     @Modifying
     @Transactional
-    @Query(value = "Delete  FROM test.material where materialid= :materialid ", nativeQuery = true)
+    @Query(value = "Delete  FROM Material u where u.materialID= :materialid ")
     void deleteMaterialAdmin(@Param("materialid") Long customerId);
 
 
-    @Query(value = "select material_name FROM test.material where material_name= :materialName ", nativeQuery = true)
+    @Query(value = "select u.MaterialName FROM Material u where u.MaterialName= :materialName ")
     boolean existsByMaterialName(@Param("materialName") String materialName);
 
     @Query(value = "select u from Material u where u.warehouse.warehouseID =:warehouseId " +

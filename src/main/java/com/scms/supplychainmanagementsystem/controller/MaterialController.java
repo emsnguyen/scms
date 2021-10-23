@@ -1,7 +1,6 @@
 package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.dto.MaterialDto;
-import com.scms.supplychainmanagementsystem.entity.Customer;
 import com.scms.supplychainmanagementsystem.entity.Material;
 import com.scms.supplychainmanagementsystem.service.IMaterialService;
 import io.swagger.annotations.ApiOperation;
@@ -64,7 +63,7 @@ public class MaterialController {
 
     @GetMapping("/warehouse/{warehouseid}")
     public ResponseEntity<List<Material>> getMaterialInWarehouse(@PathVariable Long warehouseid) {
-        log.info("[Start PurchaseHistoryController - Get PurchaseHistory By ID]");
+        log.info("[Start MaterialController - Get Material ]");
 
         List<Material> materialArrayList = new ArrayList<>();
         materialArrayList=iMaterialService.getMaterialInWareHouse(warehouseid);

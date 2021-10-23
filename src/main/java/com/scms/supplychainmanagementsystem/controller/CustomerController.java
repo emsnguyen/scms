@@ -2,17 +2,14 @@ package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.CustomerDto;
-import com.scms.supplychainmanagementsystem.dto.RoleDto;
 import com.scms.supplychainmanagementsystem.dto.WarehouseDto;
-import com.scms.supplychainmanagementsystem.entity.*;
+import com.scms.supplychainmanagementsystem.entity.Customer;
 import com.scms.supplychainmanagementsystem.repository.CustomerRepository;
 import com.scms.supplychainmanagementsystem.service.ICustomerService;
+import com.scms.supplychainmanagementsystem.validation.MyValidation;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,9 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,19 +39,8 @@ public class CustomerController {
     private ICustomerService iCustomerService;
     private CustomerRepository customerRepository;
     private final UserCommon userCommon;
-//    @GetMapping
-//    public ResponseEntity<List<CustomerDto>> getAllCustomer(Pageable page) {
-//        log.info("[Start Customer - list]");
-//        Page<Customer> customerslist = iCustomerService.getAllCustomerInWarehouse(page);
-//        log.info("[End Customer - list]");
-//        List<Customer> listcus = customerslist.getContent();
-//        List<CustomerDto> listDto = new ArrayList<>();
-//        for (Customer customer : listcus) {
-//            CustomerDto cuss = new CustomerDto(customer);
-//            listDto.add(cuss);
-//        }
-//        return status(HttpStatus.OK).body(listDto);
-//    }
+    private MyValidation validation;
+
 
     @GetMapping()
     public ResponseEntity<Map<String, Object>> getAllCustomerInWarehouse(@RequestParam(required = false) String customername,
@@ -69,7 +52,7 @@ public class CustomerController {
         Page<Customer> customerPage;
         Pageable pageable = PageRequest.of(page, size);
 
-        customerPage = iCustomerService.getAllCustomer(customername,warehouseId, pageable);
+        customerPage = iCustomerService.getAllCustomer(customername, warehouseId, pageable);
 
         customerList = customerPage.getContent();
 
@@ -143,54 +126,14 @@ public class CustomerController {
     }
 
     @PostMapping("/import")
-    public void mapReapExcelDatatoDB(@RequestParam("file") MultipartFile reapExcelDataFile) throws IOException {
-
-        XSSFWorkbook workbook = new XSSFWorkbook(reapExcelDataFile.getInputStream());
-        XSSFSheet worksheet = workbook.getSheetAt(0);
-
-
-        User currentUser = userCommon.getCurrentUser();
-        log.info("[End get current user : " + currentUser.getUsername() + "]");
-
-        Warehouse warehouse = new Warehouse();
-        if(currentUser.getRole().getRoleID()!=1){
-            warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
-        }else{
-//            warehouse.setWarehouseID(row.getCell(1).getCTCell().getS());
-        }
-        Customer customer = new Customer();
-        System.out.println("ewfhwejhewufiewhfiewjfewjfwekfewmfkewmfkewmfewkfe");
-        XSSFRow row = worksheet.getRow(0);
-        customer.setCustomerName(row.getCell(1).getStringCellValue());
-        System.out.println("customerName="+customer.getCustomerName()+"and");
-         row = worksheet.getRow(1);
-        customer.setCustomerType(row.getCell(1).getStringCellValue());
-        System.out.println("customerType="+customer.getCustomerType()+"End");
-        System.out.println("ewfhwejhewufiewhfiewjfewjfwekfewmfkewmfkewmfewkfe");
-//        Customer customer = Customer.builder()
-//                .customerCode(row.getCell(2).getStringCellValue())
-//                .CustomerType(row.getCell(2).getStringCellValue())
-//                .customerName(row.getCell(2).getStringCellValue())
-//                .email(row.getCell(2).getStringCellValue())
-//                .warehouse(warehouse)
-//                .phone(row.getCell(2).getStringCellValue())
-//                .DateOfBirth(null)
-//                .Gender(row.getCell(2).getBooleanCellValue())
-//                .Facebook(row.getCell(2).getStringCellValue())
-//                .CompanyName(row.getCell(2).getStringCellValue())
-//                .Note(row.getCell(2).getStringCellValue())
-//                .TaxCode(row.getCell(2).getStringCellValue())
-//                .district(District.builder()
-//                        .districtID(row.getCell(2).getCTCell().getS())
-//                        .province(Province.builder().provinceID(row.getCell(2).getCTCell().getS()).build()).build())
-//                .streetAddress(row.getCell(2).getStringCellValue())
-//                .createdDate(Instant.now())
-//                .createdBy(currentUser)
-//                .lastModifiedBy(currentUser)
-//                .build();
-//        customerRepository.saveAndFlush(customer);
-
-
+    public ResponseEntity<String> mapReapExcelDatatoDB(@RequestParam("file") MultipartFile reapExcelDataFile) throws IOException {
+        log.info("[Start CustomerController -  AddCustomer from Excel  ");
+        iCustomerService.mapReapExcelDatatoDB(reapExcelDataFile);
+        log.info("[End CustomerController - AddCustomer from Excel  ");
+        return new ResponseEntity<>("Add Successfully", CREATED);
 
     }
+
+
 }
+
