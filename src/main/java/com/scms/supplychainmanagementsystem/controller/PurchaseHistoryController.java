@@ -32,7 +32,7 @@ import static org.springframework.http.ResponseEntity.status;
 @AllArgsConstructor
 @Slf4j
 @RestController
-@RequestMapping("/api/manage/purchase")
+//@RequestMapping("/api/manage/purchase")
 public class PurchaseHistoryController {
 
     private IPurchaseHistory iPurchaseHistory;
