@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface IPurchaseDetailService {
-    Page<PurchaseDetails> getAllPurchaseDetail(Long warehouseId, Pageable pageble);
+    Page<PurchaseDetails> getAllPurchaseDetail(Long purchaseid,Long warehouseId, Pageable pageble);
 
     PurchaseDetails getPurchaseDetailByIdInWarehouse(Long purchaseDetailId);
 

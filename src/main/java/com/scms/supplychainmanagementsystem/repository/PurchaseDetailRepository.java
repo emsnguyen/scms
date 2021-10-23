@@ -13,10 +13,10 @@ import javax.transaction.Transactional;
 
 public interface PurchaseDetailRepository extends JpaRepository<PurchaseDetails , Long> {
     @Query(value = "SELECT u FROM PurchaseDetails u where u.purchaseDetailID= :purchasedetailid  and u.purchase.warehouse= :warehouseid")
-    Purchase findByPurchaseDetailId(@Param("purchasedetailid") Long purchaseDetailid, @Param("warehouseid") Long warehouseid);
+    PurchaseDetails findByPurchaseDetailId(@Param("purchasedetailid") Long purchaseDetailid, @Param("warehouseid") Long warehouseid);
 
     @Query(value = "SELECT u FROM PurchaseDetails u where u.purchaseDetailID= :purchasedetailid ")
-    Purchase findByPurchaseDetailIdAdmin(@Param("purchasedetailid") Long purchasedetailid);
+    PurchaseDetails findByPurchaseDetailIdAdmin(@Param("purchasedetailid") Long purchasedetailid);
 
 
     @Modifying
@@ -31,9 +31,9 @@ public interface PurchaseDetailRepository extends JpaRepository<PurchaseDetails 
 
     @Query(value = "select u from PurchaseDetails u where u.purchase.purchaseID=:purchaseid and u.purchase.warehouse.warehouseID=:warehouseid " +
             " order by u.purchase.createdDate desc")
-    Page<Purchase> filterInOneWarehouse(@Param("purchaseid") Long purchaseid,@Param("warehouseid") Long warehouseid, Pageable pageable);
+    Page<PurchaseDetails> filterInOneWarehouse(@Param("purchaseid") Long purchaseid,@Param("warehouseid") Long warehouseid, Pageable pageable);
 
     @Query(value = "select u from PurchaseDetails u where  u.purchase.purchaseID=:purchaseid and (:warehouseId is null or u.purchase.warehouse.warehouseID = :warehouseId) " +
             " order by u.purchase.createdDate desc")
-    Page<Purchase> filterAllWarehouses(@Param("purchaseid") Long purchaseid,@Param("warehouseId") Long warehouseId, Pageable pageable);
+    Page<PurchaseDetails> filterAllWarehouses(@Param("purchaseid") Long purchaseid,@Param("warehouseId") Long warehouseId, Pageable pageable);
 }
