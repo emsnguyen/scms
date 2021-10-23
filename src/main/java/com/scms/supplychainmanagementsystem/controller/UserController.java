@@ -43,6 +43,7 @@ public class UserController {
         Map<String, Object> result = new HashMap<>();
         User currentUser = userCommon.getCurrentUser();
         UserDto user = UserDto.builder()
+                .userId(currentUser.getUserId())
                 .username(currentUser.getUsername())
                 .email(currentUser.getEmail())
                 .roleId(currentUser.getRole().getRoleID())

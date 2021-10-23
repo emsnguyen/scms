@@ -90,7 +90,7 @@ public class OrderService implements IOrderService {
         //log.info("Generate Order Code");
         //order.setOrderCode(generateCode.genCodeByDate("DH") + order.getOrderId());
         //orderRepository.saveAndFlush(order);
-        log.info("[End Save Order ID to database]");
+        log.info("[End Save Order to database]");
         log.info("[End OrderService - createOrder]");
 
     }
@@ -131,15 +131,15 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public Page<Order> getAllOrders(String orderCode, Long customerId, Long orderStatusId, Long warehouseId, Pageable pageable) {
+    public Page<Order> getAllOrders(String orderCode, String customerName, Long orderStatusId, Long warehouseId, Pageable pageable) {
         log.info("[Start OrderService - Get All Orders]");
         Page<Order> orderPage;
         User current = userCommon.getCurrentUser();
         Warehouse wh = current.getWarehouse();
         if (current.getRole().getRoleID() == 1) {
-            orderPage = orderRepository.filterAllWarehouses(orderCode, customerId, orderStatusId, warehouseId, pageable);
+            orderPage = orderRepository.filterAllWarehouses(orderCode, customerName, orderStatusId, warehouseId, pageable);
         } else {
-            orderPage = orderRepository.filterInOneWarehouse(orderCode, customerId, orderStatusId, wh.getWarehouseID(), pageable);
+            orderPage = orderRepository.filterInOneWarehouse(orderCode, customerName, orderStatusId, wh.getWarehouseID(), pageable);
         }
         log.info("[End OrderService - Get All Orders]");
         return orderPage;
@@ -159,6 +159,17 @@ public class OrderService implements IOrderService {
     public void updateOrderStatus(Long orderId, Long orderStatusId) {
         log.info("[Start OrderService - updateOrderStatus Order ID = " + orderId + "]");
         if (checkAccessOrder(orderId)) {
+            if (orderStatusId == 1) {
+
+            } else if (orderStatusId == 2) {
+
+            } else if (orderStatusId == 3) {
+
+            } else if (orderStatusId == 4) {
+
+            } else {
+
+            }
             Order order = orderRepository.getById(orderId);
             order.setOrderStatus(orderStatusRepository.getById(orderStatusId));
         } else {

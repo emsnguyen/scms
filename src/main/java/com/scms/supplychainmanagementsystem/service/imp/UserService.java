@@ -44,7 +44,7 @@ public class UserService implements IUserService {
         User currentUser = userCommon.getCurrentUser();
         log.info("[End get current user : " + currentUser.getUsername() + "]");
         if (!userCommon.checkAccessUserInfoInWarehouse(userDto.getUserId())) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Not allow access this warehouse's resource");
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Not allow to delete this resource");
         }
         if (userDto.getRoleId() == 1) {
             if (currentUser.getRole().getRoleID() != 1) {
@@ -129,7 +129,7 @@ public class UserService implements IUserService {
         log.info("[Start UserService - find user by userID = " + userId + "]");
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
         if (!userCommon.checkAccessUserInfoInWarehouse(userId)) {
-            throw new AppException("Not allow access this warehouse's resource");
+            throw new AppException("Not allow to delete this resource");
         }
         UserDto userDto = UserDto.builder()
                 .username(user.getUsername())
@@ -169,7 +169,7 @@ public class UserService implements IUserService {
     public void deleteUser(Long userId) {
         log.info("[Start UserService - Delete User By userID = " + userId + "]");
         if (!userCommon.checkAccessUserInfoInWarehouse(userId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Not allow access this warehouse's resource");
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Not allow to delete this resource");
         }
         userRepository.deleteById(userId);
         log.info("[End UserService - Delete User By userID = " + userId + "]");

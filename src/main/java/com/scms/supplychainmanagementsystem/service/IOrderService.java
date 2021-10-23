@@ -18,7 +18,7 @@ public interface IOrderService {
 
     OrderResponse getOrderById(Long orderId);
 
-    Page<Order> getAllOrders(String orderCode, Long customerId, Long orderStatusId, Long warehouseId, Pageable pageable);
+    Page<Order> getAllOrders(String orderCode, String customerName, Long orderStatusId, Long warehouseId, Pageable pageable);
 
     List<OrderStatusDto> getAllOrderStatus();
 
