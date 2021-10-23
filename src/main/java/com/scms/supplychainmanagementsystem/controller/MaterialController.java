@@ -1,7 +1,6 @@
 package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.dto.MaterialDto;
-import com.scms.supplychainmanagementsystem.entity.Customer;
 import com.scms.supplychainmanagementsystem.entity.Material;
 import com.scms.supplychainmanagementsystem.service.IMaterialService;
 import io.swagger.annotations.ApiOperation;

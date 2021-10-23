@@ -195,8 +195,9 @@ public class CustomerServiceImpl implements ICustomerService {
         log.info("[End UserService - Get All Roles]");
         return warehouseList;
     }
+
     @Override
-    public void mapReapExcelDatatoDB( MultipartFile reapExcelDataFile) throws IOException {
+    public void mapReapExcelDatatoDB(MultipartFile reapExcelDataFile) throws IOException {
 
         XSSFWorkbook workbook = new XSSFWorkbook(reapExcelDataFile.getInputStream());
         XSSFSheet worksheet = workbook.getSheetAt(0);
@@ -213,42 +214,48 @@ public class CustomerServiceImpl implements ICustomerService {
 
             for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) {
                 XSSFRow row = worksheet.getRow(i);
-                Date date =null;
-                if(row.getCell(5)!=null){
-                    date = row.getCell(5).getDateCellValue() ;}
-                else{
-                    ex(" DateofBirth ",i+1);
+                Date date = null;
+                if (row.getCell(5) != null) {
+                    date = row.getCell(5).getDateCellValue();
+                } else {
+                    ex(" DateofBirth ", i + 1);
                 }
 
                 DateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
                 String convertedDate = parser.format(date);
 
                 String sex = null;
-                if(row.getCell(6)!=null){
-                    sex =row.getCell(6).getStringCellValue().toLowerCase(Locale.ROOT).trim();
-                    if(sex.equals("male") ||sex.equals("nam") ||sex.equals("trai") ){
-                        sex ="TRUE"; }
-                    else {if(sex.equals("female") ||sex.equals("nu") ||sex.equals("nữ") ||sex.equals("gái") ||sex.equals("gai")){
-                        sex ="FALSE"; }else{  ex("Gender",i+1); }}}
-                else{
-                    ex("Gender",i+1); }
+                if (row.getCell(6) != null) {
+                    sex = row.getCell(6).getStringCellValue().toLowerCase(Locale.ROOT).trim();
+                    if (sex.equals("male") || sex.equals("nam") || sex.equals("trai")) {
+                        sex = "TRUE";
+                    } else {
+                        if (sex.equals("female") || sex.equals("nu") || sex.equals("nữ") || sex.equals("gái") || sex.equals("gai")) {
+                            sex = "FALSE";
+                        } else {
+                            ex("Gender", i + 1);
+                        }
+                    }
+                } else {
+                    ex("Gender", i + 1);
+                }
 
                 Customer customer = Customer.builder()
-                        .customerCode(row.getCell(0) != null ? row.getCell(0).getStringCellValue() :ex(" customerCode ",i+1))
-                        .CustomerType(row.getCell(1) !=null?row.getCell(1).getStringCellValue():ex(" customerType ",i+1))
+                        .customerCode(row.getCell(0) != null ? row.getCell(0).getStringCellValue() : ex(" customerCode ", i + 1))
+                        .CustomerType(row.getCell(1) != null ? row.getCell(1).getStringCellValue() : ex(" customerType ", i + 1))
                         .customerName(row.getCell(2).getStringCellValue())
-                        .email(row.getCell(3) != null ? validation.checkInputEmail( row.getCell(3).getStringCellValue(),i+1) :ex(" Email ",i+1))
+                        .email(row.getCell(3) != null ? validation.checkInputEmail(row.getCell(3).getStringCellValue(), i + 1) : ex(" Email ", i + 1))
                         .warehouse(warehouse)
-                        .phone(row.getCell(4) != null ? validation.checkInputPhone( row.getCell(4).getStringCellValue(),i+1) :ex(" Phone ",i+1))
+                        .phone(row.getCell(4) != null ? validation.checkInputPhone(row.getCell(4).getStringCellValue(), i + 1) : ex(" Phone ", i + 1))
                         .DateOfBirth(LocalDate.parse(convertedDate))
                         .Gender(Boolean.parseBoolean(sex))
-                        .Facebook(row.getCell(7) != null ? row.getCell(7).getStringCellValue() :ex(" Facebook ",i+1))
-                        .CompanyName(row.getCell(8) != null ? row.getCell(8).getStringCellValue() :ex(" CompanyName ",i+1))
-                        .Note(row.getCell(9) != null ? row.getCell(9).getStringCellValue() :ex(" Note ",i+1))
-                        .TaxCode(row.getCell(10) != null ? row.getCell(10).getStringCellValue() :ex(" TaxCode ",i+1))
+                        .Facebook(row.getCell(7) != null ? row.getCell(7).getStringCellValue() : ex(" Facebook ", i + 1))
+                        .CompanyName(row.getCell(8) != null ? row.getCell(8).getStringCellValue() : ex(" CompanyName ", i + 1))
+                        .Note(row.getCell(9) != null ? row.getCell(9).getStringCellValue() : ex(" Note ", i + 1))
+                        .TaxCode(row.getCell(10) != null ? row.getCell(10).getStringCellValue() : ex(" TaxCode ", i + 1))
                         .district(District.builder()
                                 .districtID(0L).build())
-                        .streetAddress(row.getCell(11) != null ? row.getCell(11).getStringCellValue() :ex(" StreetAddress ",i+1))
+                        .streetAddress(row.getCell(11) != null ? row.getCell(11).getStringCellValue() : ex(" StreetAddress ", i + 1))
                         .createdDate(Instant.now())
                         .createdBy(currentUser)
                         .lastModifiedBy(currentUser)
@@ -257,7 +264,7 @@ public class CustomerServiceImpl implements ICustomerService {
 
                 System.out.println(customer.toString());
             }
-            for (Customer customer: customerList ) {
+            for (Customer customer : customerList) {
                 customerRepository.saveAndFlush(customer);
             }
         } else {
@@ -267,40 +274,49 @@ public class CustomerServiceImpl implements ICustomerService {
             for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) {
                 XSSFRow row = worksheet.getRow(i);
                 Warehouse warehouse = new Warehouse();
-                Date date =null;
-                if(row.getCell(5)!=null){ date = row.getCell(5).getDateCellValue() ;}
-                else{ ex(" DateofBirth ",i+1); }
+                Date date = null;
+                if (row.getCell(5) != null) {
+                    date = row.getCell(5).getDateCellValue();
+                } else {
+                    ex(" DateofBirth ", i + 1);
+                }
 
                 warehouse.setWarehouseID(Long.parseLong(row.getCell(12).getRawValue()));
                 DateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
                 String convertedDate = parser.format(date);
 
                 String sex = null;
-                if(row.getCell(6)!=null){
-                     sex =row.getCell(6).getStringCellValue().toLowerCase(Locale.ROOT).trim();
-                    if(sex.equals("male") ||sex.equals("nam") ||sex.equals("trai") ){
-                        sex ="TRUE"; }
-                    else {if(sex.equals("female") ||sex.equals("nu") ||sex.equals("nữ") ||sex.equals("gái") ||sex.equals("gai")){
-                        sex ="FALSE"; }else{  ex("Gender",i+1); }}}
-                else{
-                    ex("Gender",i+1); }
+                if (row.getCell(6) != null) {
+                    sex = row.getCell(6).getStringCellValue().toLowerCase(Locale.ROOT).trim();
+                    if (sex.equals("male") || sex.equals("nam") || sex.equals("trai")) {
+                        sex = "TRUE";
+                    } else {
+                        if (sex.equals("female") || sex.equals("nu") || sex.equals("nữ") || sex.equals("gái") || sex.equals("gai")) {
+                            sex = "FALSE";
+                        } else {
+                            ex("Gender", i + 1);
+                        }
+                    }
+                } else {
+                    ex("Gender", i + 1);
+                }
 
                 Customer customer = Customer.builder()
-                        .customerCode(row.getCell(0) != null ? row.getCell(0).getStringCellValue() :ex(" customerCode ",i+1))
-                        .CustomerType(row.getCell(1) !=null?row.getCell(1).getStringCellValue():ex(" customerType ",i+1))
+                        .customerCode(row.getCell(0) != null ? row.getCell(0).getStringCellValue() : ex(" customerCode ", i + 1))
+                        .CustomerType(row.getCell(1) != null ? row.getCell(1).getStringCellValue() : ex(" customerType ", i + 1))
                         .customerName(row.getCell(2).getStringCellValue())
-                        .email(row.getCell(3) != null ? validation.checkInputEmail( row.getCell(3).getStringCellValue(),i+1) :ex(" Email ",i+1))
+                        .email(row.getCell(3) != null ? validation.checkInputEmail(row.getCell(3).getStringCellValue(), i + 1) : ex(" Email ", i + 1))
                         .warehouse(warehouse)
-                        .phone(row.getCell(4) != null ? validation.checkInputPhone( row.getCell(4).getStringCellValue(),i+1) :ex(" Phone ",i+1))
+                        .phone(row.getCell(4) != null ? validation.checkInputPhone(row.getCell(4).getStringCellValue(), i + 1) : ex(" Phone ", i + 1))
                         .DateOfBirth(LocalDate.parse(convertedDate))
                         .Gender(Boolean.parseBoolean(sex))
-                        .Facebook(row.getCell(7) != null ? row.getCell(7).getStringCellValue() :ex(" Facebook ",i+1))
-                        .CompanyName(row.getCell(8) != null ? row.getCell(8).getStringCellValue() :ex(" CompanyName ",i+1))
-                        .Note(row.getCell(9) != null ? row.getCell(9).getStringCellValue() :ex(" Note ",i+1))
-                        .TaxCode(row.getCell(10) != null ? row.getCell(10).getStringCellValue() :ex(" TaxCode ",i+1))
+                        .Facebook(row.getCell(7) != null ? row.getCell(7).getStringCellValue() : ex(" Facebook ", i + 1))
+                        .CompanyName(row.getCell(8) != null ? row.getCell(8).getStringCellValue() : ex(" CompanyName ", i + 1))
+                        .Note(row.getCell(9) != null ? row.getCell(9).getStringCellValue() : ex(" Note ", i + 1))
+                        .TaxCode(row.getCell(10) != null ? row.getCell(10).getStringCellValue() : ex(" TaxCode ", i + 1))
                         .district(District.builder()
                                 .districtID(0L).build())
-                        .streetAddress(row.getCell(11) != null ? row.getCell(11).getStringCellValue() :ex(" StreetAddress ",i+1))
+                        .streetAddress(row.getCell(11) != null ? row.getCell(11).getStringCellValue() : ex(" StreetAddress ", i + 1))
                         .createdDate(Instant.now())
                         .createdBy(currentUser)
                         .lastModifiedBy(currentUser)
@@ -309,14 +325,14 @@ public class CustomerServiceImpl implements ICustomerService {
 
                 System.out.println(customer.toString());
             }
-            for (Customer customer: customerList ) {
+            for (Customer customer : customerList) {
                 customerRepository.saveAndFlush(customer);
             }
         }
     }
 
-    public String ex (String loi ,int index) throws IOException {
-        throw new AppException("Lỗi nhận dữ liệu "+loi+ " tai hàng "+ index);
+    public String ex(String loi, int index) throws IOException {
+        throw new AppException("Lỗi nhận dữ liệu " + loi + " tai hàng " + index);
     }
 }
 

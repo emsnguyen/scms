@@ -1,10 +1,7 @@
 package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.dto.PurchaseDto;
-import com.scms.supplychainmanagementsystem.dto.PurchaseHistoryDto;
 import com.scms.supplychainmanagementsystem.entity.Purchase;
-import com.scms.supplychainmanagementsystem.entity.PurchaseHistory;
-import com.scms.supplychainmanagementsystem.service.IPurchaseHistory;
 import com.scms.supplychainmanagementsystem.service.IPurchaseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -61,9 +58,6 @@ public class PurchaseController {
         log.info("[End CustomerController - Get All Customer In Warehouse]");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-
-
 
 
     @PostMapping

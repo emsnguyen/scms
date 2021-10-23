@@ -1,13 +1,7 @@
 package com.scms.supplychainmanagementsystem.dto;
 
-import com.scms.supplychainmanagementsystem.entity.Material;
-import com.scms.supplychainmanagementsystem.entity.Purchase;
 import com.scms.supplychainmanagementsystem.entity.PurchaseDetails;
 import lombok.*;
-
-import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 @Getter
 @Setter

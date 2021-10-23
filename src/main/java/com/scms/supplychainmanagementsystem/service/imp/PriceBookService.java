@@ -40,8 +40,6 @@ public class PriceBookService implements IPriceBookService {
             User current = userCommon.getCurrentUser();
             if (current.getRole().getRoleID() == 1) {
                 priceBook.setWarehouse(warehouseRepository.getById(priceBookDto.getWarehouseId()));
-            } else {
-                priceBook.setWarehouse(current.getWarehouse());
             }
             log.info("[Start Save PriceBook " + priceBookDto.getPriceBookName() + " to database]");
             priceBookRepository.saveAndFlush(priceBook);

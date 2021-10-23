@@ -50,6 +50,9 @@ public class PriceBookEntryService implements IPriceBookEntryService {
     @Override
     public void createPriceBookEntry(PriceBookEntryDto priceBookEntryDto) {
         log.info("[Start PriceBookEntryService - Create PriceBookEntry ]");
+        if (priceBookEntryDto.getProductId() == null || priceBookEntryDto.getPriceBookId() == null) {
+            throw new AppException("Not fill in all required fields");
+        }
         PriceBookEntry priceBookEntry = new PriceBookEntry();
         priceBookEntry.setPriceBook(priceBookRepository.findById(priceBookEntryDto.getPriceBookId())
                 .orElseThrow(() -> new AppException("PriceBook not found")));

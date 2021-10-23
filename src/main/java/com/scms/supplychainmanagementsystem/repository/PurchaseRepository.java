@@ -1,7 +1,6 @@
 package com.scms.supplychainmanagementsystem.repository;
 
 import com.scms.supplychainmanagementsystem.entity.Purchase;
-import com.scms.supplychainmanagementsystem.entity.PurchaseHistory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 
 @Repository
-public interface PurchaseRepository extends JpaRepository<Purchase ,Long> {
+public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
 
     @Query(value = "SELECT u FROM Purchase u where u.purchaseID= :purchaseid  and u.warehouse.warehouseID= :warehouseid")
     Purchase findByPurchaseIdInWarehouse(@Param("purchaseid") Long purchaseid, @Param("warehouseid") Long warehouseId);

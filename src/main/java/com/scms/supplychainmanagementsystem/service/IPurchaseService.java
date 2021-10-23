@@ -1,7 +1,6 @@
 package com.scms.supplychainmanagementsystem.service;
 
 import com.scms.supplychainmanagementsystem.dto.PurchaseDto;
-import com.scms.supplychainmanagementsystem.dto.PurchaseHistoryDto;
 import com.scms.supplychainmanagementsystem.entity.Purchase;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

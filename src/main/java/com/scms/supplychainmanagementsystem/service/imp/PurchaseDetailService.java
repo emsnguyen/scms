@@ -3,9 +3,7 @@ package com.scms.supplychainmanagementsystem.service.imp;
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.PurchaseDetailDto;
 import com.scms.supplychainmanagementsystem.entity.*;
-import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.PurchaseDetailRepository;
-import com.scms.supplychainmanagementsystem.repository.PurchaseRepository;
 import com.scms.supplychainmanagementsystem.service.IPurchaseDetailService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
 
 @AllArgsConstructor
 @Transactional
@@ -26,7 +22,7 @@ public class PurchaseDetailService implements IPurchaseDetailService {
     private PurchaseDetailRepository purchaseDetailRepository;
 
     @Override
-    public Page<PurchaseDetails> getAllPurchaseDetail(Long purchaseid,Long warehouseId, Pageable pageable) {
+    public Page<PurchaseDetails> getAllPurchaseDetail(Long purchaseid, Long warehouseId, Pageable pageable) {
         log.info("[Start PurchaseDetailService - Get All PurchaseDetail]");
         Page<PurchaseDetails> PurchasePage;
         User current = userCommon.getCurrentUser();
@@ -34,11 +30,10 @@ public class PurchaseDetailService implements IPurchaseDetailService {
         Long userId = current.getUserId();
 
 
-
         if (current.getRole().getRoleID() == 1) {
-            PurchasePage = purchaseDetailRepository.filterAllWarehouses(purchaseid,warehouseId, pageable);
+            PurchasePage = purchaseDetailRepository.filterAllWarehouses(purchaseid, warehouseId, pageable);
         } else {
-            PurchasePage = purchaseDetailRepository.filterInOneWarehouse(purchaseid,wh.getWarehouseID(), pageable);
+            PurchasePage = purchaseDetailRepository.filterInOneWarehouse(purchaseid, wh.getWarehouseID(), pageable);
         }
         log.info("[End PurchaseDetailService - Get All PurchaseDetail]");
         return PurchasePage;
@@ -66,7 +61,7 @@ public class PurchaseDetailService implements IPurchaseDetailService {
 
         Material material = new Material();
         material.setMaterialID(purchaseDetailDto.getMaterialId());
-        Purchase purchase= new Purchase();
+        Purchase purchase = new Purchase();
         purchase.setPurchaseID(purchaseDetailDto.getPurchaseId());
 
 
@@ -92,7 +87,7 @@ public class PurchaseDetailService implements IPurchaseDetailService {
 
         Material material = new Material();
         material.setMaterialID(purchaseDetailDto.getMaterialId());
-        Purchase purchase= new Purchase();
+        Purchase purchase = new Purchase();
         purchase.setPurchaseID(purchaseDetailDto.getPurchaseId());
 
 
@@ -125,5 +120,5 @@ public class PurchaseDetailService implements IPurchaseDetailService {
             purchaseDetailRepository.deletePurchaseAdmin(purchaseDetailId);
         }
     }
-    }
+}
 

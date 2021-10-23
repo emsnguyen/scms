@@ -1,14 +1,11 @@
 package com.scms.supplychainmanagementsystem.dto;
 
 import com.scms.supplychainmanagementsystem.entity.Purchase;
-import com.scms.supplychainmanagementsystem.entity.Supplier;
-import com.scms.supplychainmanagementsystem.entity.User;
-import com.scms.supplychainmanagementsystem.entity.Warehouse;
 import lombok.*;
 
-import javax.persistence.*;
 import java.time.Instant;
 import java.time.LocalDate;
+
 @Getter
 @Setter
 @AllArgsConstructor
