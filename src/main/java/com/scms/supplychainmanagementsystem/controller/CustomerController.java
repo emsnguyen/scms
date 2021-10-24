@@ -3,7 +3,7 @@ package com.scms.supplychainmanagementsystem.controller;
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.CustomerDto;
 import com.scms.supplychainmanagementsystem.dto.WarehouseDto;
-import com.scms.supplychainmanagementsystem.entity.*;
+import com.scms.supplychainmanagementsystem.entity.Customer;
 import com.scms.supplychainmanagementsystem.repository.CustomerRepository;
 import com.scms.supplychainmanagementsystem.service.ICustomerService;
 import com.scms.supplychainmanagementsystem.validation.MyValidation;
@@ -18,9 +18,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -129,9 +132,8 @@ public class CustomerController {
         log.info("[End CustomerController - AddCustomer from Excel  ");
         return new ResponseEntity<>("Add Successfully", CREATED);
 
-        }
-
-
-
     }
+
+
+}
 

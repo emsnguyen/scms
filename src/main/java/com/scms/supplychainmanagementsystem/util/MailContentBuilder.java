@@ -1,4 +1,4 @@
-package com.scms.supplychainmanagementsystem.service.imp;
+package com.scms.supplychainmanagementsystem.util;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.scms.supplychainmanagementsystem.service.imp;
+package com.scms.supplychainmanagementsystem.util;
 
 import com.scms.supplychainmanagementsystem.dto.NotificationEmail;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
@@ -9,11 +9,11 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.mail.internet.InternetAddress;
 
-@Service
+@Component
 @AllArgsConstructor
 @Slf4j
 public class MailService {
@@ -22,7 +22,7 @@ public class MailService {
     private final MailContentBuilder mailContentBuilder;
 
     @Async
-    void sendMail(NotificationEmail notificationEmail) {
+    public void sendMail(NotificationEmail notificationEmail) {
         MimeMessagePreparator messagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setFrom(new InternetAddress("quynhpthe130472@fpt.edu.vn"));

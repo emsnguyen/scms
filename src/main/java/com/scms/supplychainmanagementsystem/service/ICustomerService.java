@@ -26,5 +26,5 @@ public interface ICustomerService {
 
     List<WarehouseDto> getAllWarehouse();
 
-    public void mapReapExcelDatatoDB( MultipartFile reapExcelDataFile) throws IOException ;
+    public void mapReapExcelDatatoDB(MultipartFile reapExcelDataFile) throws IOException;
 }

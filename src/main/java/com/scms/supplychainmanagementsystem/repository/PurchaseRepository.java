@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 
 @Repository
-public interface PurchaseRepository extends JpaRepository<Purchase ,Long> {
+public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
 
     @Query(value = "SELECT u FROM Purchase u where u.purchaseID= :purchaseid  and u.warehouse.warehouseID= :warehouseid")
     Purchase findByPurchaseIdInWarehouse(@Param("purchaseid") Long purchaseid, @Param("warehouseid") Long warehouseId);

@@ -34,7 +34,7 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllOrders(@RequestParam(required = false) String orderCode,
-                                                            @RequestParam(required = false) Long customerId,
+                                                            @RequestParam(required = false) String customerName,
                                                             @RequestParam(required = false) Long orderStatusId,
                                                             @RequestParam(required = false) Long warehouseId,
                                                             @RequestParam(defaultValue = "0") int page,
@@ -43,7 +43,7 @@ public class OrderController {
         List<Order> orderList;
         Page<Order> orderPage;
         Pageable pageable = PageRequest.of(page, size);
-        orderPage = iOrderService.getAllOrders(orderCode, customerId, orderStatusId, warehouseId, pageable);
+        orderPage = iOrderService.getAllOrders(orderCode, customerName, orderStatusId, warehouseId, pageable);
 
         orderList = orderPage.getContent();
         Map<String, Object> response = new HashMap<>();
