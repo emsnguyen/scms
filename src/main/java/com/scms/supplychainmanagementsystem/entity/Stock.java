@@ -11,7 +11,6 @@ import java.time.Instant;
 @NoArgsConstructor
 @Builder
 @Entity
-@Builder
 public class Stock {
 
     @Id
