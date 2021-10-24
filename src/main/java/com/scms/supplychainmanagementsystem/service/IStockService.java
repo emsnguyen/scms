@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface IStockService {
 
-    Page<Stock> getAllStock(Long productId,Long StockId, Pageable pageble);
+    Page<Stock> getAllStock(Long productId,Long warehouseId, Pageable pageble);
 
     Stock getStockById(Long stockId);
 

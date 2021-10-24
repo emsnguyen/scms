@@ -1,9 +1,6 @@
 package com.scms.supplychainmanagementsystem.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -12,6 +9,7 @@ import java.time.Instant;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 public class StockHistory {
     @Id
@@ -32,11 +30,11 @@ public class StockHistory {
 
 
     @ManyToOne
-    @JoinColumn(name = "CreatedBy", referencedColumnName = "CreatedBy")
-    private Product createdBy;
+    @JoinColumn(name = "CreatedBy", referencedColumnName = "userID")
+    private User createdBy;
 
     @ManyToOne
-    @JoinColumn(name = "LastModifiedBy", referencedColumnName = "LastModifiedBy")
-    private Product lastModifiedBy;
+    @JoinColumn(name = "LastModifiedBy", referencedColumnName = "userID")
+    private User lastModifiedBy;
 
 }

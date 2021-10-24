@@ -41,7 +41,21 @@ public class StockHistoryDto {
         this.createdDate = stockHistory.getCreatedDate();
         this.lastModifiedDate = stockHistory.getLastModifiedDate();
         this.productId = stockHistory.getProduct().getProductId();
-        this.createdBy = stockHistory.getCreatedBy().getCreatedBy().getUsername();
-        this.lastModifiedBy = stockHistory.getLastModifiedBy().getLastModifiedBy().getUsername();
+        this.createdBy = stockHistory.getCreatedBy().getUsername();
+        this.lastModifiedBy = stockHistory.getLastModifiedBy().getUsername();
+    }
+
+    @Override
+    public String toString() {
+        return "StockHistoryDto{" +
+                "stockHistoryID=" + stockHistoryID +
+                ", stockInQuantity=" + stockInQuantity +
+                ", unitCostPrice=" + unitCostPrice +
+                ", createdDate=" + createdDate +
+                ", lastModifiedDate=" + lastModifiedDate +
+                ", productId=" + productId +
+                ", createdBy='" + createdBy + '\'' +
+                ", lastModifiedBy='" + lastModifiedBy + '\'' +
+                '}';
     }
 }

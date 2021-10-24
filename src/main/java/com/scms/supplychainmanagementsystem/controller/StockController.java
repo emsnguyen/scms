@@ -1,8 +1,11 @@
 package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.dto.PurchaseDto;
+import com.scms.supplychainmanagementsystem.dto.StockDto;
 import com.scms.supplychainmanagementsystem.entity.Purchase;
-import com.scms.supplychainmanagementsystem.service.IPurchaseService;
+import com.scms.supplychainmanagementsystem.entity.Stock;
+import com.scms.supplychainmanagementsystem.service.IStockService;
+import com.scms.supplychainmanagementsystem.service.ISupplierService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,31 +29,31 @@ import static org.springframework.http.ResponseEntity.status;
 @AllArgsConstructor
 @Slf4j
 @RestController
-@RequestMapping("/api/manage/purchase")
-public class PurchaseController {
+@RequestMapping("/api/manage/stock")
+public class StockController {
+    private IStockService iStockService;
 
-    private IPurchaseService iPurchaseService;
 
-
-    @GetMapping
-    public ResponseEntity<Map<String, Object>> getAllPurchase(@RequestParam(required = false) Long warehouseId,
+    @GetMapping("/product/{productid}")
+    public ResponseEntity<Map<String, Object>> getAllPurchase(@PathVariable  Long productid,
+                                                              @RequestParam(required = false) Long warehouseId,
                                                               @RequestParam(defaultValue = "0") int page,
                                                               @RequestParam(defaultValue = "10") int size) {
         log.info("[Start PurchaseController - Get All Purchase In Warehouse]");
-        List<Purchase> PurchaselList;
-        Page<Purchase> PurchasePage;
+        List<Stock> StockList;
+        Page<Stock> StockPage;
         Pageable pageable = PageRequest.of(page, size);
 
-        PurchasePage = iPurchaseService.getAllPurchase(warehouseId, pageable);
+        StockPage = iStockService.getAllStock(productid,warehouseId, pageable);
 
-        PurchaselList = PurchasePage.getContent();
+        StockList = StockPage.getContent();
 
         Map<String, Object> response = new HashMap<>();
-        response.put("data", PurchaselList);
-        response.put("currentPage", PurchasePage.getNumber());
-        response.put("totalItems", PurchasePage.getTotalElements());
-        response.put("totalPages", PurchasePage.getTotalPages());
-        if (!PurchasePage.isEmpty()) {
+        response.put("data", StockList);
+        response.put("currentPage", StockPage.getNumber());
+        response.put("totalItems", StockPage.getTotalElements());
+        response.put("totalPages", StockPage.getTotalPages());
+        if (!StockPage.isEmpty()) {
             response.put("message", HttpStatus.OK);
         } else {
             response.put("message", "EMPTY_RESULT");
@@ -66,43 +69,43 @@ public class PurchaseController {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @ApiOperation(value = "Requires ADMIN or MANAGER Access")
-    public ResponseEntity<String> createPurchase(@Valid @RequestBody PurchaseDto purchaseDto) {
+    public ResponseEntity<String> createStock(@Valid @RequestBody StockDto stockDto) {
         log.info("[Start PurchaseController -  createPurchase  ]");
-        iPurchaseService.savePurchase(purchaseDto);
+        iStockService.saveStock(stockDto);
         log.info("[End PurchaseController -  createPurchase  ]");
         return new ResponseEntity<>("Created Successfully", CREATED);
     }
 
-    @GetMapping("/{purchaseid}")
-    public ResponseEntity<PurchaseDto> getPurchaseidById(@PathVariable Long purchaseid) {
+    @GetMapping("/{stockId}")
+    public ResponseEntity<StockDto> getStockById(@PathVariable Long stockId) {
         log.info("[Start PurchaseController - Get Purchase By ID]");
-        Purchase purchase = iPurchaseService.getPurchaseByIdInWarehouse(purchaseid);
-        if (purchase != null) {
-            PurchaseDto purchaseDto = new PurchaseDto(purchase);
+        Stock stock = iStockService.getStockById(stockId);
+        if (stock != null) {
+            StockDto stockDto = new StockDto(stock);
             log.info("[End PurchaseController - Get Purchase By ID]");
-            return status(HttpStatus.OK).body(purchaseDto);
+            return status(HttpStatus.OK).body(stockDto);
         } else {
             return null;
         }
     }
 
-    @PutMapping("/{purchaseid}")
+    @PutMapping("/{stockId}")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @ApiOperation(value = "Requires ADMIN or MANAGER Access")
-    public ResponseEntity<String> updatePurchase(@PathVariable Long purchaseid, @Valid @RequestBody PurchaseDto purchaseDto) {
+    public ResponseEntity<String> updateStock(@PathVariable Long stockId, @Valid @RequestBody StockDto stockDto) {
         log.info("[Start PurchaseController - Update Purchase ]");
-        iPurchaseService.updatePurchase(purchaseid, purchaseDto);
+        iStockService.updateStock(stockId, stockDto);
         log.info("[End PurchaseController - Update Purchase ]");
         return new ResponseEntity<>("Update Purchase Successfully", OK);
     }
 
-    @DeleteMapping("/{purchaseid}")
+    @DeleteMapping("/{stockId}")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @ApiOperation(value = "Requires ADMIN or MANAGER Access")
-    public ResponseEntity<String> DeletePurchase(@PathVariable Long purchaseid) {
-        log.info("[Start PurchaseController - Delete Purchase By ID]");
-        iPurchaseService.deletePurchase(purchaseid);
-        log.info("[End PurchaseController - Delete Purchase By ID]");
-        return new ResponseEntity<>("Delete Purchase Successfully", OK);
+    public ResponseEntity<String> DeleteStock(@PathVariable Long stockId) {
+        log.info("[Start stockController - Delete stock By ID]");
+        iStockService.deleteStock(stockId);
+        log.info("[End stockController - Delete stock By ID]");
+        return new ResponseEntity<>("Delete stock Successfully", OK);
     }
 }

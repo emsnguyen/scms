@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface IStockHistoryService {
 
-    Page<StockHistory> getAllStockHistory(Long warehouseId, Pageable pageble);
+    Page<StockHistory> getAllStockHistory(Long productid,Long warehouseId, Pageable pageble);
 
     StockHistory getStockHistoryByIdInWarehouse(Long stockHistoryId);
 

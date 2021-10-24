@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.*;
 import java.time.Instant;
 
 @AllArgsConstructor
@@ -26,20 +27,20 @@ public class StockService implements IStockService {
     private StockRepository stockRepository;
 
     @Override
-    public Page<Stock> getAllStock(Long productId, Long StockId, Pageable pageble) {
-//        log.info("[Start PurchaseService - Get All Purchase]");
-//        Page<Stock> StockPage;
-//        User current = userCommon.getCurrentUser();
-//        Warehouse wh = current.getWarehouse();
-//        Long userId = current.getUserId();
-//        if (current.getRole().getRoleID() == 1) {
-//            PurchasePage = purchaseRepository.filterAllWarehouses(warehouseId, pageable);
-//        } else {
-//            PurchasePage = purchaseRepository.filterInOneWarehouse(wh.getWarehouseID(), pageable);
-//        }
-//        log.info("[End PurchaseService - Get All Purchase]");
-//        return PurchasePage;
-        return  null;
+    public Page<Stock> getAllStock(Long productId, Long warehouseId,Pageable pageable) {
+        log.info("[Start PurchaseService - Get All Purchase]");
+        Page<Stock> StockPage;
+        User current = userCommon.getCurrentUser();
+        Warehouse wh = current.getWarehouse();
+        Long userId = current.getUserId();
+        if (current.getRole().getRoleID() == 1) {
+            StockPage = stockRepository.filterAllWarehouses(productId,warehouseId, pageable);
+        } else {
+            StockPage = stockRepository.filterInOneWarehouse(productId,wh.getWarehouseID(), pageable);
+        }
+        log.info("[End PurchaseService - Get All Purchase]");
+        return StockPage;
+
     }
 
     @Override
@@ -62,8 +63,6 @@ public class StockService implements IStockService {
         User currentUser = userCommon.getCurrentUser();
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
-        Warehouse warehouse = new Warehouse();
-
         if (currentUser.getRole().getRoleID() != 1) {
             if (currentUser.getWarehouse().getWarehouseID() != stockRepository.findByStockIdId(stockId).getProduct().getWarehouse().getWarehouseID()) {
                 throw new AppException("you cant update in another Warehouse");
@@ -76,6 +75,25 @@ public class StockService implements IStockService {
         Stock stock = Stock.builder()
                 .stockId(stockId)
                 .availableQuantity(stockDto.getAvailableQuantity())
+                .lastModifiedDate(Instant.now())
+                .product(product)
+                .build();
+        log.info("[Start Update PurchaseService  to database]");
+        stockRepository.save(stock);
+        log.info("[Start StockService - UpdateStock  to database ]");
+        log.info("[End StockService - UpdateStock ]");
+    }
+
+
+    public void updateStockQuantity(Long productId, Double quantity) {
+
+        Stock strock = stockRepository.findByProductId(productId);
+        System.out.println("fdffdfdfdf "+strock.getAvailableQuantity()+"  +  "+quantity+" -------- ");
+        Product product = new Product();
+        product.setProductId(productId);
+        Stock stock = Stock.builder()
+                .stockId(strock.getStockId())
+                .availableQuantity(strock.getAvailableQuantity()+quantity)
                 .lastModifiedDate(Instant.now())
                 .product(product)
                 .build();

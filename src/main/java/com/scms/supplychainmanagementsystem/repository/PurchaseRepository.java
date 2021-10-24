@@ -1,7 +1,6 @@
 package com.scms.supplychainmanagementsystem.repository;
 
 import com.scms.supplychainmanagementsystem.entity.Purchase;
-import com.scms.supplychainmanagementsystem.entity.PurchaseHistory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
