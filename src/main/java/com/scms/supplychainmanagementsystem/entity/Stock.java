@@ -10,7 +10,6 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Builder
 public class Stock {
 
     @Id

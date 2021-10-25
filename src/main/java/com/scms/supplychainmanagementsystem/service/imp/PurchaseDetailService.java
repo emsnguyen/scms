@@ -3,7 +3,9 @@ package com.scms.supplychainmanagementsystem.service.imp;
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.PurchaseDetailDto;
 import com.scms.supplychainmanagementsystem.entity.*;
+import com.scms.supplychainmanagementsystem.repository.MaterialRepository;
 import com.scms.supplychainmanagementsystem.repository.PurchaseDetailRepository;
+import com.scms.supplychainmanagementsystem.repository.PurchaseRepository;
 import com.scms.supplychainmanagementsystem.service.IPurchaseDetailService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,9 @@ public class PurchaseDetailService implements IPurchaseDetailService {
 
     private final UserCommon userCommon;
     private PurchaseDetailRepository purchaseDetailRepository;
+    private MaterialRepository materialRepository;
+    private PurchaseRepository purchaseRepository;
+
 
     @Override
     public Page<PurchaseDetails> getAllPurchaseDetail(Long purchaseid, Long warehouseId, Pageable pageable) {
@@ -60,10 +65,9 @@ public class PurchaseDetailService implements IPurchaseDetailService {
 
 
         Material material = new Material();
-        material.setMaterialID(purchaseDetailDto.getMaterialId());
+        material=materialRepository.getById(purchaseDetailDto.getMaterialId());
         Purchase purchase = new Purchase();
-        purchase.setPurchaseID(purchaseDetailDto.getPurchaseId());
-
+        purchase=purchaseRepository.getById(purchaseDetailDto.getPurchaseId());
 
         PurchaseDetails purchaseDetails = PurchaseDetails.builder()
                 .purchaseDetailID(purchasedDetailId)
@@ -86,9 +90,9 @@ public class PurchaseDetailService implements IPurchaseDetailService {
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
         Material material = new Material();
-        material.setMaterialID(purchaseDetailDto.getMaterialId());
+        material=materialRepository.getById(purchaseDetailDto.getMaterialId());
         Purchase purchase = new Purchase();
-        purchase.setPurchaseID(purchaseDetailDto.getPurchaseId());
+        purchase=purchaseRepository.getById(purchaseDetailDto.getPurchaseId());
 
 
 //         Warehouse warehouse = new Warehouse();
