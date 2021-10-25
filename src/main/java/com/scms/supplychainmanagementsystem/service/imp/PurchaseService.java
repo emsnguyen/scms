@@ -7,6 +7,7 @@ import com.scms.supplychainmanagementsystem.entity.Supplier;
 import com.scms.supplychainmanagementsystem.entity.User;
 import com.scms.supplychainmanagementsystem.entity.Warehouse;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
+import com.scms.supplychainmanagementsystem.repository.PurchaseDetailRepository;
 import com.scms.supplychainmanagementsystem.repository.PurchaseRepository;
 import com.scms.supplychainmanagementsystem.service.IPurchaseService;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class PurchaseService implements IPurchaseService {
 
     private final UserCommon userCommon;
     private PurchaseRepository purchaseRepository;
+    private PurchaseDetailRepository purchaseDetailRepository;
 
     @Override
     public Page<Purchase> getAllPurchase(Long warehouseId, Pageable pageable) {
@@ -129,8 +131,10 @@ public class PurchaseService implements IPurchaseService {
     public void deletePurchase(Long PurchaseId) {
         User currentUser = userCommon.getCurrentUser();
         if (currentUser.getRole().getRoleID() != 1) {
+            purchaseDetailRepository.deletePurchaseDetailByPurchaseId(PurchaseId);
             purchaseRepository.deletePurchase(PurchaseId, currentUser.getWarehouse().getWarehouseID());
         } else {
+            purchaseDetailRepository.deletePurchaseDetailByPurchaseId(PurchaseId);
             purchaseRepository.deletePurchaseAdmin(PurchaseId);
         }
     }

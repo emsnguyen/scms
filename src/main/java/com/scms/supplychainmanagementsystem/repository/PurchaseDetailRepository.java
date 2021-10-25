@@ -25,6 +25,11 @@ public interface PurchaseDetailRepository extends JpaRepository<PurchaseDetails,
 
     @Modifying
     @Transactional
+    @Query(value = "Delete  FROM PurchaseDetails u where u.purchase.purchaseID= :purchaseid  ")
+    void deletePurchaseDetailByPurchaseId(@Param("purchaseid") Long purchaseid);
+
+    @Modifying
+    @Transactional
     @Query(value = "Delete  FROM PurchaseDetails u where u.purchaseDetailID= :purchasedetailid ")
     void deletePurchaseAdmin(@Param("purchasedetailid") Long purchasedetailid);
 
