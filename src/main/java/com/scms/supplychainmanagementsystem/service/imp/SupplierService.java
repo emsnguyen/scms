@@ -6,6 +6,7 @@ import com.scms.supplychainmanagementsystem.entity.*;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.MaterialRepository;
 import com.scms.supplychainmanagementsystem.repository.SupplierRepository;
+import com.scms.supplychainmanagementsystem.repository.WarehouseRepository;
 import com.scms.supplychainmanagementsystem.service.ISupplierService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class SupplierService implements ISupplierService {
 
     private SupplierRepository supplierRepository;
     private final UserCommon userCommon;
-
+    private WarehouseRepository warehouseRepository;
     @Override
     public Page<Supplier> getAllSupplier(String suppliername, Long warehouseId, Pageable pageable) {
         log.info("[Start SupplierService - Get All Supplier]");
@@ -69,12 +70,12 @@ public class SupplierService implements ISupplierService {
 
         Warehouse warehouse = new Warehouse();
         if(currentUser.getRole().getRoleID()!=1){
-            warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+            warehouse=warehouseRepository.getById(currentUser.getWarehouse().getWarehouseID());
             if(currentUser.getWarehouse().getWarehouseID()!=supplierRepository.findBySupplierId(supplierId).getWarehouse().getWarehouseID()){
                 throw new AppException("you cant update in another Warehouse");
             }
         }else{
-            warehouse.setWarehouseID(supplierDto.getWarehouseId());
+            warehouse=warehouseRepository.getById(supplierDto.getWarehouseId());
         }
 
         Supplier supplier = Supplier.builder()
@@ -108,9 +109,9 @@ public class SupplierService implements ISupplierService {
 
         Warehouse warehouse = new Warehouse();
         if(currentUser.getRole().getRoleID()!=1){
-            warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+            warehouse =warehouseRepository.getById(currentUser.getWarehouse().getWarehouseID());
         }else{
-            warehouse.setWarehouseID(supplierDto.getWarehouseId());
+            warehouse = warehouseRepository.getById(supplierDto.getWarehouseId());
         }
 
         Supplier supplier = Supplier.builder()

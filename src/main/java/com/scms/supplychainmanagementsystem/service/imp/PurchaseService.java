@@ -9,6 +9,8 @@ import com.scms.supplychainmanagementsystem.entity.Warehouse;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.PurchaseDetailRepository;
 import com.scms.supplychainmanagementsystem.repository.PurchaseRepository;
+import com.scms.supplychainmanagementsystem.repository.SupplierRepository;
+import com.scms.supplychainmanagementsystem.repository.WarehouseRepository;
 import com.scms.supplychainmanagementsystem.service.IPurchaseService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,8 @@ public class PurchaseService implements IPurchaseService {
     private final UserCommon userCommon;
     private PurchaseRepository purchaseRepository;
     private PurchaseDetailRepository purchaseDetailRepository;
+    private WarehouseRepository warehouseRepository;
+    private SupplierRepository supplierRepository;
 
     @Override
     public Page<Purchase> getAllPurchase(Long warehouseId, Pageable pageable) {
@@ -67,16 +71,16 @@ public class PurchaseService implements IPurchaseService {
         Warehouse warehouse = new Warehouse();
 
         if (currentUser.getRole().getRoleID() != 1) {
-            warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+            warehouse=warehouseRepository.getById(currentUser.getWarehouse().getWarehouseID());
             if (currentUser.getWarehouse().getWarehouseID() != purchaseRepository.findByPurchaseId(PurchaseId).getWarehouse().getWarehouseID()) {
                 throw new AppException("you cant update in another Warehouse");
             }
         } else {
-            warehouse.setWarehouseID(purchaseDto.getWarehouseId());
+            warehouse=warehouseRepository.getById(purchaseDto.getWarehouseId());
         }
-
         Supplier supplier = new Supplier();
-        supplier.setSupplierId(purchaseDto.getSupplierId());
+        supplier=supplierRepository.getById(purchaseDto.getSupplierId());
+
 
         Purchase purchase = Purchase.builder()
                 .purchaseID(PurchaseId)
@@ -102,14 +106,14 @@ public class PurchaseService implements IPurchaseService {
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
         Supplier supplier = new Supplier();
-        supplier.setSupplierId(purchaseDto.getSupplierId());
+        supplier=supplierRepository.getById(purchaseDto.getSupplierId());
+
         Warehouse warehouse = new Warehouse();
 
-
         if (currentUser.getRole().getRoleID() != 1) {
-            warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+            warehouse=warehouseRepository.getById(currentUser.getWarehouse().getWarehouseID());
         } else {
-            warehouse.setWarehouseID(purchaseDto.getWarehouseId());
+            warehouse=warehouseRepository.getById(purchaseDto.getWarehouseId());
         }
 
         Purchase purchase = Purchase.builder()

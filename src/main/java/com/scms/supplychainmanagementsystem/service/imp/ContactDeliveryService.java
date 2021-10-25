@@ -26,6 +26,7 @@ public class ContactDeliveryService implements IContactDeliveryService {
     private CustomerRepository customerRepository;
 
 
+
     @Override
     public Page<ContactDelivery> getAllContactDeliveryofcustomer(Long customerId, String contactname, Pageable pageable) {
         log.info("[Start ContactDeliveryService - Get All ContactDelivery]");
@@ -72,8 +73,7 @@ public class ContactDeliveryService implements IContactDeliveryService {
         User currentUser = userCommon.getCurrentUser();
         log.info("[End get current user : " + currentUser.getUsername() + "]");
         Customer customer = new Customer();
-        customer.setCustomerId(contactDeliveryDto.getCustomerId());
-
+        customer=customerRepository.getById(contactDeliveryDto.getCustomerId());
         if (currentUser.getRole().getRoleID() != 1) {
 
             if (currentUser.getWarehouse().getWarehouseID() != contactDeliveryRepository.findByContactIDAdmin(contactDeliveryId).getCustomer().getWarehouse().getWarehouseID()) {
@@ -109,7 +109,7 @@ public class ContactDeliveryService implements IContactDeliveryService {
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
         Customer customer = new Customer();
-        customer.setCustomerId(contactDeliveryDto.getCustomerId());
+        customer=customerRepository.getById(contactDeliveryDto.getCustomerId());
 
         ContactDelivery contactDelivery = ContactDelivery.builder()
                 .contactName(contactDeliveryDto.getContactName())

@@ -4,6 +4,7 @@ import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.StockHistoryDto;
 import com.scms.supplychainmanagementsystem.entity.*;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
+import com.scms.supplychainmanagementsystem.repository.ProductRepository;
 import com.scms.supplychainmanagementsystem.repository.PurchaseDetailRepository;
 import com.scms.supplychainmanagementsystem.repository.StockHistoryRepository;
 import com.scms.supplychainmanagementsystem.repository.StockRepository;
@@ -25,6 +26,8 @@ public class StockHistoryService implements IStockHistoryService {
     private final UserCommon userCommon;
     private StockHistoryRepository stockHistoryRepository;
     private StockService stockService;
+    private StockRepository stockRepository;
+    private ProductRepository productRepository;
 
     @Override
     public Page<StockHistory> getAllStockHistory(Long productid,Long warehouseId, Pageable pageable) {
@@ -62,14 +65,13 @@ public class StockHistoryService implements IStockHistoryService {
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
         Product product = new Product();
-        product.setProductId(stockHistoryDto.getProductId());
-
+        product = productRepository.getById(stockHistoryDto.getProductId());
+        Double QuantityOld=stockHistoryRepository.findByStockHistoryIdAdmin(stockHistoryId).getStockInQuantity();
         if (currentUser.getRole().getRoleID() != 1) {
             if (currentUser.getWarehouse().getWarehouseID() != stockHistoryRepository.findByStockHistoryIdAdmin(stockHistoryId).getProduct().getWarehouse().getWarehouseID()) {
                 throw new AppException("you cant update in another Warehouse");
             }
         }
-
         StockHistory stockHistory = StockHistory.builder()
                 .stockHistoryID(stockHistoryId)
                 .createdDate(Instant.now())
@@ -82,6 +84,7 @@ public class StockHistoryService implements IStockHistoryService {
                 .build();
         log.info("[Start Update PurchaseService  to database]");
         stockHistoryRepository.save(stockHistory);
+        stockService.updateStockQuantity(product.getProductId(),stockHistoryDto.getStockInQuantity()-QuantityOld);
         log.info("[Start PurchaseService - UpdatePurchase  to database ]");
         log.info("[End PurchaseService -UpdatePurchase ]");
     }
@@ -94,7 +97,7 @@ public class StockHistoryService implements IStockHistoryService {
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
         Product product = new Product();
-        product.setProductId(stockHistoryDto.getProductId());
+        product=productRepository.getById(stockHistoryDto.getProductId());
 
         StockHistory stockHistory = StockHistory.builder()
                 .createdDate(Instant.now())
@@ -114,11 +117,18 @@ public class StockHistoryService implements IStockHistoryService {
 
     @Override
     public void deleteStockHistory(Long stockHistoryId) {
+        Double QuantityOld=stockHistoryRepository.findByStockHistoryIdAdmin(stockHistoryId).getStockInQuantity();
+        Long productId =stockHistoryRepository.findByStockHistoryIdAdmin(stockHistoryId).getProduct().getProductId();
         User currentUser = userCommon.getCurrentUser();
         if (currentUser.getRole().getRoleID() != 1) {
-            stockHistoryRepository.deleteStockHistory(stockHistoryId, currentUser.getWarehouse().getWarehouseID());
+            if(currentUser.getWarehouse().getWarehouseID()!=stockHistoryRepository.getById(stockHistoryId).getProduct().getWarehouse().getWarehouseID()){
+                throw new AppException("you cant delete in another Warehouse");
+            }else{
+            stockHistoryRepository.deleteStockHistoryAdmin(stockHistoryId);
+            stockService.updateStockQuantity(productId,-QuantityOld);}
         } else {
             stockHistoryRepository.deleteStockHistoryAdmin(stockHistoryId);
+            stockService.updateStockQuantity(productId,-QuantityOld);
         }
     }
     }

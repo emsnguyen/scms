@@ -4,6 +4,7 @@ import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.StockDto;
 import com.scms.supplychainmanagementsystem.entity.*;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
+import com.scms.supplychainmanagementsystem.repository.ProductRepository;
 import com.scms.supplychainmanagementsystem.repository.PurchaseRepository;
 import com.scms.supplychainmanagementsystem.repository.StockRepository;
 import com.scms.supplychainmanagementsystem.service.IStockService;
@@ -25,6 +26,7 @@ public class StockService implements IStockService {
 
     private final UserCommon userCommon;
     private StockRepository stockRepository;
+    private ProductRepository productRepository;
 
     @Override
     public Page<Stock> getAllStock(Long productId, Long warehouseId,Pageable pageable) {
@@ -70,8 +72,7 @@ public class StockService implements IStockService {
         }
 
         Product product = new Product();
-        product.setProductId(stockDto.getProductId());
-
+        product=productRepository.getById(stockDto.getProductId());
         Stock stock = Stock.builder()
                 .stockId(stockId)
                 .availableQuantity(stockDto.getAvailableQuantity())
@@ -88,9 +89,8 @@ public class StockService implements IStockService {
     public void updateStockQuantity(Long productId, Double quantity) {
 
         Stock strock = stockRepository.findByProductId(productId);
-        System.out.println("fdffdfdfdf "+strock.getAvailableQuantity()+"  +  "+quantity+" -------- ");
         Product product = new Product();
-        product.setProductId(productId);
+        product =productRepository.getById(productId);
         Stock stock = Stock.builder()
                 .stockId(strock.getStockId())
                 .availableQuantity(strock.getAvailableQuantity()+quantity)
@@ -111,7 +111,7 @@ public class StockService implements IStockService {
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
         Product product = new Product();
-        product.setProductId(stockDto.getProductId());
+        product = productRepository.getById(stockDto.getProductId());
 
         Stock stock = Stock.builder()
                .availableQuantity(stockDto.getAvailableQuantity())
