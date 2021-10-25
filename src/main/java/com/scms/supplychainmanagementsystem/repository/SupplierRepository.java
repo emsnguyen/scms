@@ -44,13 +44,17 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
 
     @Query(value = "select u from Supplier u where u.warehouse.warehouseID =:warehouseId " +
             " and (:suppliername is null or u.SupplierName like %:suppliername%) " +
+            " and (:active is null or u.isActive =:active) " +
             " order by u.supplierId desc")
     Page<Supplier> filterInOneWarehouse(@Param("suppliername") String suppliername,
+                                        @Param("active") String isActive,
                                         @Param("warehouseId") Long warehouseId, Pageable pageable);
 
     @Query(value = "select u from Supplier u where (:warehouseId is null or u.warehouse.warehouseID = :warehouseId) " +
             " and (:suppliername is null or u.SupplierName like %:suppliername%) " +
+            " and (:active is null or u.isActive =:active) " +
             " order by u.supplierId desc")
     Page<Supplier> filterAllWarehouses(@Param("suppliername") String suppliername,
+                                       @Param("active") String isActive,
                                        @Param("warehouseId") Long warehouseId, Pageable pageable);
 }

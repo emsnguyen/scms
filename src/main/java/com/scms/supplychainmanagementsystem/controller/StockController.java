@@ -101,7 +101,7 @@ public class StockController {
 
     @DeleteMapping("/{stockId}")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    @ApiOperation(value = "Requires ADMIN or MANAGER Access")
+    @ApiOperation(value = "Requires ADMIN or MANAGER Access .Only Use When Delete A Product ,Doesnt delete from list")
     public ResponseEntity<String> DeleteStock(@PathVariable Long stockId) {
         log.info("[Start stockController - Delete stock By ID]");
         iStockService.deleteStock(stockId);

@@ -25,13 +25,6 @@ public interface StockRepository extends JpaRepository<Stock,Long> {
     Stock findByProductId(@Param("productid") Long productid);
 
 
-
-
-    @Modifying
-    @Transactional
-    @Query(value = "Delete  FROM Stock u where u.stockId= :stockId  and u.product.warehouse.warehouseID= :warehouseid")
-    void deleteStock(@Param("stockId") Long stockId, @Param("warehouseid") Long warehouseId);
-
     @Modifying
     @Transactional
     @Query(value = "Delete  FROM Stock u where u.stockId=:stockId")
