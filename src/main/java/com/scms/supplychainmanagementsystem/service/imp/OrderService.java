@@ -42,8 +42,7 @@ public class OrderService implements IOrderService {
     public void updateOrder(OrderRequest orderRequest) {
         log.info("[Start OrderService - updateOrder ID = " + orderRequest.getOrderId() + "]");
         if (checkAccessOrder(orderRequest.getOrderId())) {
-            Order order = orderRepository.findById(orderRequest.getOrderId())
-                    .orElseThrow(() -> new AppException("Order not found"));
+            Order order = orderRepository.getById(orderRequest.getOrderId());
             User current = userCommon.getCurrentUser();
             if (current.getRole().getRoleID() == 1) {
                 order.setWarehouse(warehouseRepository.findById(orderRequest.getWarehouseId())
@@ -99,6 +98,7 @@ public class OrderService implements IOrderService {
     public void deleteOrderByOrderId(Long orderId) {
         log.info("[Start OrderService - deleteOrderByOrderId = " + orderId + "]");
         if (checkAccessOrder(orderId)) {
+            // TODO: delete order item and update quantity stock
             orderRepository.deleteById(orderId);
         } else {
             throw new AppException("Not allow to delete this resource");
@@ -159,6 +159,7 @@ public class OrderService implements IOrderService {
     public void updateOrderStatus(Long orderId, Long orderStatusId) {
         log.info("[Start OrderService - updateOrderStatus Order ID = " + orderId + "]");
         if (checkAccessOrder(orderId)) {
+            // TODO: check status valid
             if (orderStatusId == 1) {
 
             } else if (orderStatusId == 2) {

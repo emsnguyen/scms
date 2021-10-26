@@ -60,31 +60,19 @@ public class OrderDetailsService implements IOrderDetailsService {
         if (orderDetailsRequest.getProductId() == null || orderDetailsRequest.getPriceBookId() == null) {
             throw new AppException("Not fill in all required fields");
         }
-        OrderDetails orderDetails;
-        if (checkOrderItemQtyAvailable(orderDetailsRequest.getProductId())) {
-            orderDetails = OrderDetails.builder()
-                    .order(orderRepository.findById(orderDetailsRequest.getOrderId())
-                            .orElseThrow(() -> new AppException("Order not found")))
-                    .priceBook(priceBookRepository.findById(orderDetailsRequest.getPriceBookId())
-                            .orElseThrow(() -> new AppException("PriceBook not found")))
-                    .product(productRepository.findById(orderDetailsRequest.getProductId())
-                            .orElseThrow(() -> new AppException("Product not found")))
-                    .quantity(orderDetailsRequest.getQuantity())
-                    .orderDetailsStatus(orderDetailSttRepository.getById(1L))
-                    .build();
-
+        OrderDetails orderDetails = new OrderDetails();
+        orderDetails.setOrder(orderRepository.findById(orderDetailsRequest.getOrderId())
+                .orElseThrow(() -> new AppException("Order not found")));
+        orderDetails.setPriceBook(priceBookRepository.findById(orderDetailsRequest.getPriceBookId())
+                .orElseThrow(() -> new AppException("PriceBook not found")));
+        orderDetails.setProduct(productRepository.findById(orderDetailsRequest.getProductId())
+                .orElseThrow(() -> new AppException("Product not found")));
+        if (!checkOrderItemQtyAvailable(orderDetailsRequest.getProductId())) {
+            //Not enough stock
+            orderDetails.setOrderDetailsStatus(orderDetailSttRepository.getById(1L));
         } else {
-            orderDetails = OrderDetails.builder()
-                    .order(orderRepository.findById(orderDetailsRequest.getOrderId())
-                            .orElseThrow(() -> new AppException("Order not found")))
-                    .priceBook(priceBookRepository.findById(orderDetailsRequest.getPriceBookId())
-                            .orElseThrow(() -> new AppException("PriceBook not found")))
-                    .product(productRepository.findById(orderDetailsRequest.getProductId())
-                            .orElseThrow(() -> new AppException("Product not found")))
-                    .quantity(orderDetailsRequest.getQuantity())
-                    .orderDetailsStatus(orderDetailSttRepository.getById(2L))
-                    .build();
-
+            //Enough stock
+            orderDetails.setOrderDetailsStatus(orderDetailSttRepository.getById(2L));
         }
         log.info("[Start Save OrderDetails to database]");
         orderDetailsRepository.saveAndFlush(orderDetails);
@@ -97,11 +85,16 @@ public class OrderDetailsService implements IOrderDetailsService {
         log.info("[Start OrderDetailsService - deleteOrderDetailsById = " + orderDetailId + "]");
         if (checkAccessOrderDetails(orderDetailId)) {
             OrderDetails orderDetails = orderDetailsRepository.getById(orderDetailId);
-            Stock stock = stockRepository.findByProduct(orderDetails.getProduct());
-            stock.setAvailableQuantity(stock.getAvailableQuantity() - orderDetails.getQuantity());
-            log.info("Subtract quantity " + orderDetails.getQuantity() + " in Stock to " + stock.getAvailableQuantity());
-            stockRepository.saveAndFlush(stock);
-            log.info("Update Stock in database Successfully");
+            Long orderStatusId = orderDetails.getOrder().getOrderStatus().getOrderStatusID();
+            if (orderStatusId == 2) {
+                Stock stock = stockRepository.findByProduct(orderDetails.getProduct());
+                stock.setAvailableQuantity(stock.getAvailableQuantity() - orderDetails.getQuantity());
+                log.info("Subtract quantity " + orderDetails.getQuantity() + " in Stock to " + stock.getAvailableQuantity());
+                stockRepository.saveAndFlush(stock);
+                log.info("Update Stock in database Successfully");
+            } else if (orderStatusId > 2) {
+                throw new AppException("Item delivered cannot be deleted");
+            }
             orderDetailsRepository.deleteById(orderDetailId);
             log.info("Delete OrderDetails Successfully");
         } else {
