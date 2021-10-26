@@ -18,6 +18,10 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
             " from Stock s where s.product.productId = :productId")
     boolean checkQtyAvailablePositive(Long productId);
 
+    @Modifying
+    @Query(value = "delete from Stock where product.productId = :productId")
+    void deleteByProductId(Long productId);
+
     Stock findByProduct(Product product);
 
     @Query(value = "SELECT u FROM Stock u where u.stockId= :stockId  and u.product.warehouse.warehouseID= :warehouseid")

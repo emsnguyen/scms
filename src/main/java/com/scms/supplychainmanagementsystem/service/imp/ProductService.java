@@ -36,13 +36,8 @@ public class ProductService implements IProductService {
     public void updateProduct(ProductDto productDto) {
         log.info("[Start ProductService - updateProduct " + productDto.getProductName() + "]");
         if (checkAccessProduct(productDto.getProductId())) {
-            Product product = productRepository.findById(productDto.getProductId())
-                    .orElseThrow(() -> new AppException("Product not found"));
+            Product product = productRepository.getById(productDto.getProductId());
             User current = userCommon.getCurrentUser();
-//            if (current.getRole().getRoleID() != 1
-//                    && !productDto.getWarehouseId().equals(current.getWarehouse().getWarehouseID())) {
-//                throw new AppException("Not allow to choose warehouse");
-//            }
             if (current.getRole().getRoleID() == 1) {
                 product.setWarehouse(warehouseRepository.findById(productDto.getWarehouseId())
                         .orElseThrow(() -> new AppException("Warehouse not found")));
@@ -72,10 +67,6 @@ public class ProductService implements IProductService {
         if (productDto.getCategoryId() == null) {
             throw new AppException("Not fill in all required fields");
         }
-//        if (current.getRole().getRoleID() != 1
-//                && !productDto.getWarehouseId().equals(current.getWarehouse().getWarehouseID())) {
-//            throw new AppException("Not allow to choose warehouse");
-//        }
         if (current.getRole().getRoleID() == 1) {
             product.setWarehouse(warehouseRepository.findById(productDto.getWarehouseId())
                     .orElseThrow(() -> new AppException("Warehouse not found")));
@@ -102,7 +93,10 @@ public class ProductService implements IProductService {
     public void deleteProductByProductId(Long productId) {
         log.info("[Start ProductService - deleteProductByProductId = " + productId + "]");
         if (checkAccessProduct(productId)) {
+            stockRepository.deleteByProductId(productId);
+            log.info("Delete stock into database Successfully");
             productRepository.deleteById(productId);
+            log.info("Delete product into database Successfully");
         } else {
             throw new AppException("Not allow to delete this resource");
         }
@@ -158,8 +152,7 @@ public class ProductService implements IProductService {
         if (!checkAccessProduct(productId)) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Not allow update user activation");
         }
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new AppException("Product not found"));
+        Product product = productRepository.getById(productId);
         product.setIsActive(isActive);
         productRepository.saveAndFlush(product);
         log.info("[End ProductService - Update Product Active " + productId + "]");
