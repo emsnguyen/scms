@@ -73,23 +73,19 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public void updateCustomer(Long customerid, CustomerDto customerDto) {
         log.info("[Start CustomerService - UpdateCustomer with email: " + customerDto.getEmail() + "]");
-
         log.info("[Start get current user]");
-
         User currentUser = userCommon.getCurrentUser();
-
 
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
-
         Warehouse warehouse = new Warehouse();
         if (currentUser.getRole().getRoleID() != 1) {
-            warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+            warehouse=warehouseRepository.getById(currentUser.getWarehouse().getWarehouseID());
             if (currentUser.getWarehouse().getWarehouseID() != customerRepository.findByCustomerId(customerid).getWarehouse().getWarehouseID()) {
                 throw new AppException("you cant update in another Warehouse");
             }
         } else {
-            warehouse.setWarehouseID(customerDto.getWarehouseId());
+            warehouse=warehouseRepository.getById(customerDto.getWarehouseId());
         }
 
         Customer customer = Customer.builder()
@@ -130,9 +126,9 @@ public class CustomerServiceImpl implements ICustomerService {
 
         Warehouse warehouse = new Warehouse();
         if (currentUser.getRole().getRoleID() != 1) {
-            warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+            warehouse=warehouseRepository.getById(currentUser.getWarehouse().getWarehouseID());
         } else {
-            warehouse.setWarehouseID(customerDto.getWarehouseId());
+            warehouse=warehouseRepository.getById(customerDto.getWarehouseId());
         }
 
         Customer customer = Customer.builder()
@@ -207,7 +203,7 @@ public class CustomerServiceImpl implements ICustomerService {
 
         if (currentUser.getRole().getRoleID() != 1) {
             Warehouse warehouse = new Warehouse();
-            warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+            warehouse=warehouseRepository.getById(currentUser.getWarehouse().getWarehouseID());
 
             System.out.println("so hang" + worksheet.getPhysicalNumberOfRows());
             List<Customer> customerList = new ArrayList<>();
@@ -281,7 +277,7 @@ public class CustomerServiceImpl implements ICustomerService {
                     ex(" DateofBirth ", i + 1);
                 }
 
-                warehouse.setWarehouseID(Long.parseLong(row.getCell(12).getRawValue()));
+                warehouse=warehouseRepository.getById(Long.parseLong(row.getCell(12).getRawValue()));
                 DateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
                 String convertedDate = parser.format(date);
 

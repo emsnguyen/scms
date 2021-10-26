@@ -7,6 +7,7 @@ import com.scms.supplychainmanagementsystem.entity.User;
 import com.scms.supplychainmanagementsystem.entity.Warehouse;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.MaterialRepository;
+import com.scms.supplychainmanagementsystem.repository.WarehouseRepository;
 import com.scms.supplychainmanagementsystem.service.IMaterialService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ public class MaterialService implements IMaterialService {
 
     private MaterialRepository materialRepository;
     private final UserCommon userCommon;
+    private WarehouseRepository warehouseRepository;
 
     @Override
     public Material getMaterialByIdInWarehouse(Long MaterialId) {
@@ -48,12 +50,13 @@ public class MaterialService implements IMaterialService {
 
         Warehouse warehouse = new Warehouse();
         if (currentUser.getRole().getRoleID() != 1) {
-            warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+            warehouse = warehouseRepository.getById(currentUser.getWarehouse().getWarehouseID());
             if (currentUser.getWarehouse().getWarehouseID() != materialRepository.findByMaterialId(materialId).getWarehouse().getWarehouseID()) {
                 throw new AppException("you cant update in another Warehouse");
             }
         } else {
-            warehouse.setWarehouseID(materialDto.getWarehouseId());
+            warehouse = warehouseRepository.getById(materialDto.getWarehouseId());
+
         }
 
         Material material = Material.builder()
@@ -82,12 +85,11 @@ public class MaterialService implements IMaterialService {
         User currentUser = userCommon.getCurrentUser();
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
-
         Warehouse warehouse = new Warehouse();
         if (currentUser.getRole().getRoleID() != 1) {
-            warehouse.setWarehouseID(currentUser.getWarehouse().getWarehouseID());
+            warehouse=warehouseRepository.getById(currentUser.getWarehouse().getWarehouseID());
         } else {
-            warehouse.setWarehouseID(materialDto.getWarehouseId());
+            warehouse= warehouseRepository.getById(materialDto.getWarehouseId());
         }
         Material material = Material.builder()
                 .MaterialName(materialDto.getMaterialName())
