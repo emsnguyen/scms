@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ISupplierService {
 
-    Page<Supplier> getAllSupplier(String suppliername, Long warehouseId, Pageable pageble);
+    Page<Supplier> getAllSupplier(String suppliername,String isActive, Long warehouseId, Pageable pageble);
 
     Supplier getSupplierByIdInWarehouse(Long supplierId);
 

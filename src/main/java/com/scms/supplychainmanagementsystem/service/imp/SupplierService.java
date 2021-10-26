@@ -28,16 +28,16 @@ public class SupplierService implements ISupplierService {
     private final UserCommon userCommon;
     private WarehouseRepository warehouseRepository;
     @Override
-    public Page<Supplier> getAllSupplier(String suppliername, Long warehouseId, Pageable pageable) {
+    public Page<Supplier> getAllSupplier(String suppliername,String isActive, Long warehouseId, Pageable pageable) {
         log.info("[Start SupplierService - Get All Supplier]");
         Page<Supplier> supplierPage;
         User current = userCommon.getCurrentUser();
         Warehouse wh = current.getWarehouse();
         Long userId = current.getUserId();
         if (current.getRole().getRoleID() == 1) {
-            supplierPage = supplierRepository.filterAllWarehouses(suppliername, warehouseId, pageable);
+            supplierPage = supplierRepository.filterAllWarehouses(suppliername,isActive,warehouseId, pageable);
         } else {
-            supplierPage = supplierRepository.filterInOneWarehouse(suppliername, wh.getWarehouseID(), pageable);
+            supplierPage = supplierRepository.filterInOneWarehouse(suppliername,isActive,wh.getWarehouseID(), pageable);
         }
         log.info("[End CustomerService - Get All Customer]");
         return supplierPage;

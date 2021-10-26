@@ -37,6 +37,7 @@ public class SupplierController {
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllSupplierInWarehouse(@RequestParam(required = false) String SupplierName,
+                                                                         @RequestParam(required = false) String isActive,
                                                                          @RequestParam(required = false) Long warehouseId,
                                                                          @RequestParam(defaultValue = "0") int page,
                                                                          @RequestParam(defaultValue = "10") int size) {
@@ -45,7 +46,7 @@ public class SupplierController {
         Page<Supplier> supplierPage;
         Pageable pageable = PageRequest.of(page, size);
 
-        supplierPage = iSupplierService.getAllSupplier(SupplierName,warehouseId, pageable);
+        supplierPage = iSupplierService.getAllSupplier(SupplierName,isActive,warehouseId, pageable);
 
         supplierlList = supplierPage.getContent();
 
