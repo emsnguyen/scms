@@ -1,3 +1,19 @@
+INSERT INTO `order_status`
+VALUES (1, 'Khởi tạo đơn hàng');
+INSERT INTO `order_status`
+VALUES (2, 'Chờ hàng nhập');
+INSERT INTO `order_status`
+VALUES (3, 'Đã nhận 1 phần đơn hàng');
+INSERT INTO `order_status`
+VALUES (4, 'Đã nhận đủ hàng');
+INSERT INTO `order_status`
+VALUES (5, 'Đóng đơn');
+
+INSERT INTO `order_details_status`
+VALUES (1, 'Chưa đủ hàng');
+INSERT INTO `order_details_status`
+VALUES (2, 'Đã đủ hàng');
+
 INSERT INTO `role`
 VALUES (1, 'ADMIN');
 INSERT INTO `role`
