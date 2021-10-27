@@ -127,11 +127,8 @@ public class StockService implements IStockService {
     @Override
     public void deleteStock(Long stockId) {
         User currentUser = userCommon.getCurrentUser();
-        if (currentUser.getRole().getRoleID() != 1) {
-            stockRepository.deleteStock(stockId, currentUser.getWarehouse().getWarehouseID());
-        } else {
             stockRepository.deleteStockAdmin(stockId);
         }
     }
-    }
+
 
