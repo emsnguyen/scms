@@ -3,11 +3,13 @@ VALUES (1, 'Khởi tạo đơn hàng');
 INSERT INTO `order_status`
 VALUES (2, 'Chờ hàng nhập');
 INSERT INTO `order_status`
-VALUES (3, 'Đã nhận 1 phần đơn hàng');
+VALUES (3, 'Xác nhận đặt hàng');
 INSERT INTO `order_status`
-VALUES (4, 'Đã nhận đủ hàng');
+VALUES (4, 'Đã nhận 1 phần đơn hàng');
 INSERT INTO `order_status`
-VALUES (5, 'Đóng đơn');
+VALUES (5, 'Đã nhận đủ hàng');
+INSERT INTO `order_status`
+VALUES (6, 'Đóng đơn');
 
 INSERT INTO `order_details_status`
 VALUES (1, 'Chưa đủ hàng');
@@ -1071,36 +1073,60 @@ INSERT INTO `district`
 VALUES ('617', 'Huyện Tu Mơ Rông', 'Huyện', '62');
 INSERT INTO `district`
 VALUES ('618', 'Huyện Ia H\' Drai', 'Huyện', '62');
-INSERT INTO `district` VALUES ('622', 'Thành phố Pleiku', 'Thành phố', '64');
-INSERT INTO `district` VALUES ('623', 'Thị xã An Khê', 'Thị xã', '64');
-INSERT INTO `district` VALUES ('624', 'Thị xã Ayun Pa', 'Thị xã', '64');
-INSERT INTO `district` VALUES ('625', 'Huyện KBang', 'Huyện', '64');
-INSERT INTO `district` VALUES ('626', 'Huyện Đăk Đoa', 'Huyện', '64');
-INSERT INTO `district` VALUES ('627', 'Huyện Chư Păh', 'Huyện', '64');
-INSERT INTO `district` VALUES ('628', 'Huyện Ia Grai', 'Huyện', '64');
-INSERT INTO `district` VALUES ('629', 'Huyện Mang Yang', 'Huyện', '64');
-INSERT INTO `district` VALUES ('630', 'Huyện Kông Chro', 'Huyện', '64');
-INSERT INTO `district` VALUES ('631', 'Huyện Đức Cơ', 'Huyện', '64');
-INSERT INTO `district` VALUES ('632', 'Huyện Chư Prông', 'Huyện', '64');
-INSERT INTO `district` VALUES ('633', 'Huyện Chư Sê', 'Huyện', '64');
-INSERT INTO `district` VALUES ('634', 'Huyện Đăk Pơ', 'Huyện', '64');
-INSERT INTO `district` VALUES ('635', 'Huyện Ia Pa', 'Huyện', '64');
-INSERT INTO `district` VALUES ('637', 'Huyện Krông Pa', 'Huyện', '64');
-INSERT INTO `district` VALUES ('638', 'Huyện Phú Thiện', 'Huyện', '64');
-INSERT INTO `district` VALUES ('639', 'Huyện Chư Pưh', 'Huyện', '64');
-INSERT INTO `district` VALUES ('643', 'Thành phố Buôn Ma Thuột', 'Thành phố', '66');
-INSERT INTO `district` VALUES ('644', 'Thị Xã Buôn Hồ', 'Thị xã', '66');
-INSERT INTO `district` VALUES ('645', 'Huyện Ea H\'leo', 'Huyện', '66');
+INSERT INTO `district`
+VALUES ('622', 'Thành phố Pleiku', 'Thành phố', '64');
+INSERT INTO `district`
+VALUES ('623', 'Thị xã An Khê', 'Thị xã', '64');
+INSERT INTO `district`
+VALUES ('624', 'Thị xã Ayun Pa', 'Thị xã', '64');
+INSERT INTO `district`
+VALUES ('625', 'Huyện KBang', 'Huyện', '64');
+INSERT INTO `district`
+VALUES ('626', 'Huyện Đăk Đoa', 'Huyện', '64');
+INSERT INTO `district`
+VALUES ('627', 'Huyện Chư Păh', 'Huyện', '64');
+INSERT INTO `district`
+VALUES ('628', 'Huyện Ia Grai', 'Huyện', '64');
+INSERT INTO `district`
+VALUES ('629', 'Huyện Mang Yang', 'Huyện', '64');
+INSERT INTO `district`
+VALUES ('630', 'Huyện Kông Chro', 'Huyện', '64');
+INSERT INTO `district`
+VALUES ('631', 'Huyện Đức Cơ', 'Huyện', '64');
+INSERT INTO `district`
+VALUES ('632', 'Huyện Chư Prông', 'Huyện', '64');
+INSERT INTO `district`
+VALUES ('633', 'Huyện Chư Sê', 'Huyện', '64');
+INSERT INTO `district`
+VALUES ('634', 'Huyện Đăk Pơ', 'Huyện', '64');
+INSERT INTO `district`
+VALUES ('635', 'Huyện Ia Pa', 'Huyện', '64');
+INSERT INTO `district`
+VALUES ('637', 'Huyện Krông Pa', 'Huyện', '64');
+INSERT INTO `district`
+VALUES ('638', 'Huyện Phú Thiện', 'Huyện', '64');
+INSERT INTO `district`
+VALUES ('639', 'Huyện Chư Pưh', 'Huyện', '64');
+INSERT INTO `district`
+VALUES ('643', 'Thành phố Buôn Ma Thuột', 'Thành phố', '66');
+INSERT INTO `district`
+VALUES ('644', 'Thị Xã Buôn Hồ', 'Thị xã', '66');
+INSERT INTO `district`
+VALUES ('645', 'Huyện Ea H\'leo', 'Huyện', '66');
 INSERT INTO `district`
 VALUES ('646', 'Huyện Ea Súp', 'Huyện', '66');
 INSERT INTO `district`
 VALUES ('647', 'Huyện Buôn Đôn', 'Huyện', '66');
 INSERT INTO `district`
 VALUES ('648', 'Huyện Cư M\'gar', 'Huyện', '66');
-INSERT INTO `district` VALUES ('649', 'Huyện Krông Búk', 'Huyện', '66');
-INSERT INTO `district` VALUES ('650', 'Huyện Krông Năng', 'Huyện', '66');
-INSERT INTO `district` VALUES ('651', 'Huyện Ea Kar', 'Huyện', '66');
-INSERT INTO `district` VALUES ('652', 'Huyện M\'Đrắk', 'Huyện', '66');
+INSERT INTO `district`
+VALUES ('649', 'Huyện Krông Búk', 'Huyện', '66');
+INSERT INTO `district`
+VALUES ('650', 'Huyện Krông Năng', 'Huyện', '66');
+INSERT INTO `district`
+VALUES ('651', 'Huyện Ea Kar', 'Huyện', '66');
+INSERT INTO `district`
+VALUES ('652', 'Huyện M\'Đrắk', 'Huyện', '66');
 INSERT INTO `district`
 VALUES ('653', 'Huyện Krông Bông', 'Huyện', '66');
 INSERT INTO `district`
@@ -1125,222 +1151,441 @@ INSERT INTO `district`
 VALUES ('665', 'Huyện Đắk Song', 'Huyện', '67');
 INSERT INTO `district`
 VALUES ('666', 'Huyện Đắk R\'Lấp', 'Huyện', '67');
-INSERT INTO `district` VALUES ('667', 'Huyện Tuy Đức', 'Huyện', '67');
-INSERT INTO `district` VALUES ('672', 'Thành phố Đà Lạt', 'Thành phố', '68');
-INSERT INTO `district` VALUES ('673', 'Thành phố Bảo Lộc', 'Thành phố', '68');
-INSERT INTO `district` VALUES ('674', 'Huyện Đam Rông', 'Huyện', '68');
-INSERT INTO `district` VALUES ('675', 'Huyện Lạc Dương', 'Huyện', '68');
-INSERT INTO `district` VALUES ('676', 'Huyện Lâm Hà', 'Huyện', '68');
-INSERT INTO `district` VALUES ('677', 'Huyện Đơn Dương', 'Huyện', '68');
-INSERT INTO `district` VALUES ('678', 'Huyện Đức Trọng', 'Huyện', '68');
-INSERT INTO `district` VALUES ('679', 'Huyện Di Linh', 'Huyện', '68');
-INSERT INTO `district` VALUES ('680', 'Huyện Bảo Lâm', 'Huyện', '68');
-INSERT INTO `district` VALUES ('681', 'Huyện Đạ Huoai', 'Huyện', '68');
-INSERT INTO `district` VALUES ('682', 'Huyện Đạ Tẻh', 'Huyện', '68');
-INSERT INTO `district` VALUES ('683', 'Huyện Cát Tiên', 'Huyện', '68');
-INSERT INTO `district` VALUES ('688', 'Thị xã Phước Long', 'Thị xã', '70');
-INSERT INTO `district` VALUES ('689', 'Thị xã Đồng Xoài', 'Thị xã', '70');
-INSERT INTO `district` VALUES ('690', 'Thị xã Bình Long', 'Thị xã', '70');
-INSERT INTO `district` VALUES ('691', 'Huyện Bù Gia Mập', 'Huyện', '70');
-INSERT INTO `district` VALUES ('692', 'Huyện Lộc Ninh', 'Huyện', '70');
-INSERT INTO `district` VALUES ('693', 'Huyện Bù Đốp', 'Huyện', '70');
-INSERT INTO `district` VALUES ('694', 'Huyện Hớn Quản', 'Huyện', '70');
-INSERT INTO `district` VALUES ('695', 'Huyện Đồng Phú', 'Huyện', '70');
-INSERT INTO `district` VALUES ('696', 'Huyện Bù Đăng', 'Huyện', '70');
-INSERT INTO `district` VALUES ('697', 'Huyện Chơn Thành', 'Huyện', '70');
-INSERT INTO `district` VALUES ('698', 'Huyện Phú Riềng', 'Huyện', '70');
-INSERT INTO `district` VALUES ('703', 'Thành phố Tây Ninh', 'Thành phố', '72');
-INSERT INTO `district` VALUES ('705', 'Huyện Tân Biên', 'Huyện', '72');
-INSERT INTO `district` VALUES ('706', 'Huyện Tân Châu', 'Huyện', '72');
-INSERT INTO `district` VALUES ('707', 'Huyện Dương Minh Châu', 'Huyện', '72');
-INSERT INTO `district` VALUES ('708', 'Huyện Châu Thành', 'Huyện', '72');
-INSERT INTO `district` VALUES ('709', 'Huyện Hòa Thành', 'Huyện', '72');
-INSERT INTO `district` VALUES ('710', 'Huyện Gò Dầu', 'Huyện', '72');
-INSERT INTO `district` VALUES ('711', 'Huyện Bến Cầu', 'Huyện', '72');
-INSERT INTO `district` VALUES ('712', 'Huyện Trảng Bàng', 'Huyện', '72');
-INSERT INTO `district` VALUES ('718', 'Thành phố Thủ Dầu Một', 'Thành phố', '74');
-INSERT INTO `district` VALUES ('719', 'Huyện Bàu Bàng', 'Huyện', '74');
-INSERT INTO `district` VALUES ('720', 'Huyện Dầu Tiếng', 'Huyện', '74');
-INSERT INTO `district` VALUES ('721', 'Thị xã Bến Cát', 'Thị xã', '74');
-INSERT INTO `district` VALUES ('722', 'Huyện Phú Giáo', 'Huyện', '74');
-INSERT INTO `district` VALUES ('723', 'Thị xã Tân Uyên', 'Thị xã', '74');
-INSERT INTO `district` VALUES ('724', 'Thị xã Dĩ An', 'Thị xã', '74');
-INSERT INTO `district` VALUES ('725', 'Thị xã Thuận An', 'Thị xã', '74');
-INSERT INTO `district` VALUES ('726', 'Huyện Bắc Tân Uyên', 'Huyện', '74');
-INSERT INTO `district` VALUES ('731', 'Thành phố Biên Hòa', 'Thành phố', '75');
-INSERT INTO `district` VALUES ('732', 'Thị xã Long Khánh', 'Thị xã', '75');
-INSERT INTO `district` VALUES ('734', 'Huyện Tân Phú', 'Huyện', '75');
-INSERT INTO `district` VALUES ('735', 'Huyện Vĩnh Cửu', 'Huyện', '75');
-INSERT INTO `district` VALUES ('736', 'Huyện Định Quán', 'Huyện', '75');
-INSERT INTO `district` VALUES ('737', 'Huyện Trảng Bom', 'Huyện', '75');
-INSERT INTO `district` VALUES ('738', 'Huyện Thống Nhất', 'Huyện', '75');
-INSERT INTO `district` VALUES ('739', 'Huyện Cẩm Mỹ', 'Huyện', '75');
-INSERT INTO `district` VALUES ('740', 'Huyện Long Thành', 'Huyện', '75');
-INSERT INTO `district` VALUES ('741', 'Huyện Xuân Lộc', 'Huyện', '75');
-INSERT INTO `district` VALUES ('742', 'Huyện Nhơn Trạch', 'Huyện', '75');
-INSERT INTO `district` VALUES ('747', 'Thành phố Vũng Tàu', 'Thành phố', '77');
-INSERT INTO `district` VALUES ('748', 'Thành phố Bà Rịa', 'Thành phố', '77');
-INSERT INTO `district` VALUES ('750', 'Huyện Châu Đức', 'Huyện', '77');
-INSERT INTO `district` VALUES ('751', 'Huyện Xuyên Mộc', 'Huyện', '77');
-INSERT INTO `district` VALUES ('752', 'Huyện Long Điền', 'Huyện', '77');
-INSERT INTO `district` VALUES ('753', 'Huyện Đất Đỏ', 'Huyện', '77');
-INSERT INTO `district` VALUES ('754', 'Huyện Tân Thành', 'Huyện', '77');
-INSERT INTO `district` VALUES ('755', 'Huyện Côn Đảo', 'Huyện', '77');
-INSERT INTO `district` VALUES ('760', 'Quận 1', 'Quận', '79');
-INSERT INTO `district` VALUES ('761', 'Quận 12', 'Quận', '79');
-INSERT INTO `district` VALUES ('762', 'Quận Thủ Đức', 'Quận', '79');
-INSERT INTO `district` VALUES ('763', 'Quận 9', 'Quận', '79');
-INSERT INTO `district` VALUES ('764', 'Quận Gò Vấp', 'Quận', '79');
-INSERT INTO `district` VALUES ('765', 'Quận Bình Thạnh', 'Quận', '79');
-INSERT INTO `district` VALUES ('766', 'Quận Tân Bình', 'Quận', '79');
-INSERT INTO `district` VALUES ('767', 'Quận Tân Phú', 'Quận', '79');
-INSERT INTO `district` VALUES ('768', 'Quận Phú Nhuận', 'Quận', '79');
-INSERT INTO `district` VALUES ('769', 'Quận 2', 'Quận', '79');
-INSERT INTO `district` VALUES ('770', 'Quận 3', 'Quận', '79');
-INSERT INTO `district` VALUES ('771', 'Quận 10', 'Quận', '79');
-INSERT INTO `district` VALUES ('772', 'Quận 11', 'Quận', '79');
-INSERT INTO `district` VALUES ('773', 'Quận 4', 'Quận', '79');
-INSERT INTO `district` VALUES ('774', 'Quận 5', 'Quận', '79');
-INSERT INTO `district` VALUES ('775', 'Quận 6', 'Quận', '79');
-INSERT INTO `district` VALUES ('776', 'Quận 8', 'Quận', '79');
-INSERT INTO `district` VALUES ('777', 'Quận Bình Tân', 'Quận', '79');
-INSERT INTO `district` VALUES ('778', 'Quận 7', 'Quận', '79');
-INSERT INTO `district` VALUES ('783', 'Huyện Củ Chi', 'Huyện', '79');
-INSERT INTO `district` VALUES ('784', 'Huyện Hóc Môn', 'Huyện', '79');
-INSERT INTO `district` VALUES ('785', 'Huyện Bình Chánh', 'Huyện', '79');
-INSERT INTO `district` VALUES ('786', 'Huyện Nhà Bè', 'Huyện', '79');
-INSERT INTO `district` VALUES ('787', 'Huyện Cần Giờ', 'Huyện', '79');
-INSERT INTO `district` VALUES ('794', 'Thành phố Tân An', 'Thành phố', '80');
-INSERT INTO `district` VALUES ('795', 'Thị xã Kiến Tường', 'Thị xã', '80');
-INSERT INTO `district` VALUES ('796', 'Huyện Tân Hưng', 'Huyện', '80');
-INSERT INTO `district` VALUES ('797', 'Huyện Vĩnh Hưng', 'Huyện', '80');
-INSERT INTO `district` VALUES ('798', 'Huyện Mộc Hóa', 'Huyện', '80');
-INSERT INTO `district` VALUES ('799', 'Huyện Tân Thạnh', 'Huyện', '80');
-INSERT INTO `district` VALUES ('800', 'Huyện Thạnh Hóa', 'Huyện', '80');
-INSERT INTO `district` VALUES ('801', 'Huyện Đức Huệ', 'Huyện', '80');
-INSERT INTO `district` VALUES ('802', 'Huyện Đức Hòa', 'Huyện', '80');
-INSERT INTO `district` VALUES ('803', 'Huyện Bến Lức', 'Huyện', '80');
-INSERT INTO `district` VALUES ('804', 'Huyện Thủ Thừa', 'Huyện', '80');
-INSERT INTO `district` VALUES ('805', 'Huyện Tân Trụ', 'Huyện', '80');
-INSERT INTO `district` VALUES ('806', 'Huyện Cần Đước', 'Huyện', '80');
-INSERT INTO `district` VALUES ('807', 'Huyện Cần Giuộc', 'Huyện', '80');
-INSERT INTO `district` VALUES ('808', 'Huyện Châu Thành', 'Huyện', '80');
-INSERT INTO `district` VALUES ('815', 'Thành phố Mỹ Tho', 'Thành phố', '82');
-INSERT INTO `district` VALUES ('816', 'Thị xã Gò Công', 'Thị xã', '82');
-INSERT INTO `district` VALUES ('817', 'Thị xã Cai Lậy', 'Huyện', '82');
-INSERT INTO `district` VALUES ('818', 'Huyện Tân Phước', 'Huyện', '82');
-INSERT INTO `district` VALUES ('819', 'Huyện Cái Bè', 'Huyện', '82');
-INSERT INTO `district` VALUES ('820', 'Huyện Cai Lậy', 'Thị xã', '82');
-INSERT INTO `district` VALUES ('821', 'Huyện Châu Thành', 'Huyện', '82');
-INSERT INTO `district` VALUES ('822', 'Huyện Chợ Gạo', 'Huyện', '82');
-INSERT INTO `district` VALUES ('823', 'Huyện Gò Công Tây', 'Huyện', '82');
-INSERT INTO `district` VALUES ('824', 'Huyện Gò Công Đông', 'Huyện', '82');
-INSERT INTO `district` VALUES ('825', 'Huyện Tân Phú Đông', 'Huyện', '82');
-INSERT INTO `district` VALUES ('829', 'Thành phố Bến Tre', 'Thành phố', '83');
-INSERT INTO `district` VALUES ('831', 'Huyện Châu Thành', 'Huyện', '83');
-INSERT INTO `district` VALUES ('832', 'Huyện Chợ Lách', 'Huyện', '83');
-INSERT INTO `district` VALUES ('833', 'Huyện Mỏ Cày Nam', 'Huyện', '83');
-INSERT INTO `district` VALUES ('834', 'Huyện Giồng Trôm', 'Huyện', '83');
-INSERT INTO `district` VALUES ('835', 'Huyện Bình Đại', 'Huyện', '83');
-INSERT INTO `district` VALUES ('836', 'Huyện Ba Tri', 'Huyện', '83');
-INSERT INTO `district` VALUES ('837', 'Huyện Thạnh Phú', 'Huyện', '83');
-INSERT INTO `district` VALUES ('838', 'Huyện Mỏ Cày Bắc', 'Huyện', '83');
-INSERT INTO `district` VALUES ('842', 'Thành phố Trà Vinh', 'Thành phố', '84');
-INSERT INTO `district` VALUES ('844', 'Huyện Càng Long', 'Huyện', '84');
-INSERT INTO `district` VALUES ('845', 'Huyện Cầu Kè', 'Huyện', '84');
-INSERT INTO `district` VALUES ('846', 'Huyện Tiểu Cần', 'Huyện', '84');
-INSERT INTO `district` VALUES ('847', 'Huyện Châu Thành', 'Huyện', '84');
-INSERT INTO `district` VALUES ('848', 'Huyện Cầu Ngang', 'Huyện', '84');
-INSERT INTO `district` VALUES ('849', 'Huyện Trà Cú', 'Huyện', '84');
-INSERT INTO `district` VALUES ('850', 'Huyện Duyên Hải', 'Huyện', '84');
-INSERT INTO `district` VALUES ('851', 'Thị xã Duyên Hải', 'Thị xã', '84');
-INSERT INTO `district` VALUES ('855', 'Thành phố Vĩnh Long', 'Thành phố', '86');
-INSERT INTO `district` VALUES ('857', 'Huyện Long Hồ', 'Huyện', '86');
-INSERT INTO `district` VALUES ('858', 'Huyện Mang Thít', 'Huyện', '86');
-INSERT INTO `district` VALUES ('859', 'Huyện  Vũng Liêm', 'Huyện', '86');
-INSERT INTO `district` VALUES ('860', 'Huyện Tam Bình', 'Huyện', '86');
-INSERT INTO `district` VALUES ('861', 'Thị xã Bình Minh', 'Thị xã', '86');
-INSERT INTO `district` VALUES ('862', 'Huyện Trà Ôn', 'Huyện', '86');
-INSERT INTO `district` VALUES ('863', 'Huyện Bình Tân', 'Huyện', '86');
-INSERT INTO `district` VALUES ('866', 'Thành phố Cao Lãnh', 'Thành phố', '87');
-INSERT INTO `district` VALUES ('867', 'Thành phố Sa Đéc', 'Thành phố', '87');
-INSERT INTO `district` VALUES ('868', 'Thị xã Hồng Ngự', 'Thị xã', '87');
-INSERT INTO `district` VALUES ('869', 'Huyện Tân Hồng', 'Huyện', '87');
-INSERT INTO `district` VALUES ('870', 'Huyện Hồng Ngự', 'Huyện', '87');
-INSERT INTO `district` VALUES ('871', 'Huyện Tam Nông', 'Huyện', '87');
-INSERT INTO `district` VALUES ('872', 'Huyện Tháp Mười', 'Huyện', '87');
-INSERT INTO `district` VALUES ('873', 'Huyện Cao Lãnh', 'Huyện', '87');
-INSERT INTO `district` VALUES ('874', 'Huyện Thanh Bình', 'Huyện', '87');
-INSERT INTO `district` VALUES ('875', 'Huyện Lấp Vò', 'Huyện', '87');
-INSERT INTO `district` VALUES ('876', 'Huyện Lai Vung', 'Huyện', '87');
-INSERT INTO `district` VALUES ('877', 'Huyện Châu Thành', 'Huyện', '87');
-INSERT INTO `district` VALUES ('883', 'Thành phố Long Xuyên', 'Thành phố', '89');
-INSERT INTO `district` VALUES ('884', 'Thành phố Châu Đốc', 'Thành phố', '89');
-INSERT INTO `district` VALUES ('886', 'Huyện An Phú', 'Huyện', '89');
-INSERT INTO `district` VALUES ('887', 'Thị xã Tân Châu', 'Thị xã', '89');
-INSERT INTO `district` VALUES ('888', 'Huyện Phú Tân', 'Huyện', '89');
-INSERT INTO `district` VALUES ('889', 'Huyện Châu Phú', 'Huyện', '89');
-INSERT INTO `district` VALUES ('890', 'Huyện Tịnh Biên', 'Huyện', '89');
-INSERT INTO `district` VALUES ('891', 'Huyện Tri Tôn', 'Huyện', '89');
-INSERT INTO `district` VALUES ('892', 'Huyện Châu Thành', 'Huyện', '89');
-INSERT INTO `district` VALUES ('893', 'Huyện Chợ Mới', 'Huyện', '89');
-INSERT INTO `district` VALUES ('894', 'Huyện Thoại Sơn', 'Huyện', '89');
-INSERT INTO `district` VALUES ('899', 'Thành phố Rạch Giá', 'Thành phố', '91');
-INSERT INTO `district` VALUES ('900', 'Thị xã Hà Tiên', 'Thị xã', '91');
-INSERT INTO `district` VALUES ('902', 'Huyện Kiên Lương', 'Huyện', '91');
-INSERT INTO `district` VALUES ('903', 'Huyện Hòn Đất', 'Huyện', '91');
-INSERT INTO `district` VALUES ('904', 'Huyện Tân Hiệp', 'Huyện', '91');
-INSERT INTO `district` VALUES ('905', 'Huyện Châu Thành', 'Huyện', '91');
-INSERT INTO `district` VALUES ('906', 'Huyện Giồng Riềng', 'Huyện', '91');
-INSERT INTO `district` VALUES ('907', 'Huyện Gò Quao', 'Huyện', '91');
-INSERT INTO `district` VALUES ('908', 'Huyện An Biên', 'Huyện', '91');
-INSERT INTO `district` VALUES ('909', 'Huyện An Minh', 'Huyện', '91');
-INSERT INTO `district` VALUES ('910', 'Huyện Vĩnh Thuận', 'Huyện', '91');
-INSERT INTO `district` VALUES ('911', 'Huyện Phú Quốc', 'Huyện', '91');
-INSERT INTO `district` VALUES ('912', 'Huyện Kiên Hải', 'Huyện', '91');
-INSERT INTO `district` VALUES ('913', 'Huyện U Minh Thượng', 'Huyện', '91');
-INSERT INTO `district` VALUES ('914', 'Huyện Giang Thành', 'Huyện', '91');
-INSERT INTO `district` VALUES ('916', 'Quận Ninh Kiều', 'Quận', '92');
-INSERT INTO `district` VALUES ('917', 'Quận Ô Môn', 'Quận', '92');
-INSERT INTO `district` VALUES ('918', 'Quận Bình Thuỷ', 'Quận', '92');
-INSERT INTO `district` VALUES ('919', 'Quận Cái Răng', 'Quận', '92');
-INSERT INTO `district` VALUES ('923', 'Quận Thốt Nốt', 'Quận', '92');
-INSERT INTO `district` VALUES ('924', 'Huyện Vĩnh Thạnh', 'Huyện', '92');
-INSERT INTO `district` VALUES ('925', 'Huyện Cờ Đỏ', 'Huyện', '92');
-INSERT INTO `district` VALUES ('926', 'Huyện Phong Điền', 'Huyện', '92');
-INSERT INTO `district` VALUES ('927', 'Huyện Thới Lai', 'Huyện', '92');
-INSERT INTO `district` VALUES ('930', 'Thành phố Vị Thanh', 'Thành phố', '93');
-INSERT INTO `district` VALUES ('931', 'Thị xã Ngã Bảy', 'Thị xã', '93');
-INSERT INTO `district` VALUES ('932', 'Huyện Châu Thành A', 'Huyện', '93');
-INSERT INTO `district` VALUES ('933', 'Huyện Châu Thành', 'Huyện', '93');
-INSERT INTO `district` VALUES ('934', 'Huyện Phụng Hiệp', 'Huyện', '93');
-INSERT INTO `district` VALUES ('935', 'Huyện Vị Thuỷ', 'Huyện', '93');
-INSERT INTO `district` VALUES ('936', 'Huyện Long Mỹ', 'Huyện', '93');
-INSERT INTO `district` VALUES ('937', 'Thị xã Long Mỹ', 'Thị xã', '93');
-INSERT INTO `district` VALUES ('941', 'Thành phố Sóc Trăng', 'Thành phố', '94');
-INSERT INTO `district` VALUES ('942', 'Huyện Châu Thành', 'Huyện', '94');
-INSERT INTO `district` VALUES ('943', 'Huyện Kế Sách', 'Huyện', '94');
-INSERT INTO `district` VALUES ('944', 'Huyện Mỹ Tú', 'Huyện', '94');
-INSERT INTO `district` VALUES ('945', 'Huyện Cù Lao Dung', 'Huyện', '94');
-INSERT INTO `district` VALUES ('946', 'Huyện Long Phú', 'Huyện', '94');
-INSERT INTO `district` VALUES ('947', 'Huyện Mỹ Xuyên', 'Huyện', '94');
-INSERT INTO `district` VALUES ('948', 'Thị xã Ngã Năm', 'Thị xã', '94');
-INSERT INTO `district` VALUES ('949', 'Huyện Thạnh Trị', 'Huyện', '94');
-INSERT INTO `district` VALUES ('950', 'Thị xã Vĩnh Châu', 'Thị xã', '94');
-INSERT INTO `district` VALUES ('951', 'Huyện Trần Đề', 'Huyện', '94');
-INSERT INTO `district` VALUES ('954', 'Thành phố Bạc Liêu', 'Thành phố', '95');
-INSERT INTO `district` VALUES ('956', 'Huyện Hồng Dân', 'Huyện', '95');
-INSERT INTO `district` VALUES ('957', 'Huyện Phước Long', 'Huyện', '95');
-INSERT INTO `district` VALUES ('958', 'Huyện Vĩnh Lợi', 'Huyện', '95');
-INSERT INTO `district` VALUES ('959', 'Thị xã Giá Rai', 'Thị xã', '95');
-INSERT INTO `district` VALUES ('960', 'Huyện Đông Hải', 'Huyện', '95');
-INSERT INTO `district` VALUES ('961', 'Huyện Hoà Bình', 'Huyện', '95');
-INSERT INTO `district` VALUES ('964', 'Thành phố Cà Mau', 'Thành phố', '96');
-INSERT INTO `district` VALUES ('966', 'Huyện U Minh', 'Huyện', '96');
-INSERT INTO `district` VALUES ('967', 'Huyện Thới Bình', 'Huyện', '96');
-INSERT INTO `district` VALUES ('968', 'Huyện Trần Văn Thời', 'Huyện', '96');
-INSERT INTO `district` VALUES ('969', 'Huyện Cái Nước', 'Huyện', '96');
-INSERT INTO `district` VALUES ('970', 'Huyện Đầm Dơi', 'Huyện', '96');
-INSERT INTO `district` VALUES ('971', 'Huyện Năm Căn', 'Huyện', '96');
-INSERT INTO `district` VALUES ('972', 'Huyện Phú Tân', 'Huyện', '96');
-INSERT INTO `district` VALUES ('973', 'Huyện Ngọc Hiển', 'Huyện', '96');
+INSERT INTO `district`
+VALUES ('667', 'Huyện Tuy Đức', 'Huyện', '67');
+INSERT INTO `district`
+VALUES ('672', 'Thành phố Đà Lạt', 'Thành phố', '68');
+INSERT INTO `district`
+VALUES ('673', 'Thành phố Bảo Lộc', 'Thành phố', '68');
+INSERT INTO `district`
+VALUES ('674', 'Huyện Đam Rông', 'Huyện', '68');
+INSERT INTO `district`
+VALUES ('675', 'Huyện Lạc Dương', 'Huyện', '68');
+INSERT INTO `district`
+VALUES ('676', 'Huyện Lâm Hà', 'Huyện', '68');
+INSERT INTO `district`
+VALUES ('677', 'Huyện Đơn Dương', 'Huyện', '68');
+INSERT INTO `district`
+VALUES ('678', 'Huyện Đức Trọng', 'Huyện', '68');
+INSERT INTO `district`
+VALUES ('679', 'Huyện Di Linh', 'Huyện', '68');
+INSERT INTO `district`
+VALUES ('680', 'Huyện Bảo Lâm', 'Huyện', '68');
+INSERT INTO `district`
+VALUES ('681', 'Huyện Đạ Huoai', 'Huyện', '68');
+INSERT INTO `district`
+VALUES ('682', 'Huyện Đạ Tẻh', 'Huyện', '68');
+INSERT INTO `district`
+VALUES ('683', 'Huyện Cát Tiên', 'Huyện', '68');
+INSERT INTO `district`
+VALUES ('688', 'Thị xã Phước Long', 'Thị xã', '70');
+INSERT INTO `district`
+VALUES ('689', 'Thị xã Đồng Xoài', 'Thị xã', '70');
+INSERT INTO `district`
+VALUES ('690', 'Thị xã Bình Long', 'Thị xã', '70');
+INSERT INTO `district`
+VALUES ('691', 'Huyện Bù Gia Mập', 'Huyện', '70');
+INSERT INTO `district`
+VALUES ('692', 'Huyện Lộc Ninh', 'Huyện', '70');
+INSERT INTO `district`
+VALUES ('693', 'Huyện Bù Đốp', 'Huyện', '70');
+INSERT INTO `district`
+VALUES ('694', 'Huyện Hớn Quản', 'Huyện', '70');
+INSERT INTO `district`
+VALUES ('695', 'Huyện Đồng Phú', 'Huyện', '70');
+INSERT INTO `district`
+VALUES ('696', 'Huyện Bù Đăng', 'Huyện', '70');
+INSERT INTO `district`
+VALUES ('697', 'Huyện Chơn Thành', 'Huyện', '70');
+INSERT INTO `district`
+VALUES ('698', 'Huyện Phú Riềng', 'Huyện', '70');
+INSERT INTO `district`
+VALUES ('703', 'Thành phố Tây Ninh', 'Thành phố', '72');
+INSERT INTO `district`
+VALUES ('705', 'Huyện Tân Biên', 'Huyện', '72');
+INSERT INTO `district`
+VALUES ('706', 'Huyện Tân Châu', 'Huyện', '72');
+INSERT INTO `district`
+VALUES ('707', 'Huyện Dương Minh Châu', 'Huyện', '72');
+INSERT INTO `district`
+VALUES ('708', 'Huyện Châu Thành', 'Huyện', '72');
+INSERT INTO `district`
+VALUES ('709', 'Huyện Hòa Thành', 'Huyện', '72');
+INSERT INTO `district`
+VALUES ('710', 'Huyện Gò Dầu', 'Huyện', '72');
+INSERT INTO `district`
+VALUES ('711', 'Huyện Bến Cầu', 'Huyện', '72');
+INSERT INTO `district`
+VALUES ('712', 'Huyện Trảng Bàng', 'Huyện', '72');
+INSERT INTO `district`
+VALUES ('718', 'Thành phố Thủ Dầu Một', 'Thành phố', '74');
+INSERT INTO `district`
+VALUES ('719', 'Huyện Bàu Bàng', 'Huyện', '74');
+INSERT INTO `district`
+VALUES ('720', 'Huyện Dầu Tiếng', 'Huyện', '74');
+INSERT INTO `district`
+VALUES ('721', 'Thị xã Bến Cát', 'Thị xã', '74');
+INSERT INTO `district`
+VALUES ('722', 'Huyện Phú Giáo', 'Huyện', '74');
+INSERT INTO `district`
+VALUES ('723', 'Thị xã Tân Uyên', 'Thị xã', '74');
+INSERT INTO `district`
+VALUES ('724', 'Thị xã Dĩ An', 'Thị xã', '74');
+INSERT INTO `district`
+VALUES ('725', 'Thị xã Thuận An', 'Thị xã', '74');
+INSERT INTO `district`
+VALUES ('726', 'Huyện Bắc Tân Uyên', 'Huyện', '74');
+INSERT INTO `district`
+VALUES ('731', 'Thành phố Biên Hòa', 'Thành phố', '75');
+INSERT INTO `district`
+VALUES ('732', 'Thị xã Long Khánh', 'Thị xã', '75');
+INSERT INTO `district`
+VALUES ('734', 'Huyện Tân Phú', 'Huyện', '75');
+INSERT INTO `district`
+VALUES ('735', 'Huyện Vĩnh Cửu', 'Huyện', '75');
+INSERT INTO `district`
+VALUES ('736', 'Huyện Định Quán', 'Huyện', '75');
+INSERT INTO `district`
+VALUES ('737', 'Huyện Trảng Bom', 'Huyện', '75');
+INSERT INTO `district`
+VALUES ('738', 'Huyện Thống Nhất', 'Huyện', '75');
+INSERT INTO `district`
+VALUES ('739', 'Huyện Cẩm Mỹ', 'Huyện', '75');
+INSERT INTO `district`
+VALUES ('740', 'Huyện Long Thành', 'Huyện', '75');
+INSERT INTO `district`
+VALUES ('741', 'Huyện Xuân Lộc', 'Huyện', '75');
+INSERT INTO `district`
+VALUES ('742', 'Huyện Nhơn Trạch', 'Huyện', '75');
+INSERT INTO `district`
+VALUES ('747', 'Thành phố Vũng Tàu', 'Thành phố', '77');
+INSERT INTO `district`
+VALUES ('748', 'Thành phố Bà Rịa', 'Thành phố', '77');
+INSERT INTO `district`
+VALUES ('750', 'Huyện Châu Đức', 'Huyện', '77');
+INSERT INTO `district`
+VALUES ('751', 'Huyện Xuyên Mộc', 'Huyện', '77');
+INSERT INTO `district`
+VALUES ('752', 'Huyện Long Điền', 'Huyện', '77');
+INSERT INTO `district`
+VALUES ('753', 'Huyện Đất Đỏ', 'Huyện', '77');
+INSERT INTO `district`
+VALUES ('754', 'Huyện Tân Thành', 'Huyện', '77');
+INSERT INTO `district`
+VALUES ('755', 'Huyện Côn Đảo', 'Huyện', '77');
+INSERT INTO `district`
+VALUES ('760', 'Quận 1', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('761', 'Quận 12', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('762', 'Quận Thủ Đức', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('763', 'Quận 9', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('764', 'Quận Gò Vấp', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('765', 'Quận Bình Thạnh', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('766', 'Quận Tân Bình', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('767', 'Quận Tân Phú', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('768', 'Quận Phú Nhuận', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('769', 'Quận 2', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('770', 'Quận 3', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('771', 'Quận 10', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('772', 'Quận 11', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('773', 'Quận 4', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('774', 'Quận 5', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('775', 'Quận 6', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('776', 'Quận 8', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('777', 'Quận Bình Tân', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('778', 'Quận 7', 'Quận', '79');
+INSERT INTO `district`
+VALUES ('783', 'Huyện Củ Chi', 'Huyện', '79');
+INSERT INTO `district`
+VALUES ('784', 'Huyện Hóc Môn', 'Huyện', '79');
+INSERT INTO `district`
+VALUES ('785', 'Huyện Bình Chánh', 'Huyện', '79');
+INSERT INTO `district`
+VALUES ('786', 'Huyện Nhà Bè', 'Huyện', '79');
+INSERT INTO `district`
+VALUES ('787', 'Huyện Cần Giờ', 'Huyện', '79');
+INSERT INTO `district`
+VALUES ('794', 'Thành phố Tân An', 'Thành phố', '80');
+INSERT INTO `district`
+VALUES ('795', 'Thị xã Kiến Tường', 'Thị xã', '80');
+INSERT INTO `district`
+VALUES ('796', 'Huyện Tân Hưng', 'Huyện', '80');
+INSERT INTO `district`
+VALUES ('797', 'Huyện Vĩnh Hưng', 'Huyện', '80');
+INSERT INTO `district`
+VALUES ('798', 'Huyện Mộc Hóa', 'Huyện', '80');
+INSERT INTO `district`
+VALUES ('799', 'Huyện Tân Thạnh', 'Huyện', '80');
+INSERT INTO `district`
+VALUES ('800', 'Huyện Thạnh Hóa', 'Huyện', '80');
+INSERT INTO `district`
+VALUES ('801', 'Huyện Đức Huệ', 'Huyện', '80');
+INSERT INTO `district`
+VALUES ('802', 'Huyện Đức Hòa', 'Huyện', '80');
+INSERT INTO `district`
+VALUES ('803', 'Huyện Bến Lức', 'Huyện', '80');
+INSERT INTO `district`
+VALUES ('804', 'Huyện Thủ Thừa', 'Huyện', '80');
+INSERT INTO `district`
+VALUES ('805', 'Huyện Tân Trụ', 'Huyện', '80');
+INSERT INTO `district`
+VALUES ('806', 'Huyện Cần Đước', 'Huyện', '80');
+INSERT INTO `district`
+VALUES ('807', 'Huyện Cần Giuộc', 'Huyện', '80');
+INSERT INTO `district`
+VALUES ('808', 'Huyện Châu Thành', 'Huyện', '80');
+INSERT INTO `district`
+VALUES ('815', 'Thành phố Mỹ Tho', 'Thành phố', '82');
+INSERT INTO `district`
+VALUES ('816', 'Thị xã Gò Công', 'Thị xã', '82');
+INSERT INTO `district`
+VALUES ('817', 'Thị xã Cai Lậy', 'Huyện', '82');
+INSERT INTO `district`
+VALUES ('818', 'Huyện Tân Phước', 'Huyện', '82');
+INSERT INTO `district`
+VALUES ('819', 'Huyện Cái Bè', 'Huyện', '82');
+INSERT INTO `district`
+VALUES ('820', 'Huyện Cai Lậy', 'Thị xã', '82');
+INSERT INTO `district`
+VALUES ('821', 'Huyện Châu Thành', 'Huyện', '82');
+INSERT INTO `district`
+VALUES ('822', 'Huyện Chợ Gạo', 'Huyện', '82');
+INSERT INTO `district`
+VALUES ('823', 'Huyện Gò Công Tây', 'Huyện', '82');
+INSERT INTO `district`
+VALUES ('824', 'Huyện Gò Công Đông', 'Huyện', '82');
+INSERT INTO `district`
+VALUES ('825', 'Huyện Tân Phú Đông', 'Huyện', '82');
+INSERT INTO `district`
+VALUES ('829', 'Thành phố Bến Tre', 'Thành phố', '83');
+INSERT INTO `district`
+VALUES ('831', 'Huyện Châu Thành', 'Huyện', '83');
+INSERT INTO `district`
+VALUES ('832', 'Huyện Chợ Lách', 'Huyện', '83');
+INSERT INTO `district`
+VALUES ('833', 'Huyện Mỏ Cày Nam', 'Huyện', '83');
+INSERT INTO `district`
+VALUES ('834', 'Huyện Giồng Trôm', 'Huyện', '83');
+INSERT INTO `district`
+VALUES ('835', 'Huyện Bình Đại', 'Huyện', '83');
+INSERT INTO `district`
+VALUES ('836', 'Huyện Ba Tri', 'Huyện', '83');
+INSERT INTO `district`
+VALUES ('837', 'Huyện Thạnh Phú', 'Huyện', '83');
+INSERT INTO `district`
+VALUES ('838', 'Huyện Mỏ Cày Bắc', 'Huyện', '83');
+INSERT INTO `district`
+VALUES ('842', 'Thành phố Trà Vinh', 'Thành phố', '84');
+INSERT INTO `district`
+VALUES ('844', 'Huyện Càng Long', 'Huyện', '84');
+INSERT INTO `district`
+VALUES ('845', 'Huyện Cầu Kè', 'Huyện', '84');
+INSERT INTO `district`
+VALUES ('846', 'Huyện Tiểu Cần', 'Huyện', '84');
+INSERT INTO `district`
+VALUES ('847', 'Huyện Châu Thành', 'Huyện', '84');
+INSERT INTO `district`
+VALUES ('848', 'Huyện Cầu Ngang', 'Huyện', '84');
+INSERT INTO `district`
+VALUES ('849', 'Huyện Trà Cú', 'Huyện', '84');
+INSERT INTO `district`
+VALUES ('850', 'Huyện Duyên Hải', 'Huyện', '84');
+INSERT INTO `district`
+VALUES ('851', 'Thị xã Duyên Hải', 'Thị xã', '84');
+INSERT INTO `district`
+VALUES ('855', 'Thành phố Vĩnh Long', 'Thành phố', '86');
+INSERT INTO `district`
+VALUES ('857', 'Huyện Long Hồ', 'Huyện', '86');
+INSERT INTO `district`
+VALUES ('858', 'Huyện Mang Thít', 'Huyện', '86');
+INSERT INTO `district`
+VALUES ('859', 'Huyện  Vũng Liêm', 'Huyện', '86');
+INSERT INTO `district`
+VALUES ('860', 'Huyện Tam Bình', 'Huyện', '86');
+INSERT INTO `district`
+VALUES ('861', 'Thị xã Bình Minh', 'Thị xã', '86');
+INSERT INTO `district`
+VALUES ('862', 'Huyện Trà Ôn', 'Huyện', '86');
+INSERT INTO `district`
+VALUES ('863', 'Huyện Bình Tân', 'Huyện', '86');
+INSERT INTO `district`
+VALUES ('866', 'Thành phố Cao Lãnh', 'Thành phố', '87');
+INSERT INTO `district`
+VALUES ('867', 'Thành phố Sa Đéc', 'Thành phố', '87');
+INSERT INTO `district`
+VALUES ('868', 'Thị xã Hồng Ngự', 'Thị xã', '87');
+INSERT INTO `district`
+VALUES ('869', 'Huyện Tân Hồng', 'Huyện', '87');
+INSERT INTO `district`
+VALUES ('870', 'Huyện Hồng Ngự', 'Huyện', '87');
+INSERT INTO `district`
+VALUES ('871', 'Huyện Tam Nông', 'Huyện', '87');
+INSERT INTO `district`
+VALUES ('872', 'Huyện Tháp Mười', 'Huyện', '87');
+INSERT INTO `district`
+VALUES ('873', 'Huyện Cao Lãnh', 'Huyện', '87');
+INSERT INTO `district`
+VALUES ('874', 'Huyện Thanh Bình', 'Huyện', '87');
+INSERT INTO `district`
+VALUES ('875', 'Huyện Lấp Vò', 'Huyện', '87');
+INSERT INTO `district`
+VALUES ('876', 'Huyện Lai Vung', 'Huyện', '87');
+INSERT INTO `district`
+VALUES ('877', 'Huyện Châu Thành', 'Huyện', '87');
+INSERT INTO `district`
+VALUES ('883', 'Thành phố Long Xuyên', 'Thành phố', '89');
+INSERT INTO `district`
+VALUES ('884', 'Thành phố Châu Đốc', 'Thành phố', '89');
+INSERT INTO `district`
+VALUES ('886', 'Huyện An Phú', 'Huyện', '89');
+INSERT INTO `district`
+VALUES ('887', 'Thị xã Tân Châu', 'Thị xã', '89');
+INSERT INTO `district`
+VALUES ('888', 'Huyện Phú Tân', 'Huyện', '89');
+INSERT INTO `district`
+VALUES ('889', 'Huyện Châu Phú', 'Huyện', '89');
+INSERT INTO `district`
+VALUES ('890', 'Huyện Tịnh Biên', 'Huyện', '89');
+INSERT INTO `district`
+VALUES ('891', 'Huyện Tri Tôn', 'Huyện', '89');
+INSERT INTO `district`
+VALUES ('892', 'Huyện Châu Thành', 'Huyện', '89');
+INSERT INTO `district`
+VALUES ('893', 'Huyện Chợ Mới', 'Huyện', '89');
+INSERT INTO `district`
+VALUES ('894', 'Huyện Thoại Sơn', 'Huyện', '89');
+INSERT INTO `district`
+VALUES ('899', 'Thành phố Rạch Giá', 'Thành phố', '91');
+INSERT INTO `district`
+VALUES ('900', 'Thị xã Hà Tiên', 'Thị xã', '91');
+INSERT INTO `district`
+VALUES ('902', 'Huyện Kiên Lương', 'Huyện', '91');
+INSERT INTO `district`
+VALUES ('903', 'Huyện Hòn Đất', 'Huyện', '91');
+INSERT INTO `district`
+VALUES ('904', 'Huyện Tân Hiệp', 'Huyện', '91');
+INSERT INTO `district`
+VALUES ('905', 'Huyện Châu Thành', 'Huyện', '91');
+INSERT INTO `district`
+VALUES ('906', 'Huyện Giồng Riềng', 'Huyện', '91');
+INSERT INTO `district`
+VALUES ('907', 'Huyện Gò Quao', 'Huyện', '91');
+INSERT INTO `district`
+VALUES ('908', 'Huyện An Biên', 'Huyện', '91');
+INSERT INTO `district`
+VALUES ('909', 'Huyện An Minh', 'Huyện', '91');
+INSERT INTO `district`
+VALUES ('910', 'Huyện Vĩnh Thuận', 'Huyện', '91');
+INSERT INTO `district`
+VALUES ('911', 'Huyện Phú Quốc', 'Huyện', '91');
+INSERT INTO `district`
+VALUES ('912', 'Huyện Kiên Hải', 'Huyện', '91');
+INSERT INTO `district`
+VALUES ('913', 'Huyện U Minh Thượng', 'Huyện', '91');
+INSERT INTO `district`
+VALUES ('914', 'Huyện Giang Thành', 'Huyện', '91');
+INSERT INTO `district`
+VALUES ('916', 'Quận Ninh Kiều', 'Quận', '92');
+INSERT INTO `district`
+VALUES ('917', 'Quận Ô Môn', 'Quận', '92');
+INSERT INTO `district`
+VALUES ('918', 'Quận Bình Thuỷ', 'Quận', '92');
+INSERT INTO `district`
+VALUES ('919', 'Quận Cái Răng', 'Quận', '92');
+INSERT INTO `district`
+VALUES ('923', 'Quận Thốt Nốt', 'Quận', '92');
+INSERT INTO `district`
+VALUES ('924', 'Huyện Vĩnh Thạnh', 'Huyện', '92');
+INSERT INTO `district`
+VALUES ('925', 'Huyện Cờ Đỏ', 'Huyện', '92');
+INSERT INTO `district`
+VALUES ('926', 'Huyện Phong Điền', 'Huyện', '92');
+INSERT INTO `district`
+VALUES ('927', 'Huyện Thới Lai', 'Huyện', '92');
+INSERT INTO `district`
+VALUES ('930', 'Thành phố Vị Thanh', 'Thành phố', '93');
+INSERT INTO `district`
+VALUES ('931', 'Thị xã Ngã Bảy', 'Thị xã', '93');
+INSERT INTO `district`
+VALUES ('932', 'Huyện Châu Thành A', 'Huyện', '93');
+INSERT INTO `district`
+VALUES ('933', 'Huyện Châu Thành', 'Huyện', '93');
+INSERT INTO `district`
+VALUES ('934', 'Huyện Phụng Hiệp', 'Huyện', '93');
+INSERT INTO `district`
+VALUES ('935', 'Huyện Vị Thuỷ', 'Huyện', '93');
+INSERT INTO `district`
+VALUES ('936', 'Huyện Long Mỹ', 'Huyện', '93');
+INSERT INTO `district`
+VALUES ('937', 'Thị xã Long Mỹ', 'Thị xã', '93');
+INSERT INTO `district`
+VALUES ('941', 'Thành phố Sóc Trăng', 'Thành phố', '94');
+INSERT INTO `district`
+VALUES ('942', 'Huyện Châu Thành', 'Huyện', '94');
+INSERT INTO `district`
+VALUES ('943', 'Huyện Kế Sách', 'Huyện', '94');
+INSERT INTO `district`
+VALUES ('944', 'Huyện Mỹ Tú', 'Huyện', '94');
+INSERT INTO `district`
+VALUES ('945', 'Huyện Cù Lao Dung', 'Huyện', '94');
+INSERT INTO `district`
+VALUES ('946', 'Huyện Long Phú', 'Huyện', '94');
+INSERT INTO `district`
+VALUES ('947', 'Huyện Mỹ Xuyên', 'Huyện', '94');
+INSERT INTO `district`
+VALUES ('948', 'Thị xã Ngã Năm', 'Thị xã', '94');
+INSERT INTO `district`
+VALUES ('949', 'Huyện Thạnh Trị', 'Huyện', '94');
+INSERT INTO `district`
+VALUES ('950', 'Thị xã Vĩnh Châu', 'Thị xã', '94');
+INSERT INTO `district`
+VALUES ('951', 'Huyện Trần Đề', 'Huyện', '94');
+INSERT INTO `district`
+VALUES ('954', 'Thành phố Bạc Liêu', 'Thành phố', '95');
+INSERT INTO `district`
+VALUES ('956', 'Huyện Hồng Dân', 'Huyện', '95');
+INSERT INTO `district`
+VALUES ('957', 'Huyện Phước Long', 'Huyện', '95');
+INSERT INTO `district`
+VALUES ('958', 'Huyện Vĩnh Lợi', 'Huyện', '95');
+INSERT INTO `district`
+VALUES ('959', 'Thị xã Giá Rai', 'Thị xã', '95');
+INSERT INTO `district`
+VALUES ('960', 'Huyện Đông Hải', 'Huyện', '95');
+INSERT INTO `district`
+VALUES ('961', 'Huyện Hoà Bình', 'Huyện', '95');
+INSERT INTO `district`
+VALUES ('964', 'Thành phố Cà Mau', 'Thành phố', '96');
+INSERT INTO `district`
+VALUES ('966', 'Huyện U Minh', 'Huyện', '96');
+INSERT INTO `district`
+VALUES ('967', 'Huyện Thới Bình', 'Huyện', '96');
+INSERT INTO `district`
+VALUES ('968', 'Huyện Trần Văn Thời', 'Huyện', '96');
+INSERT INTO `district`
+VALUES ('969', 'Huyện Cái Nước', 'Huyện', '96');
+INSERT INTO `district`
+VALUES ('970', 'Huyện Đầm Dơi', 'Huyện', '96');
+INSERT INTO `district`
+VALUES ('971', 'Huyện Năm Căn', 'Huyện', '96');
+INSERT INTO `district`
+VALUES ('972', 'Huyện Phú Tân', 'Huyện', '96');
+INSERT INTO `district`
+VALUES ('973', 'Huyện Ngọc Hiển', 'Huyện', '96');
