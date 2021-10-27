@@ -12,7 +12,7 @@ import java.util.List;
 public interface IWarehouseService {
     Page<Warehouse> getAllWarehouse(String warehouseName, String address, Pageable pageble);
 
-    void updateMaterial(Long warehouseId, WarehouseDto warehouseDto);
+    void updateWarehouse(Long warehouseId, WarehouseDto warehouseDto);
 
     void saveWarehouse(WarehouseDto warehouseDto);
 

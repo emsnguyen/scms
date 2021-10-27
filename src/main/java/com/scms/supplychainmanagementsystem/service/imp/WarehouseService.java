@@ -42,7 +42,7 @@ public class WarehouseService  implements IWarehouseService {
     }
 
     @Override
-    public void updateMaterial(Long warehouseId, WarehouseDto warehouseDto) {
+    public void updateWarehouse(Long warehouseId, WarehouseDto warehouseDto) {
         log.info("[Start WarehouseService - UpdateWarehouse with WarehouseName: " + warehouseDto.getWarehouseName() + "]");
         log.info("[Start get current user]");
         User currentUser = userCommon.getCurrentUser();
@@ -82,14 +82,12 @@ public class WarehouseService  implements IWarehouseService {
             log.info("[End WarehouseService - saveWarehouse with WarehouseName: " + warehouseDto.getWarehouseName() + "]");
         }
 
-
     }
 
     @Override
     public void deleteWarehouse(Long warehouseId) {
         User currentUser = userCommon.getCurrentUser();
         if (currentUser.getRole().getRoleID() == 1) {
-
             warehouseRepository.deleteWarehouseByWarehouseID(warehouseId);
         } else {
             throw new AppException("you are not Admin");
