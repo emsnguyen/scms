@@ -1,6 +1,7 @@
 package com.scms.supplychainmanagementsystem.repository;
 
 import com.scms.supplychainmanagementsystem.entity.PriceBook;
+import com.scms.supplychainmanagementsystem.entity.Warehouse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +11,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PriceBookRepository extends JpaRepository<PriceBook, Long> {
-    boolean existsByIsStandardPriceBook(Boolean isStandard);
+
+    @Query(value = "select case when count(p.priceBookId) > 0 then true else false end " +
+            " from PriceBook p where p.warehouse = :warehouse and p.isStandardPriceBook = true " +
+            " and (:priceBookId is null or p.priceBookId <> :priceBookId)")
+    boolean existsStandardPriceBook(Warehouse warehouse, Long priceBookId);
 
     @Query(value = "select p from PriceBook p where p.warehouse.warehouseID =:warehouseId " +
             " and (:priceBookName is null or p.priceBookName like %:priceBookName%) " +
