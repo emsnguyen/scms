@@ -35,13 +35,14 @@ public class ProductController {
     public ResponseEntity<Map<String, Object>> getAllProducts(@RequestParam(required = false) String productName,
                                                               @RequestParam(required = false) Long categoryId,
                                                               @RequestParam(required = false) Long warehouseId,
+                                                              @RequestParam(required = false) Boolean isActive,
                                                               @RequestParam(defaultValue = "0") int page,
                                                               @RequestParam(defaultValue = "10") int size) {
         log.info("[Start ProductController - Get All Products]");
         List<Product> productList;
         Page<Product> productPage;
         Pageable pageable = PageRequest.of(page, size);
-        productPage = iProductService.getAllProducts(productName, categoryId, warehouseId, pageable);
+        productPage = iProductService.getAllProducts(productName, categoryId, warehouseId, isActive, pageable);
 
         productList = productPage.getContent();
         Map<String, Object> response = new HashMap<>();
