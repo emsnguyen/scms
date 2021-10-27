@@ -33,14 +33,12 @@ public class PriceBookService implements IPriceBookService {
             PriceBook priceBook = priceBookRepository.findById(priceBookDto.getPriceBookId())
                     .orElseThrow(() -> new AppException("PriceBook not found"));
             priceBook.setPriceBookName(priceBookDto.getPriceBookName());
-            if (priceBookDto.getIsStandardPriceBook()) {
-                checkStandardPriceBookUpdate(priceBookDto.getPriceBookId());
-            }
-            priceBook.setIsStandardPriceBook(priceBookDto.getIsStandardPriceBook());
             User current = userCommon.getCurrentUser();
             if (current.getRole().getRoleID() == 1) {
                 priceBook.setWarehouse(warehouseRepository.getById(priceBookDto.getWarehouseId()));
             }
+            checkStandardPriceBook(priceBookDto.getIsStandardPriceBook(), priceBook.getWarehouse(), priceBook.getPriceBookId());
+            priceBook.setIsStandardPriceBook(priceBookDto.getIsStandardPriceBook());
             log.info("[Start Save PriceBook " + priceBookDto.getPriceBookName() + " to database]");
             priceBookRepository.saveAndFlush(priceBook);
             log.info("[End Save PriceBook " + priceBookDto.getPriceBookName() + " to database]");
@@ -56,16 +54,14 @@ public class PriceBookService implements IPriceBookService {
         User current = userCommon.getCurrentUser();
         PriceBook priceBook = new PriceBook();
         priceBook.setPriceBookName(priceBookDto.getPriceBookName());
-        if (priceBookDto.getIsStandardPriceBook()) {
-            checkStandardPriceBook();
-        }
-        priceBook.setIsStandardPriceBook(priceBookDto.getIsStandardPriceBook());
         if (current.getRole().getRoleID() == 1) {
             priceBook.setWarehouse(warehouseRepository.findById(priceBookDto.getWarehouseId())
                     .orElseThrow(() -> new AppException("Warehouse not found")));
         } else {
             priceBook.setWarehouse(current.getWarehouse());
         }
+        checkStandardPriceBook(priceBookDto.getIsStandardPriceBook(), priceBook.getWarehouse(), null);
+        priceBook.setIsStandardPriceBook(priceBookDto.getIsStandardPriceBook());
         log.info("[Start Save PriceBook " + priceBookDto.getPriceBookName() + " to database]");
         priceBookRepository.saveAndFlush(priceBook);
         log.info("[End Save PriceBook " + priceBookDto.getPriceBookName() + " to database]");
@@ -129,17 +125,9 @@ public class PriceBookService implements IPriceBookService {
         return false;
     }
 
-    public void checkStandardPriceBook() {
-        if (priceBookRepository.existsByIsStandardPriceBook(true)) {
+    public void checkStandardPriceBook(Boolean isStandard, Warehouse warehouse, Long priceBookId) {
+        if (isStandard && priceBookRepository.existsStandardPriceBook(warehouse, priceBookId)) {
             throw new AppException("Exist Standard PriceBook");
-        }
-    }
-
-    public void checkStandardPriceBookUpdate(Long priceBookId) {
-        if (priceBookRepository.existsByIsStandardPriceBook(true)) {
-            if (!priceBookRepository.getById(priceBookId).getIsStandardPriceBook()) {
-                throw new AppException("Exist Standard PriceBook");
-            }
         }
     }
 }
