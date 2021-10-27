@@ -10,10 +10,7 @@ import com.scms.supplychainmanagementsystem.entity.OrderStatus;
 import com.scms.supplychainmanagementsystem.entity.User;
 import com.scms.supplychainmanagementsystem.entity.Warehouse;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
-import com.scms.supplychainmanagementsystem.repository.ContactDeliveryRepository;
-import com.scms.supplychainmanagementsystem.repository.OrderRepository;
-import com.scms.supplychainmanagementsystem.repository.OrderStatusRepository;
-import com.scms.supplychainmanagementsystem.repository.WarehouseRepository;
+import com.scms.supplychainmanagementsystem.repository.*;
 import com.scms.supplychainmanagementsystem.service.IOrderService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +34,7 @@ public class OrderService implements IOrderService {
     private final ContactDeliveryRepository contactDeliveryRepository;
     private final OrderStatusRepository orderStatusRepository;
     private final GenerateCode generateCode;
+    private final OrderDetailsRepository orderDetailsRepository;
 
     @Override
     public void updateOrder(OrderRequest orderRequest) {
@@ -98,7 +96,11 @@ public class OrderService implements IOrderService {
     public void deleteOrderByOrderId(Long orderId) {
         log.info("[Start OrderService - deleteOrderByOrderId = " + orderId + "]");
         if (checkAccessOrder(orderId)) {
-            // TODO: delete order item and update quantity stock
+            Order order = orderRepository.getById(orderId);
+            if (order.getOrderStatus().getOrderStatusID() != 1) {
+                throw new AppException("Change Order Status to Step 1");
+            }
+            orderDetailsRepository.deleteAllByOrder(order);
             orderRepository.deleteById(orderId);
         } else {
             throw new AppException("Not allow to delete this resource");
@@ -160,18 +162,21 @@ public class OrderService implements IOrderService {
         log.info("[Start OrderService - updateOrderStatus Order ID = " + orderId + "]");
         if (checkAccessOrder(orderId)) {
             // TODO: check status valid
-            if (orderStatusId == 1) {
+            Order order = orderRepository.getById(orderId);
+            Long status = order.getOrderStatus().getOrderStatusID();
+            if (status == 1) {
 
-            } else if (orderStatusId == 2) {
+            } else if (status == 2) {
 
-            } else if (orderStatusId == 3) {
+            } else if (status == 3) {
 
-            } else if (orderStatusId == 4) {
+            } else if (status == 4) {
 
-            } else {
+            } else if (status == 5) {
+
+            } else if (status == 6) {
 
             }
-            Order order = orderRepository.getById(orderId);
             order.setOrderStatus(orderStatusRepository.getById(orderStatusId));
         } else {
             throw new AppException("Not allow to access this resource");
@@ -193,9 +198,15 @@ public class OrderService implements IOrderService {
         return false;
     }
 
-    private boolean checkOrderStatus() {
-        // TODO: check stt
-        return true;
+    private void executeOrderByStt1(Long orderStatusId, Order order) {
+        // TODO: execute order
+        if (orderStatusId == 2) {
+
+        } else if (orderStatusId == 3) {
+
+        } else {
+            throw new AppException("");
+        }
     }
 
 }
