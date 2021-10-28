@@ -14,9 +14,9 @@ import javax.transaction.Transactional;
 
 @Repository
 public interface StockRepository extends JpaRepository<Stock, Long> {
-    @Query(value = "select case when s.availableQuantity > 0 then true else false end" +
+    @Query(value = "select case when s.availableQuantity >= :quantity then true else false end" +
             " from Stock s where s.product.productId = :productId")
-    boolean checkQtyAvailablePositive(Long productId);
+    boolean checkQtyAvailable(Long productId, Double quantity);
 
     @Modifying
     @Query(value = "delete from Stock where product.productId = :productId")
