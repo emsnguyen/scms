@@ -68,10 +68,10 @@ public class OrderDetailsService implements IOrderDetailsService {
         orderDetails.setProduct(productRepository.findById(orderDetailsRequest.getProductId())
                 .orElseThrow(() -> new AppException("Product not found")));
         if (checkOrderItemQtyAvailable(orderDetailsRequest.getProductId(), orderDetailsRequest.getQuantity())) {
-            //Not enough stock
+            //Enough stock
             orderDetails.setOrderDetailsStatus(orderDetailSttRepository.getById(2L));
         } else {
-            //Enough stock
+            //Not Enough stock
             orderDetails.setOrderDetailsStatus(orderDetailSttRepository.getById(1L));
         }
         log.info("[Start Save OrderDetails to database]");

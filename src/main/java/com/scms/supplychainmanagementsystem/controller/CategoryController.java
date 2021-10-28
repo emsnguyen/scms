@@ -2,10 +2,12 @@ package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.dto.CategoryDto;
 import com.scms.supplychainmanagementsystem.entity.Category;
+import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.service.ICategoryService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -94,7 +96,11 @@ public class CategoryController {
     @ApiOperation(value = "Requires ADMIN or MANAGER Access")
     public ResponseEntity<String> deleteCategoryById(@PathVariable Long categoryId) {
         log.info("[Start CategoryController - deleteCategoryById = " + categoryId + "]");
-        iCategoryService.deleteCategoryById(categoryId);
+        try {
+            iCategoryService.deleteCategoryById(categoryId);
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException("Some resource using this data");
+        }
         log.info("[End CategoryController - deleteCategoryById " + categoryId + "]");
         return new ResponseEntity<>("Category Deleted Successfully", OK);
     }

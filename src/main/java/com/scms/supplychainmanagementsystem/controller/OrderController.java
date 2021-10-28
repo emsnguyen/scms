@@ -4,10 +4,12 @@ import com.scms.supplychainmanagementsystem.dto.OrderRequest;
 import com.scms.supplychainmanagementsystem.dto.OrderResponse;
 import com.scms.supplychainmanagementsystem.dto.OrderStatusDto;
 import com.scms.supplychainmanagementsystem.entity.Order;
+import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.service.IOrderService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -113,7 +115,11 @@ public class OrderController {
     public ResponseEntity<Map<String, Object>> deleteOrderByOrderId(@PathVariable Long orderId) {
         log.info("[Start OrderController - Delete deleteOrderByOrderId = " + orderId + "]");
         Map<String, Object> result = new HashMap<>();
-        iOrderService.deleteOrderByOrderId(orderId);
+        try {
+            iOrderService.deleteOrderByOrderId(orderId);
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException("Some resource using this data");
+        }
         result.put("message", "Order Deleted Successfully");
         log.info("[End OrderController - Delete deleteOrderByOrderId = " + orderId + "]");
         return status(HttpStatus.OK).body(result);
