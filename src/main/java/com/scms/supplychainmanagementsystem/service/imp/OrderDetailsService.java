@@ -40,10 +40,10 @@ public class OrderDetailsService implements IOrderDetailsService {
             orderDetails.setQuantity(orderDetailsRequest.getQuantity());
             orderDetails.setPriceBook(priceBookRepository.findById(orderDetailsRequest.getPriceBookId())
                     .orElseThrow(() -> new AppException("PriceBook not found")));
-            if (checkOrderItemQtyAvailable(orderDetailsRequest.getProductId())) {
-                orderDetails.setOrderDetailsStatus(orderDetailSttRepository.getById(1L));
-            } else {
+            if (checkOrderItemQtyAvailable(orderDetailsRequest.getProductId(), orderDetailsRequest.getQuantity())) {
                 orderDetails.setOrderDetailsStatus(orderDetailSttRepository.getById(2L));
+            } else {
+                orderDetails.setOrderDetailsStatus(orderDetailSttRepository.getById(1L));
             }
             log.info("[Start Save OrderDetails " + orderDetailId + " to database]");
             orderDetailsRepository.saveAndFlush(orderDetails);
@@ -67,12 +67,12 @@ public class OrderDetailsService implements IOrderDetailsService {
                 .orElseThrow(() -> new AppException("PriceBook not found")));
         orderDetails.setProduct(productRepository.findById(orderDetailsRequest.getProductId())
                 .orElseThrow(() -> new AppException("Product not found")));
-        if (!checkOrderItemQtyAvailable(orderDetailsRequest.getProductId())) {
+        if (checkOrderItemQtyAvailable(orderDetailsRequest.getProductId(), orderDetailsRequest.getQuantity())) {
             //Not enough stock
-            orderDetails.setOrderDetailsStatus(orderDetailSttRepository.getById(1L));
+            orderDetails.setOrderDetailsStatus(orderDetailSttRepository.getById(2L));
         } else {
             //Enough stock
-            orderDetails.setOrderDetailsStatus(orderDetailSttRepository.getById(2L));
+            orderDetails.setOrderDetailsStatus(orderDetailSttRepository.getById(1L));
         }
         log.info("[Start Save OrderDetails to database]");
         orderDetailsRepository.saveAndFlush(orderDetails);
@@ -147,7 +147,7 @@ public class OrderDetailsService implements IOrderDetailsService {
         return false;
     }
 
-    private boolean checkOrderItemQtyAvailable(Long productId) {
-        return stockRepository.checkQtyAvailablePositive(productId);
+    private boolean checkOrderItemQtyAvailable(Long productId, Double quantity) {
+        return stockRepository.checkQtyAvailable(productId, quantity);
     }
 }
