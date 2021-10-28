@@ -147,7 +147,7 @@ public class OrderDetailsService implements IOrderDetailsService {
         return false;
     }
 
-    private boolean checkOrderItemQtyAvailable(Long productId, Double quantity) {
+    public boolean checkOrderItemQtyAvailable(Long productId, Double quantity) {
         return stockRepository.checkQtyAvailable(productId, quantity);
     }
 }
