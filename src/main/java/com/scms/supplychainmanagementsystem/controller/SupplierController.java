@@ -1,10 +1,7 @@
 package com.scms.supplychainmanagementsystem.controller;
 
-import com.scms.supplychainmanagementsystem.dto.MaterialDto;
 import com.scms.supplychainmanagementsystem.dto.SupplierDto;
-import com.scms.supplychainmanagementsystem.entity.Material;
 import com.scms.supplychainmanagementsystem.entity.Supplier;
-import com.scms.supplychainmanagementsystem.service.IMaterialService;
 import com.scms.supplychainmanagementsystem.service.ISupplierService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -46,7 +43,7 @@ public class SupplierController {
         Page<Supplier> supplierPage;
         Pageable pageable = PageRequest.of(page, size);
 
-        supplierPage = iSupplierService.getAllSupplier(SupplierName,isActive,warehouseId, pageable);
+        supplierPage = iSupplierService.getAllSupplier(SupplierName, isActive, warehouseId, pageable);
 
         supplierlList = supplierPage.getContent();
 

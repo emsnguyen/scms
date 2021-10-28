@@ -11,19 +11,22 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+
     @Query(value = "select p from Product p where p.warehouse.warehouseID =:warehouseId " +
             " and (:productName is null or p.productName like %:productName%) " +
             " and (:categoryId is null or p.category.categoryId = :categoryId) " +
+            " and (:isActive is null or p.isActive = :isActive) " +
             " order by p.productId desc")
     Page<Product> filterInOneWarehouse(@Param("productName") String productName, @Param("categoryId") Long categoryId,
-                                       @Param("warehouseId") Long warehouseId,
+                                       @Param("warehouseId") Long warehouseId, @Param("isActive") Boolean isActive,
                                        Pageable pageable);
 
     @Query(value = "select p from Product p where (:warehouseId is null or p.warehouse.warehouseID = :warehouseId) " +
             " and (:productName is null or p.productName like %:productName%) " +
             " and (:categoryId is null or p.category.categoryId = :categoryId) " +
+            " and (:isActive is null or p.isActive = :isActive) " +
             " order by p.productId desc")
     Page<Product> filterAllWarehouses(@Param("productName") String productName, @Param("categoryId") Long categoryId,
-                                      @Param("warehouseId") Long warehouseId,
+                                      @Param("warehouseId") Long warehouseId, @Param("isActive") Boolean isActive,
                                       Pageable pageable);
 }

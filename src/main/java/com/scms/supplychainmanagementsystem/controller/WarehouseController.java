@@ -1,8 +1,6 @@
 package com.scms.supplychainmanagementsystem.controller;
 
-import com.scms.supplychainmanagementsystem.dto.MaterialDto;
 import com.scms.supplychainmanagementsystem.dto.WarehouseDto;
-import com.scms.supplychainmanagementsystem.entity.Material;
 import com.scms.supplychainmanagementsystem.entity.Warehouse;
 import com.scms.supplychainmanagementsystem.repository.WarehouseRepository;
 import com.scms.supplychainmanagementsystem.service.IWarehouseService;
@@ -18,7 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,15 +36,15 @@ public class WarehouseController {
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllWarehouse(@RequestParam(required = false) String warehouseName,
-                                                                         @RequestParam(required = false) String address,
-                                                                         @RequestParam(defaultValue = "0") int page,
-                                                                         @RequestParam(defaultValue = "10") int size) {
+                                                               @RequestParam(required = false) String address,
+                                                               @RequestParam(defaultValue = "0") int page,
+                                                               @RequestParam(defaultValue = "10") int size) {
         log.info("[Start WarehouselController - Get All  Warehouse]");
         List<Warehouse> warehouseList;
         Page<Warehouse> warehousePage;
         Pageable pageable = PageRequest.of(page, size);
 
-        warehousePage = iWarehouseService.getAllWarehouse(warehouseName,address, pageable);
+        warehousePage = iWarehouseService.getAllWarehouse(warehouseName, address, pageable);
 
         warehouseList = warehousePage.getContent();
 
@@ -66,14 +63,13 @@ public class WarehouseController {
     }
 
 
-
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @ApiOperation(value = "Requires ADMIN or MANAGER Access")
     public ResponseEntity<String> createWarehouse(@Valid @RequestBody WarehouseDto warehouseDto) {
         log.info("[Start WarehouselController -  createWarehouse " + warehouseDto.getWarehouseName() + "]");
         iWarehouseService.saveWarehouse(warehouseDto);
-        log.info("[End WarehouselController -  createWarehouse " +  warehouseDto.getWarehouseName() + "]");
+        log.info("[End WarehouselController -  createWarehouse " + warehouseDto.getWarehouseName() + "]");
         return new ResponseEntity<>("Created Successfully", CREATED);
     }
 
@@ -94,9 +90,9 @@ public class WarehouseController {
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @ApiOperation(value = "Requires ADMIN or MANAGER Access")
     public ResponseEntity<String> updateMaterial(@PathVariable Long warehouseId, @Valid @RequestBody WarehouseDto warehouseDto) {
-        log.info("[Start WarehouselController - Update Warehouse with name " +  warehouseDto.getWarehouseName() + "]");
+        log.info("[Start WarehouselController - Update Warehouse with name " + warehouseDto.getWarehouseName() + "]");
         iWarehouseService.updateWarehouse(warehouseId, warehouseDto);
-        log.info("[End WarehouselController - Update Warehouse with name " +  warehouseDto.getWarehouseName() + "]");
+        log.info("[End WarehouselController - Update Warehouse with name " + warehouseDto.getWarehouseName() + "]");
         return new ResponseEntity<>("Update Warehouse Successfully", OK);
     }
 

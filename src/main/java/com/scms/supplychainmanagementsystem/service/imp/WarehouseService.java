@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Slf4j
 @Service
-public class WarehouseService  implements IWarehouseService {
+public class WarehouseService implements IWarehouseService {
 
     private final UserCommon userCommon;
     private WarehouseRepository warehouseRepository;
@@ -32,7 +32,7 @@ public class WarehouseService  implements IWarehouseService {
         Warehouse wh = current.getWarehouse();
         Long userId = current.getUserId();
         if (current.getRole().getRoleID() == 1) {
-            warehousePage=warehouseRepository.filterAll(warehouseName,address,pageble);
+            warehousePage = warehouseRepository.filterAll(warehouseName, address, pageble);
         } else {
 
             throw new AppException("you are not Admin");
@@ -48,14 +48,14 @@ public class WarehouseService  implements IWarehouseService {
         User currentUser = userCommon.getCurrentUser();
         log.info("[End get current user : " + currentUser.getUsername() + "]");
         if (currentUser.getRole().getRoleID() == 1) {
-            Warehouse warehouse=Warehouse.builder()
+            Warehouse warehouse = Warehouse.builder()
                     .warehouseID(warehouseId)
                     .warehouseName(warehouseDto.getWarehouseName())
                     .address(warehouseDto.getAddress())
                     .build();
-            log.info("[Start Update Warehouse " +  warehouseDto.getWarehouseName() + " to database]");
+            log.info("[Start Update Warehouse " + warehouseDto.getWarehouseName() + " to database]");
             warehouseRepository.save(warehouse);
-            log.info("[End update Warehouse " +  warehouseDto.getWarehouseName() + " to database]");
+            log.info("[End update Warehouse " + warehouseDto.getWarehouseName() + " to database]");
             log.info("[End WarehouseService - updateWarehouse with WarehouseName: " + warehouseDto.getWarehouseName() + "]");
         } else {
             throw new AppException("you are not Admin");
@@ -72,13 +72,13 @@ public class WarehouseService  implements IWarehouseService {
         if (currentUser.getRole().getRoleID() != 1) {
             throw new AppException("you are not Admin");
         } else {
-          Warehouse warehouse=Warehouse.builder()
-                  .warehouseName(warehouseDto.getWarehouseName())
-                  .address(warehouseDto.getAddress())
-                  .build();
-            log.info("[Start save Warehouse " +  warehouseDto.getWarehouseName() + " to database]");
+            Warehouse warehouse = Warehouse.builder()
+                    .warehouseName(warehouseDto.getWarehouseName())
+                    .address(warehouseDto.getAddress())
+                    .build();
+            log.info("[Start save Warehouse " + warehouseDto.getWarehouseName() + " to database]");
             warehouseRepository.saveAndFlush(warehouse);
-            log.info("[End save Warehouse " +  warehouseDto.getWarehouseName() + " to database]");
+            log.info("[End save Warehouse " + warehouseDto.getWarehouseName() + " to database]");
             log.info("[End WarehouseService - saveWarehouse with WarehouseName: " + warehouseDto.getWarehouseName() + "]");
         }
 

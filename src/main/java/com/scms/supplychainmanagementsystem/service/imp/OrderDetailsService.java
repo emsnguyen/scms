@@ -86,13 +86,13 @@ public class OrderDetailsService implements IOrderDetailsService {
         if (checkAccessOrderDetails(orderDetailId)) {
             OrderDetails orderDetails = orderDetailsRepository.getById(orderDetailId);
             Long orderStatusId = orderDetails.getOrder().getOrderStatus().getOrderStatusID();
-            if (orderStatusId == 2) {
+            if (orderStatusId == 3) {
                 Stock stock = stockRepository.findByProduct(orderDetails.getProduct());
                 stock.setAvailableQuantity(stock.getAvailableQuantity() - orderDetails.getQuantity());
                 log.info("Subtract quantity " + orderDetails.getQuantity() + " in Stock to " + stock.getAvailableQuantity());
                 stockRepository.saveAndFlush(stock);
                 log.info("Update Stock in database Successfully");
-            } else if (orderStatusId > 2) {
+            } else if (orderStatusId > 3) {
                 throw new AppException("Item delivered cannot be deleted");
             }
             orderDetailsRepository.deleteById(orderDetailId);

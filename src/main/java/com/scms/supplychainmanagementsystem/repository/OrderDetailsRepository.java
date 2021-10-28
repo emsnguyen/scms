@@ -1,5 +1,6 @@
 package com.scms.supplychainmanagementsystem.repository;
 
+import com.scms.supplychainmanagementsystem.entity.Order;
 import com.scms.supplychainmanagementsystem.entity.OrderDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrderDetailsRepository extends JpaRepository<OrderDetails, Long> {
+
+    void deleteAllByOrder(Order order);
 
     @Query(value = "select o from OrderDetails o where o.order.orderId = :orderId " +
             " and :productName is null or o.product.productName like %:productName% " +

@@ -2,9 +2,11 @@ package com.scms.supplychainmanagementsystem.service.imp;
 
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.SupplierDto;
-import com.scms.supplychainmanagementsystem.entity.*;
+import com.scms.supplychainmanagementsystem.entity.District;
+import com.scms.supplychainmanagementsystem.entity.Supplier;
+import com.scms.supplychainmanagementsystem.entity.User;
+import com.scms.supplychainmanagementsystem.entity.Warehouse;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
-import com.scms.supplychainmanagementsystem.repository.MaterialRepository;
 import com.scms.supplychainmanagementsystem.repository.SupplierRepository;
 import com.scms.supplychainmanagementsystem.repository.WarehouseRepository;
 import com.scms.supplychainmanagementsystem.service.ISupplierService;
@@ -15,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.List;
 
 @AllArgsConstructor
@@ -27,17 +28,18 @@ public class SupplierService implements ISupplierService {
     private SupplierRepository supplierRepository;
     private final UserCommon userCommon;
     private WarehouseRepository warehouseRepository;
+
     @Override
-    public Page<Supplier> getAllSupplier(String suppliername,String isActive, Long warehouseId, Pageable pageable) {
+    public Page<Supplier> getAllSupplier(String suppliername, String isActive, Long warehouseId, Pageable pageable) {
         log.info("[Start SupplierService - Get All Supplier]");
         Page<Supplier> supplierPage;
         User current = userCommon.getCurrentUser();
         Warehouse wh = current.getWarehouse();
         Long userId = current.getUserId();
         if (current.getRole().getRoleID() == 1) {
-            supplierPage = supplierRepository.filterAllWarehouses(suppliername,isActive,warehouseId, pageable);
+            supplierPage = supplierRepository.filterAllWarehouses(suppliername, isActive, warehouseId, pageable);
         } else {
-            supplierPage = supplierRepository.filterInOneWarehouse(suppliername,isActive,wh.getWarehouseID(), pageable);
+            supplierPage = supplierRepository.filterInOneWarehouse(suppliername, isActive, wh.getWarehouseID(), pageable);
         }
         log.info("[End CustomerService - Get All Customer]");
         return supplierPage;

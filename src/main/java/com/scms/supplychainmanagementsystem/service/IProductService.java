@@ -14,7 +14,7 @@ public interface IProductService {
 
     ProductDto getProductById(Long productId);
 
-    Page<Product> getAllProducts(String productName, Long categoryId, Long warehouseId, Pageable pageable);
+    Page<Product> getAllProducts(String productName, Long categoryId, Long warehouseId, Boolean isActive, Pageable pageable);
 
     boolean checkProductExist(Long productId);
 

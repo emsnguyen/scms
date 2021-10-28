@@ -127,15 +127,15 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<Product> getAllProducts(String productName, Long categoryId, Long warehouseId, Pageable pageable) {
+    public Page<Product> getAllProducts(String productName, Long categoryId, Long warehouseId, Boolean isActive, Pageable pageable) {
         log.info("[Start ProductService - Get All Products]");
         Page<Product> productPage;
         User current = userCommon.getCurrentUser();
         Warehouse wh = current.getWarehouse();
         if (current.getRole().getRoleID() == 1) {
-            productPage = productRepository.filterAllWarehouses(productName, categoryId, warehouseId, pageable);
+            productPage = productRepository.filterAllWarehouses(productName, categoryId, warehouseId, isActive, pageable);
         } else {
-            productPage = productRepository.filterInOneWarehouse(productName, categoryId, wh.getWarehouseID(), pageable);
+            productPage = productRepository.filterInOneWarehouse(productName, categoryId, wh.getWarehouseID(), isActive, pageable);
         }
         log.info("[End ProductService - Get All Products]");
         return productPage;
