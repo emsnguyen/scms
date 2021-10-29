@@ -40,6 +40,7 @@ public class OrderDetailsService implements IOrderDetailsService {
             orderDetails.setQuantity(orderDetailsRequest.getQuantity());
             orderDetails.setPriceBook(priceBookRepository.findById(orderDetailsRequest.getPriceBookId())
                     .orElseThrow(() -> new AppException("PriceBook not found")));
+            orderDetails.setQuantity(!orderDetails.getQuantity().isNaN() ? orderDetails.getQuantity() : 0);
             if (checkOrderItemQtyAvailable(orderDetailsRequest.getProductId(), orderDetailsRequest.getQuantity())) {
                 orderDetails.setOrderDetailsStatus(orderDetailSttRepository.getById(2L));
             } else {
@@ -67,6 +68,7 @@ public class OrderDetailsService implements IOrderDetailsService {
                 .orElseThrow(() -> new AppException("PriceBook not found")));
         orderDetails.setProduct(productRepository.findById(orderDetailsRequest.getProductId())
                 .orElseThrow(() -> new AppException("Product not found")));
+        orderDetails.setQuantity(!orderDetails.getQuantity().isNaN() ? orderDetails.getQuantity() : 0);
         if (checkOrderItemQtyAvailable(orderDetailsRequest.getProductId(), orderDetailsRequest.getQuantity())) {
             //Enough stock
             orderDetails.setOrderDetailsStatus(orderDetailSttRepository.getById(2L));
