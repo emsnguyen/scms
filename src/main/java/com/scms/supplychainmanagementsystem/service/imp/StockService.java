@@ -4,9 +4,7 @@ import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.StockDto;
 import com.scms.supplychainmanagementsystem.entity.*;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
-import com.scms.supplychainmanagementsystem.repository.ProductRepository;
-import com.scms.supplychainmanagementsystem.repository.PurchaseRepository;
-import com.scms.supplychainmanagementsystem.repository.StockRepository;
+import com.scms.supplychainmanagementsystem.repository.*;
 import com.scms.supplychainmanagementsystem.service.IStockService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.*;
 import java.time.Instant;
+import java.util.List;
 
 @AllArgsConstructor
 @Transactional
@@ -27,6 +25,10 @@ public class StockService implements IStockService {
     private final UserCommon userCommon;
     private StockRepository stockRepository;
     private ProductRepository productRepository;
+    private OrderDetailsRepository orderDetailsRepository;
+    private OrderDetailStatus orderDetailStatus;
+    private OrderDetailsService orderDetailsService;
+
 
     @Override
     public Page<Stock> getAllStock(Long productId, Long warehouseId,Pageable pageable) {
@@ -89,19 +91,31 @@ public class StockService implements IStockService {
     public void updateStockQuantity(Long productId, Double quantity) {
 
         Stock strock = stockRepository.findByProductId(productId);
-        Product product = new Product();
-        product =productRepository.getById(productId);
+        Double sumQuantity=strock.getAvailableQuantity()+quantity;
+        Product product =productRepository.getById(productId);
+        if(quantity>0 ){
+
+            List<OrderDetails> list =orderDetailsRepository.getOrderDetailsByProductId(productId);
+
+            for (OrderDetails orderDetails : list ) {
+                if(orderDetails.getOrderDetailsStatus().getOrderDetailStatusID()==1 && sumQuantity>=orderDetails.getQuantity()){
+                    orderDetailsService.updateStatusOrderDetails(orderDetails.getOrderDetailId(),2L);
+                    sumQuantity-=orderDetails.getQuantity();
+                }
+            }
+        }
         Stock stock = Stock.builder()
                 .stockId(strock.getStockId())
-                .availableQuantity(strock.getAvailableQuantity()+quantity)
+                .availableQuantity(sumQuantity)
                 .lastModifiedDate(Instant.now())
                 .product(product)
                 .build();
-        log.info("[Start Update PurchaseService  to database]");
         stockRepository.save(stock);
         log.info("[Start StockService - UpdateStock  to database ]");
         log.info("[End StockService - UpdateStock ]");
     }
+
+
 
     @Override
     public void saveStock(StockDto stockDto) {

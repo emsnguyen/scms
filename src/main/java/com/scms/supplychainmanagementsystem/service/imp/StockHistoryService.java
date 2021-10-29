@@ -64,9 +64,15 @@ public class StockHistoryService implements IStockHistoryService {
         User currentUser = userCommon.getCurrentUser();
         log.info("[End get current user : " + currentUser.getUsername() + "]");
 
-        Product product = new Product();
-        product = productRepository.getById(stockHistoryDto.getProductId());
-        Double QuantityOld=stockHistoryRepository.findByStockHistoryIdAdmin(stockHistoryId).getStockInQuantity();
+
+
+        Product product = productRepository.getById(stockHistoryDto.getProductId());
+        Double QuantityOld=stockHistoryRepository.getById(stockHistoryId).getStockInQuantity(); //35
+               //35-30=5 >100
+        if(QuantityOld-stockHistoryDto.getStockInQuantity()>stockRepository.findByProduct(productRepository.getById(stockHistoryDto.getProductId())).getAvailableQuantity()){
+            throw new AppException("Số lượng giảm đi  vượt quá số lượng trong kho! ");
+        }
+
         if (currentUser.getRole().getRoleID() != 1) {
             if (currentUser.getWarehouse().getWarehouseID() != stockHistoryRepository.findByStockHistoryIdAdmin(stockHistoryId).getProduct().getWarehouse().getWarehouseID()) {
                 throw new AppException("you cant update in another Warehouse");
@@ -117,18 +123,26 @@ public class StockHistoryService implements IStockHistoryService {
 
     @Override
     public void deleteStockHistory(Long stockHistoryId) {
-        Double QuantityOld=stockHistoryRepository.findByStockHistoryIdAdmin(stockHistoryId).getStockInQuantity();
-        Long productId =stockHistoryRepository.findByStockHistoryIdAdmin(stockHistoryId).getProduct().getProductId();
+        Double quantityOld=stockHistoryRepository.getById(stockHistoryId).getStockInQuantity();
+        Long productId =stockHistoryRepository.getById(stockHistoryId).getProduct().getProductId();
+        Product product=stockHistoryRepository.getById(stockHistoryId).getProduct();
         User currentUser = userCommon.getCurrentUser();
         if (currentUser.getRole().getRoleID() != 1) {
             if(currentUser.getWarehouse().getWarehouseID()!=stockHistoryRepository.getById(stockHistoryId).getProduct().getWarehouse().getWarehouseID()){
                 throw new AppException("you cant delete in another Warehouse");
             }else{
-            stockHistoryRepository.deleteStockHistoryAdmin(stockHistoryId);
-            stockService.updateStockQuantity(productId,-QuantityOld);}
+                if(quantityOld>stockRepository.findByProduct(product).getAvailableQuantity()){
+                    throw new AppException("Số lượng trong kho ít hơn số lượng bạn muốn xóa");
+                }else{
+                    stockHistoryRepository.deleteStockHistoryAdmin(stockHistoryId);
+                    stockService.updateStockQuantity(productId,-quantityOld);}
+                }
         } else {
-            stockHistoryRepository.deleteStockHistoryAdmin(stockHistoryId);
-            stockService.updateStockQuantity(productId,-QuantityOld);
+            if(quantityOld>stockRepository.findByProduct(product).getAvailableQuantity()){
+                throw new AppException("Số lượng trong kho ít hơn số lượng bạn muốn xóa");
+            }else{
+                stockHistoryRepository.deleteStockHistoryAdmin(stockHistoryId);
+                stockService.updateStockQuantity(productId,-quantityOld);}
         }
     }
     }

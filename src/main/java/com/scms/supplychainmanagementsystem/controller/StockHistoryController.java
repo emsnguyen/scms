@@ -30,7 +30,7 @@ import static org.springframework.http.ResponseEntity.status;
 @AllArgsConstructor
 @Slf4j
 @RestController
-@RequestMapping("/api/manage/stockhistory")
+@RequestMapping("/api/stockhistory")
 public class StockHistoryController {
     private IStockHistoryService iStockHistoryService;
 
@@ -74,13 +74,13 @@ public class StockHistoryController {
 
 
     @GetMapping("/{stockhistoryid}")
-    public ResponseEntity<StockHistory> getStockHistoryById(@PathVariable Long stockhistoryid) {
+    public ResponseEntity<StockHistoryDto> getStockHistoryById(@PathVariable Long stockhistoryid) {
         log.info("[Start StockHistoryController - Get StockHistory By ID]");
         StockHistory stockHistory = iStockHistoryService.getStockHistoryByIdInWarehouse(stockhistoryid);
         if (stockHistory != null) {
             StockHistoryDto stockHistoryDto = new StockHistoryDto(stockHistory);
             log.info("[End StockHistoryController - Get StockHistory By ID]");
-            return status(HttpStatus.OK).body(stockHistory);
+            return status(HttpStatus.OK).body(stockHistoryDto);
         } else {
             return null;
         }

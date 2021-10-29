@@ -1,7 +1,14 @@
 package com.scms.supplychainmanagementsystem.dto;
 
-import java.time.Instant;
+import com.scms.supplychainmanagementsystem.entity.Inventory;
+import lombok.*;
 
+import java.time.Instant;
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class InventoryDto {
     private Long inventoryId;
 
@@ -9,11 +16,7 @@ public class InventoryDto {
 
     private Instant dateCheck;
 
-    private Boolean isActive;
-
     private String description;
-
-    private double currentQuantity;
 
     private double shortageQuantity;
 
@@ -31,20 +34,18 @@ public class InventoryDto {
 
     private String lastModifiedBy;
 
-//    public InventoryDto() {
-//        this.inventoryId = inventoryId;
-//        this.personCheck = personCheck;
-//        this.dateCheck = dateCheck;
-//        this.isActive = isActive;
-//        this.description = description;
-//        this.currentQuantity = currentQuantity;
-//        this.shortageQuantity = shortageQuantity;
-//        this.createdDate = createdDate;
-//        this.lastModifiedDate = lastModifiedDate;
-//        this.warehouseId = warehouseId;
-//        this.productId = productId;
-//        this.statusId = statusId;
-//        this.createdBy = createdBy;
-//        this.lastModifiedBy = lastModifiedBy;
-//    }
+    public InventoryDto(Inventory inventory) {
+        this.inventoryId = inventory.getInventoryId();
+        this.personCheck = inventory.getPersonCheck();
+        this.dateCheck = inventory.getDateCheck();
+        this.description = inventory.getDescription();
+        this.shortageQuantity = inventory.getShortageQuantity();
+        this.createdDate = inventory.getCreatedDate();
+        this.lastModifiedDate = inventory.getLastModifiedDate();
+        this.warehouseId = inventory.getWarehouse().getWarehouseID();
+        this.productId = inventory.getProduct().getProductId();
+        this.statusId = inventory.getStatus().getStatusId();
+        this.createdBy = inventory.getCreatedBy().getUsername();
+        this.lastModifiedBy = inventory.getLastModifiedBy().getUsername();
+    }
 }
