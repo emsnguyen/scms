@@ -1,5 +1,6 @@
 package com.scms.supplychainmanagementsystem.service.imp;
 
+import com.scms.supplychainmanagementsystem.common.GenerateCode;
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.OrderRequest;
 import com.scms.supplychainmanagementsystem.dto.OrderResponse;
@@ -31,6 +32,7 @@ public class OrderService implements IOrderService {
     private final OrderStatusRepository orderStatusRepository;
     private final OrderDetailsRepository orderDetailsRepository;
     private final StockRepository stockRepository;
+    private final GenerateCode generateCode;
 
     @Override
     public void updateOrder(OrderRequest orderRequest) {
@@ -77,13 +79,12 @@ public class OrderService implements IOrderService {
 
         order.setOrderStatus(orderStatusRepository.getById(1L));
         order.setCreatedBy(current);
-        // TODO: set field orderCode
         log.info("[Start Save Order to database]");
-        orderRepository.saveAndFlush(order);
-        //log.info("Generate Order Code");
-        //order.setOrderCode(generateCode.genCodeByDate("DH") + order.getOrderId());
-        //orderRepository.saveAndFlush(order);
-        log.info("[End Save Order to database]");
+        orderRepository.save(order);
+        log.info("Generate Order Code");
+        order.setOrderCode(generateCode.genCodeByDate("DH") + order.getOrderId());
+        orderRepository.save(order);
+        log.info("[End Save Order ID = " + order.getOrderId() + " to database]");
         log.info("[End OrderService - createOrder]");
 
     }
@@ -157,7 +158,6 @@ public class OrderService implements IOrderService {
     public void updateOrderStatus(Long orderId, Long orderStatusId) {
         log.info("[Start OrderService - updateOrderStatus Order ID = " + orderId + "]");
         if (checkAccessOrder(orderId)) {
-            // TODO: check status valid
             Order order = orderRepository.getById(orderId);
             Long status = order.getOrderStatus().getOrderStatusID();
             if (!checkAllowUpdateStt(status, orderStatusId)) {
