@@ -11,9 +11,10 @@ public class MailContentBuilder {
 
     private final TemplateEngine templateEngine;
 
-    public String build(String message) {
+    public String buildMailForgotPassword(String username, String content) {
         Context context = new Context();
-        context.setVariable("message", message);
-        return templateEngine.process("mailTemplate", context);
+        context.setVariable("username", username);
+        context.setVariable("content", content);
+        return templateEngine.process("mailForgotPassword", context);
     }
 }

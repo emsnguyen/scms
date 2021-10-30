@@ -24,6 +24,8 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.scms.supplychainmanagementsystem.common.Endpoint.LOCALHOST;
+
 @Service
 @AllArgsConstructor
 @Transactional
@@ -117,10 +119,9 @@ public class AuthService implements IAuthService {
                 .orElseThrow(() -> new AppException("User not found"));
         if (user.getEmail().equals(forgotPasswordRequest.getEmail())) {
             String token = generateVerificationToken(user);
-            mailService.sendMail(new NotificationEmail("[Request password change]Please verify your account",
-                    user.getEmail(), "If you did not make this request then please ignore this email." +
-                    "Please click on the below url to verify your account : " +
-                    "http://localhost:8080/api/auth/accountVerification/" + token + ""));
+            mailService.sendMailForgotPassword(new ForgotPasswordEmail("[SCMS] Quên mật khẩu",
+                    user.getEmail(), user.getUsername(),
+                    LOCALHOST.URL + "/auth/accountVerification/" + token));
         } else {
             throw new AppException("Email not match with username");
         }
