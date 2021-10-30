@@ -9,10 +9,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface OrderDetailsRepository extends JpaRepository<OrderDetails, Long> {
 
     void deleteAllByOrder(Order order);
+
+    @Query(value = "select o from OrderDetails o where o.product.productId = :productid  order by o.order.createdDate asc ")
+    List<OrderDetails> getOrderDetailsByProductId(Long productid);
 
     @Query(value = "select case when count(o.orderDetailId) > 0 then true else false end" +
             " from OrderDetails o where o.order = :order " +

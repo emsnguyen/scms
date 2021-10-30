@@ -3,9 +3,7 @@ package com.scms.supplychainmanagementsystem.service.imp;
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.OrderDetailsRequest;
 import com.scms.supplychainmanagementsystem.dto.OrderDetailsResponse;
-import com.scms.supplychainmanagementsystem.entity.OrderDetails;
-import com.scms.supplychainmanagementsystem.entity.Stock;
-import com.scms.supplychainmanagementsystem.entity.User;
+import com.scms.supplychainmanagementsystem.entity.*;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.*;
 import com.scms.supplychainmanagementsystem.service.IOrderDetailsService;
@@ -15,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
 
 @Service
 @AllArgsConstructor
@@ -53,6 +53,33 @@ public class OrderDetailsService implements IOrderDetailsService {
         } else {
             throw new AppException("Not allow to access this resource");
         }
+    }
+
+    public void updateStatusOrderDetails( Long orderDetailId,Long status) {
+        log.info("[Start OrderDetailsService - updateOrderDetails ID = " + orderDetailId + "]");
+
+        log.info("[Start get current user]");
+        User currentUser = userCommon.getCurrentUser();
+        log.info("[End get current user : " + currentUser.getUsername() + "]");
+
+        OrderDetails orderDetails =orderDetailsRepository.getById(orderDetailId);
+
+        Product product = orderDetails.getProduct();
+        PriceBook priceBook =orderDetails.getPriceBook();
+        OrderDetailsStatus orderDetailsStatus = orderDetailSttRepository.getById(status);
+        OrderDetails orderDetails1 = OrderDetails.builder()
+               .orderDetailId(orderDetailId)
+                .order(orderDetails.getOrder())
+                .quantity(orderDetails.getQuantity())
+                .orderDetailsStatus(orderDetailsStatus)
+                .product(product)
+                .priceBook(priceBook)
+                .build();
+            log.info("[Start Save OrderDetails " + orderDetailId + " to database]");
+            orderDetailsRepository.saveAndFlush(orderDetails1);
+            log.info("[End Save OrderDetails " + orderDetailId + " to database]");
+            log.info("[End OrderDetailsService - updateOrderDetails ID = " + orderDetailId + "]");
+
     }
 
     @Override
