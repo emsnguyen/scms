@@ -43,11 +43,11 @@ public class Order {
     private OrderStatus orderStatus;
 
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JoinColumn(name = "createdBy", referencedColumnName = "userId")
     private User createdBy;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JoinColumn(name = "lastModifiedBy", referencedColumnName = "userId")
     private User lastModifiedBy;
 

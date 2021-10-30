@@ -1,6 +1,6 @@
 package com.scms.supplychainmanagementsystem.util;
 
-import com.scms.supplychainmanagementsystem.dto.NotificationEmail;
+import com.scms.supplychainmanagementsystem.dto.ForgotPasswordEmail;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +11,6 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import javax.mail.internet.InternetAddress;
-
 @Component
 @AllArgsConstructor
 @Slf4j
@@ -22,20 +20,19 @@ public class MailService {
     private final MailContentBuilder mailContentBuilder;
 
     @Async
-    public void sendMail(NotificationEmail notificationEmail) {
+    public void sendMailForgotPassword(ForgotPasswordEmail forgotPasswordEmail) {
         MimeMessagePreparator messagePreparator = mimeMessage -> {
-            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-            messageHelper.setFrom(new InternetAddress("quynhpthe130472@fpt.edu.vn"));
-            messageHelper.setTo(notificationEmail.getRecipient());
-            messageHelper.setSubject(notificationEmail.getSubject());
-            messageHelper.setText(notificationEmail.getBody());
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
+            messageHelper.setTo(forgotPasswordEmail.getRecipient());
+            messageHelper.setSubject(forgotPasswordEmail.getSubject());
+            messageHelper.setText(mailContentBuilder.buildMailForgotPassword(forgotPasswordEmail.getUsername(), forgotPasswordEmail.getContent()), true);
         };
         try {
             mailSender.send(messagePreparator);
-            log.info("Request email sent");
+            log.info("Request reset password email sent");
         } catch (MailException e) {
             log.error("Exception occurred when sending mail", e);
-            throw new AppException("Exception occurred when sending mail to " + notificationEmail.getRecipient(), e);
+            throw new AppException("Exception occurred when sending mail to " + forgotPasswordEmail.getRecipient(), e);
         }
     }
 

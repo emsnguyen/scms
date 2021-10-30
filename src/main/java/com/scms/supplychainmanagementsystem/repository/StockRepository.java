@@ -22,11 +22,15 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     @Query(value = "delete from Stock where product.productId = :productId")
     void deleteByProductId(Long productId);
 
-//    @Modifying
-//    @Query(value = "update Stock s set s.availableQuantity = s.availableQuantity " +
-//            " where exists (select s from Stock s inner join Order o inner join OrderDetails od" +
-//            " where o.orderId = od.order.orderId and s.product = od.product) ")
-//    void updateStockQuantityByOrder(Order order);
+    @Modifying
+    @Query(value = "update Stock s set s.availableQuantity = s.availableQuantity - :quantity " +
+            "where s.product = :product and s.availableQuantity >= :quantity")
+    void minusStockQuantityByOrder(@Param("quantity") Double quantity, @Param("product") Product product);
+
+    @Modifying
+    @Query(value = "update Stock s set s.availableQuantity = s.availableQuantity + :quantity " +
+            "where s.product = :product and s.availableQuantity >= :quantity")
+    void plusStockQuantityByOrder(@Param("quantity") Double quantity, @Param("product") Product product);
 
     Stock findByProduct(Product product);
 
