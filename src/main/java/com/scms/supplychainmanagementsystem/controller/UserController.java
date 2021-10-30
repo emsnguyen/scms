@@ -10,6 +10,7 @@ import com.scms.supplychainmanagementsystem.service.IUserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -141,7 +142,11 @@ public class UserController {
         if (!iUserService.checkUserExistByUserId(userId)) {
             throw new AppException("User not found");
         }
-        iUserService.deleteUser(userId);
+        try {
+            iUserService.deleteUser(userId);
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException("Some resource using this data");
+        }
         log.info("[End UserController - Delete User with userid " + userId + "]");
         return new ResponseEntity<>("User Deleted Successfully", OK);
     }

@@ -7,6 +7,7 @@ import com.scms.supplychainmanagementsystem.service.IProductService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -101,7 +102,12 @@ public class ProductController {
     public ResponseEntity<Map<String, Object>> deleteProductByProductId(@PathVariable Long productId) {
         log.info("[Start ProductController - Delete Product By Product ID = " + productId + "]");
         Map<String, Object> result = new HashMap<>();
-        iProductService.deleteProductByProductId(productId);
+        try {
+            iProductService.deleteProductByProductId(productId);
+        } catch (
+                DataIntegrityViolationException e) {
+            throw new AppException("Some resource using this data");
+        }
         result.put("message", "Product Deleted Successfully");
         log.info("[End ProductController - Delete Product By Product ID = " + productId + "]");
         return status(HttpStatus.OK).body(result);

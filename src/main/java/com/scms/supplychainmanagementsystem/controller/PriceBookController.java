@@ -2,10 +2,12 @@ package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.dto.PriceBookDto;
 import com.scms.supplychainmanagementsystem.entity.PriceBook;
+import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.service.IPriceBookService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -99,7 +101,11 @@ public class PriceBookController {
     public ResponseEntity<Map<String, Object>> deletePriceBookById(@PathVariable Long priceBookId) {
         log.info("[Start PriceBookController - updatePriceBook  priceBookId = " + priceBookId + "]");
         Map<String, Object> result = new HashMap<>();
-        iPriceBookService.deletePriceBookById(priceBookId);
+        try {
+            iPriceBookService.deletePriceBookById(priceBookId);
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException("Some resource using this data");
+        }
         result.put("message", "Price Book Deleted Successfully");
         log.info("[End PriceBookController - updatePriceBook  priceBookId = " + priceBookId + "]");
         return status(HttpStatus.OK).body(result);

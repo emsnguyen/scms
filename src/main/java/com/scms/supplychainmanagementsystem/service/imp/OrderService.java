@@ -1,6 +1,5 @@
 package com.scms.supplychainmanagementsystem.service.imp;
 
-import com.scms.supplychainmanagementsystem.common.GenerateCode;
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.OrderRequest;
 import com.scms.supplychainmanagementsystem.dto.OrderResponse;
@@ -33,8 +32,8 @@ public class OrderService implements IOrderService {
     private final WarehouseRepository warehouseRepository;
     private final ContactDeliveryRepository contactDeliveryRepository;
     private final OrderStatusRepository orderStatusRepository;
-    private final GenerateCode generateCode;
     private final OrderDetailsRepository orderDetailsRepository;
+    private final StockRepository stockRepository;
 
     @Override
     public void updateOrder(OrderRequest orderRequest) {
@@ -198,15 +197,12 @@ public class OrderService implements IOrderService {
         return false;
     }
 
-    private void executeOrderByStt1(Long orderStatusId, Order order) {
-        // TODO: execute order
-        if (orderStatusId == 2) {
-
-        } else if (orderStatusId == 3) {
-
-        } else {
-            throw new AppException("");
-        }
-    }
-
+//    private void updateOrderSuccess(Order order) {
+//        if (orderDetailsRepository.existsByOrderIdAndNotEnoughStock(order)) {
+//            order.setOrderStatus(orderStatusRepository.getById(2L));
+//        } else {
+//            stockRepository.updateStockQuantityByOrder(order);
+//            order.setOrderStatus(orderStatusRepository.getById(3L));
+//        }
+//    }
 }
