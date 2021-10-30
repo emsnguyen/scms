@@ -4,10 +4,7 @@ import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.OrderRequest;
 import com.scms.supplychainmanagementsystem.dto.OrderResponse;
 import com.scms.supplychainmanagementsystem.dto.OrderStatusDto;
-import com.scms.supplychainmanagementsystem.entity.Order;
-import com.scms.supplychainmanagementsystem.entity.OrderStatus;
-import com.scms.supplychainmanagementsystem.entity.User;
-import com.scms.supplychainmanagementsystem.entity.Warehouse;
+import com.scms.supplychainmanagementsystem.entity.*;
 import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.*;
 import com.scms.supplychainmanagementsystem.service.IOrderService;
@@ -163,24 +160,22 @@ public class OrderService implements IOrderService {
             // TODO: check status valid
             Order order = orderRepository.getById(orderId);
             Long status = order.getOrderStatus().getOrderStatusID();
+            if (!checkAllowUpdateStt(status, orderStatusId)) {
+                throw new AppException("Can't update to this status");
+            }
             if (status == 1) {
-
+                checkAndUpdateOrderSuccess(order);
             } else if (status == 2) {
-
+                checkAndUpdateOrderSuccess(order);
             } else if (status == 3) {
-
-            } else if (status == 4) {
-
-            } else if (status == 5) {
-
-            } else if (status == 6) {
-
+                if (orderStatusId == 1) {
+                    updateOrderBack(order);
+                }
             }
             order.setOrderStatus(orderStatusRepository.getById(orderStatusId));
         } else {
             throw new AppException("Not allow to access this resource");
         }
-
         log.info("[Start OrderService - updateOrderStatus Order ID = " + orderId + "]");
     }
 
@@ -197,12 +192,41 @@ public class OrderService implements IOrderService {
         return false;
     }
 
-//    private void updateOrderSuccess(Order order) {
-//        if (orderDetailsRepository.existsByOrderIdAndNotEnoughStock(order)) {
-//            order.setOrderStatus(orderStatusRepository.getById(2L));
-//        } else {
-//            stockRepository.updateStockQuantityByOrder(order);
-//            order.setOrderStatus(orderStatusRepository.getById(3L));
-//        }
-//    }
+    private void checkAndUpdateOrderSuccess(Order order) {
+        if (orderDetailsRepository.existsByOrderIdAndNotEnoughStock(order)) {
+            order.setOrderStatus(orderStatusRepository.getById(2L));
+        } else {
+            List<OrderDetails> orderDetailsList = orderDetailsRepository.findAllByOrder(order);
+            for (OrderDetails o : orderDetailsList) {
+                stockRepository.minusStockQuantityByOrder(o.getQuantity(), o.getProduct());
+            }
+            order.setOrderStatus(orderStatusRepository.getById(3L));
+        }
+    }
+
+    private void updateOrderBack(Order order) {
+        List<OrderDetails> orderDetailsList = orderDetailsRepository.findAllByOrder(order);
+        for (OrderDetails o : orderDetailsList) {
+            stockRepository.minusStockQuantityByOrder(o.getQuantity(), o.getProduct());
+        }
+        order.setOrderStatus(orderStatusRepository.getById(1L));
+    }
+
+    private boolean checkAllowUpdateStt(Long status, Long statusSelected) {
+        if (status == 1 && statusSelected == 3) {
+            return true;
+        } else if (status == 2 && (statusSelected == 1 || statusSelected == 3)) {
+            return true;
+        } else if (status == 3 && (statusSelected == 1 || statusSelected == 4 || statusSelected == 5)) {
+            return true;
+        } else if (status == 4 && (statusSelected == 5 || statusSelected == 6)) {
+            return true;
+        } else if (status == 5 && statusSelected == 6) {
+            return true;
+        } else if (status == 6 && statusSelected == 6) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

@@ -19,6 +19,8 @@ public interface OrderDetailsRepository extends JpaRepository<OrderDetails, Long
     @Query(value = "select o from OrderDetails o where o.product.productId = :productid  order by o.order.createdDate asc ")
     List<OrderDetails> getOrderDetailsByProductId(Long productid);
 
+    List<OrderDetails> findAllByOrder(Order order);
+
     @Query(value = "select case when count(o.orderDetailId) > 0 then true else false end" +
             " from OrderDetails o where o.order = :order " +
             " and o.orderDetailsStatus.orderDetailStatusID = 1")
