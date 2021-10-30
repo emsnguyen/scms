@@ -82,7 +82,7 @@ public class OrderService implements IOrderService {
         log.info("[Start Save Order to database]");
         orderRepository.save(order);
         log.info("Generate Order Code");
-        order.setOrderCode(generateCode.genCodeByDate("DH") + order.getOrderId());
+        order.setOrderCode(generateCode.genCodeByDate("DH", order.getOrderId()));
         orderRepository.save(order);
         log.info("[End Save Order ID = " + order.getOrderId() + " to database]");
         log.info("[End OrderService - createOrder]");
