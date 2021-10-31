@@ -16,7 +16,7 @@ public class Inventory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long inventoryId;
 
-    private Long personCheck;
+    private String personCheck;
 
     private Instant dateCheck;
 

@@ -80,7 +80,7 @@ public class InventoryService implements IInventoryService {
         Inventory inventory = Inventory.builder()
                 .inventoryId(inventoryId)
                 .description(inventoryDto.getDescription())
-                .personCheck(currentUser.getUserId())
+                .personCheck(currentUser.getUsername())
                 .shortageQuantity(inventoryDto.getShortageQuantity())
                 .status(invProductStatus)
                 .product(product)
@@ -107,11 +107,18 @@ public class InventoryService implements IInventoryService {
         if(inventoryDto.getShortageQuantity()>stockRepository.findByProduct(productRepository.getById(inventoryDto.getProductId())).getAvailableQuantity()){
             throw new AppException("Số Lượng thiếu hụt vượt quá số lượng trong kho! ");
         }
+        Warehouse warehouse = new Warehouse();
+        if(currentUser.getRole().getRoleID()==1){
+            warehouse= warehouseRepository.getById(inventoryDto.getWarehouseId());
+        }else{
+            warehouse=currentUser.getWarehouse();
+        }
+
         Product product= productRepository.getById(inventoryDto.getProductId());
         InvProductStatus invProductStatus = invProductStatusRepository.getById(inventoryDto.getStatusId());
         Inventory inventory = Inventory.builder()
                 .description(inventoryDto.getDescription())
-                .personCheck(currentUser.getUserId())
+                .personCheck(currentUser.getUsername())
                 .shortageQuantity(inventoryDto.getShortageQuantity())
                 .status(invProductStatus)
                 .product(product)
@@ -120,7 +127,7 @@ public class InventoryService implements IInventoryService {
                 .dateCheck(Instant.now())
                 .createdBy(currentUser)
                 .lastModifiedBy(currentUser)
-                .warehouse(warehouseRepository.getById(inventoryDto.getWarehouseId()))
+                .warehouse(warehouse)
                 .build();
         log.info("[Start save InventoryService  to database]");
         inventoryRepository.saveAndFlush(inventory);

@@ -12,7 +12,7 @@ import java.time.Instant;
 public class InventoryDto {
     private Long inventoryId;
 
-    private Long personCheck;
+    private String personCheck;
 
     private Instant dateCheck;
 
