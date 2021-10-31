@@ -17,4 +17,6 @@ public interface IInvoiceService {
     void saveInvoice(InvoiceDto invoiceDto);
 
     void deleteInvoice(Long invoiceId);
+
+     Invoice getInvoiceByOrderIdInWarehouse(Long orderId);
 }

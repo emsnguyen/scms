@@ -20,6 +20,11 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     @Query(value = "SELECT u FROM Invoice  u where u.invoiceId = :invoiceId and u.order.warehouse.warehouseID= :warehouseid")
     Invoice findByinvoiceIdAnhInWarehouse(@Param("invoiceId") Long invoiceId, @Param("warehouseid") Long warehouseId);
 
+    @Query(value = "SELECT u FROM Invoice  u where u.order.orderId = :orderId and u.order.warehouse.warehouseID= :warehouseid")
+    Invoice findByOrderIdAnhInWarehouse(@Param("orderId") Long orderId, @Param("warehouseid") Long warehouseId);
+
+    @Query(value = "SELECT u FROM Invoice  u where u.order.orderId = :orderId ")
+    Invoice findByOrderId(@Param("orderId") Long orderId);
 
 //    @Query(value = "SELECT * FROM test.customer where warehouseid= :warehouseid",nativeQuery = true)
 //    Page<Customer> findByWarehouse(@Param("warehouseid") Long warehouseId, Pageable pageable);

@@ -1,5 +1,6 @@
 package com.scms.supplychainmanagementsystem.service.imp;
 
+import com.scms.supplychainmanagementsystem.common.GenerateCode;
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.InvoiceDto;
 import com.scms.supplychainmanagementsystem.entity.*;
@@ -24,6 +25,7 @@ public class InvoiceService implements IInvoiceService {
     private WarehouseRepository warehouseRepository;
     private InvoiceRepository invoiceRepository;
     private OrderRepository orderRepository;
+    private final GenerateCode generateCode;
 
 
     @Override
@@ -55,6 +57,18 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
+    public Invoice getInvoiceByOrderIdInWarehouse(Long orderId) {
+        User currentUser = userCommon.getCurrentUser();
+        Invoice invoice = new Invoice();
+        if (currentUser.getRole().getRoleID() != 1) {
+            invoice = invoiceRepository.findByOrderIdAnhInWarehouse(orderId, userCommon.getCurrentUser().getWarehouse().getWarehouseID());
+        } else {
+            invoice = invoiceRepository.findByOrderId(orderId);
+        }
+        return invoice;
+    }
+
+    @Override
     public void updateInvoice(Long invoiceId, InvoiceDto invoiceDto) {
         log.info("[Start InvoiceService - UpdateInvoice  to database ]");
         log.info("[Start get current user]");
@@ -72,7 +86,7 @@ public class InvoiceService implements IInvoiceService {
                 .totalAmount(invoiceDto.getTotalAmount())
                 .paymentDueDate(invoiceDto.getPaymentDueDate())
                 .totalAmountPaid(invoiceDto.getTotalAmountPaid())
-                .invoiceCode("")
+                .invoiceCode(invoiceDto.getInvoiceCode())
                 .order(orderRepository.getById(invoiceDto.getOrderId()))
                 .lastModifiedDate(Instant.now())
                 .lastModifiedBy(currentUser)
@@ -94,13 +108,14 @@ public class InvoiceService implements IInvoiceService {
                 .totalAmount(invoiceDto.getTotalAmount())
                 .paymentDueDate(invoiceDto.getPaymentDueDate())
                 .totalAmountPaid(invoiceDto.getTotalAmountPaid())
-                .invoiceCode("")
                 .order(orderRepository.getById(invoiceDto.getOrderId()))
                 .lastModifiedDate(Instant.now())
                 .lastModifiedBy(currentUser)
                 .build();
         log.info("[Start save InvoiceService  to database]");
-        invoiceRepository.saveAndFlush(invoice);
+        invoiceRepository.save(invoice);
+        invoice.setInvoiceCode(generateCode.genCodeByDate("DH", invoice.getInvoiceId()));
+        invoiceRepository.save(invoice);
         log.info("[Start InvoiceService - saveInvoice   to database ]");
         log.info("[End InvoiceService - saveInvoice ]");
     }

@@ -1,5 +1,6 @@
 package com.scms.supplychainmanagementsystem.service.imp;
 
+import com.scms.supplychainmanagementsystem.common.GenerateCode;
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.CustomerDto;
 import com.scms.supplychainmanagementsystem.dto.WarehouseDto;
@@ -48,7 +49,7 @@ public class CustomerServiceImpl implements ICustomerService {
     private final UserCommon userCommon;
     private final WarehouseRepository warehouseRepository;
     private MyValidation validation;
-
+    private final GenerateCode generateCode;
 
     @Override
     public Page<Customer> getAllCustomerInWarehouse(Pageable pageable) {
@@ -132,7 +133,6 @@ public class CustomerServiceImpl implements ICustomerService {
         }
 
         Customer customer = Customer.builder()
-                .customerCode(customerDto.getCustomerCode())
                 .CustomerType(customerDto.getCustomerType())
                 .customerName(customerDto.getCustomerName())
                 .email(customerDto.getEmail())
@@ -151,7 +151,9 @@ public class CustomerServiceImpl implements ICustomerService {
                 .lastModifiedBy(currentUser)
                 .build();
         log.info("[Start save customer " + customer.getEmail() + " to database]");
-        customerRepository.saveAndFlush(customer);
+        customerRepository.save(customer);
+        customer.setCustomerCode(generateCode.genCodeByDate("KH", customer.getCustomerId()));
+        customerRepository.save(customer);
         log.info("[End save customer " + customer.getEmail() + " to database]");
         log.info("[End CustomerService - saveCustomer with Email: " + customer.getEmail() + "]");
     }

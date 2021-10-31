@@ -9,6 +9,7 @@ import com.scms.supplychainmanagementsystem.repository.WarehouseRepository;
 import com.scms.supplychainmanagementsystem.service.IWarehouseService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -88,7 +89,7 @@ public class WarehouseService implements IWarehouseService {
     public void deleteWarehouse(Long warehouseId) {
         User currentUser = userCommon.getCurrentUser();
         if (currentUser.getRole().getRoleID() == 1) {
-            warehouseRepository.deleteWarehouseByWarehouseID(warehouseId);
+           warehouseRepository.deleteById(warehouseId);
         } else {
             throw new AppException("you are not Admin");
         }

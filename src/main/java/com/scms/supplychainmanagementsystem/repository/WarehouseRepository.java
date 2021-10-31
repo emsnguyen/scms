@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
 
 
-    void deleteWarehouseByWarehouseID(Long warehouseId);
 
     boolean existsByWarehouseName(String warehouseName);
 
