@@ -14,8 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-
 @Service
 @AllArgsConstructor
 @Transactional
@@ -95,7 +93,7 @@ public class OrderDetailsService implements IOrderDetailsService {
                 .orElseThrow(() -> new AppException("PriceBook not found")));
         orderDetails.setProduct(productRepository.findById(orderDetailsRequest.getProductId())
                 .orElseThrow(() -> new AppException("Product not found")));
-        orderDetails.setQuantity(!orderDetails.getQuantity().isNaN() ? orderDetails.getQuantity() : 0);
+        orderDetails.setQuantity(!orderDetailsRequest.getQuantity().isNaN() ? orderDetailsRequest.getQuantity() : 0);
         if (checkOrderItemQtyAvailable(orderDetailsRequest.getProductId(), orderDetailsRequest.getQuantity())) {
             //Enough stock
             orderDetails.setOrderDetailsStatus(orderDetailSttRepository.getById(2L));
