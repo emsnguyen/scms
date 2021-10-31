@@ -36,7 +36,7 @@ public class PurchaseDetailController {
 
 
     @GetMapping("/purchase/{purchaseid}")
-    public ResponseEntity<Map<String, Object>> getAllPurchaseDetail(@PathVariable  Long purchaseid,
+    public ResponseEntity<Map<String, Object>> getAllPurchaseDetailDetail(@PathVariable  Long purchaseid,
                                                               @RequestParam(required = false) Long warehouseId,
                                                               @RequestParam(defaultValue = "0") int page,
                                                               @RequestParam(defaultValue = "10") int size) {
@@ -76,7 +76,7 @@ public class PurchaseDetailController {
     }
 
     @GetMapping("/{purchasedetailid}")
-    public ResponseEntity<PurchaseDetailDto> getPurchaseidById(@PathVariable Long purchasedetailid) {
+    public ResponseEntity<PurchaseDetailDto> getPurchaseDetailById(@PathVariable Long purchasedetailid) {
         log.info("[Start PurchaseDetailController - Get PurchaseDetail By ID]");
         PurchaseDetails purchaseDetails= iPurchaseDetailService.getPurchaseDetailByIdInWarehouse(purchasedetailid);
         if (purchaseDetails != null) {
@@ -91,7 +91,7 @@ public class PurchaseDetailController {
     @PutMapping("/{purchasedetailid}")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @ApiOperation(value = "Requires ADMIN or MANAGER Access")
-    public ResponseEntity<String> updatePurchase(@PathVariable Long purchasedetailid, @Valid @RequestBody PurchaseDetailDto purchaseDetailDto) {
+    public ResponseEntity<String> updatePurchaseDetail(@PathVariable Long purchasedetailid, @Valid @RequestBody PurchaseDetailDto purchaseDetailDto) {
         log.info("[Start PurchaseController - Update Purchase ]");
         iPurchaseDetailService.updatePurchaseDetail(purchasedetailid, purchaseDetailDto);
         log.info("[End PurchaseController - Update Purchase ]");
@@ -101,7 +101,7 @@ public class PurchaseDetailController {
     @DeleteMapping("/{purchasedetailid}")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @ApiOperation(value = "Requires ADMIN or MANAGER Access")
-    public ResponseEntity<String> DeletePurchase(@PathVariable Long purchasedetailid) {
+    public ResponseEntity<String> DeletePurchaseDetail(@PathVariable Long purchasedetailid) {
         log.info("[Start PurchaseController - Delete Purchase By ID]");
         iPurchaseDetailService.deletePurchaseDetail(purchasedetailid);
         log.info("[End PurchaseController - Delete Purchase By ID]");

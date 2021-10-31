@@ -2,8 +2,10 @@ package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.dto.InventoryDto;
 import com.scms.supplychainmanagementsystem.dto.StockHistoryDto;
+import com.scms.supplychainmanagementsystem.entity.InvProductStatus;
 import com.scms.supplychainmanagementsystem.entity.Inventory;
 import com.scms.supplychainmanagementsystem.entity.StockHistory;
+import com.scms.supplychainmanagementsystem.repository.InvProductStatusRepository;
 import com.scms.supplychainmanagementsystem.service.IInventoryService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -32,6 +34,7 @@ import static org.springframework.http.ResponseEntity.status;
 public class InventoryController {
 
     private IInventoryService iInventoryService;
+    private InvProductStatusRepository invProductStatusRepository;
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
@@ -103,5 +106,11 @@ public class InventoryController {
         iInventoryService.deleteInventory(inventoryId);
         log.info("[End InventoryController - Delete Inventory By ID]");
         return new ResponseEntity<>("Delete Inventory Successfully", OK);
+    }
+    @GetMapping("/liststatus")
+    public ResponseEntity<List<InvProductStatus>> getAllStatus() {
+        log.info("[Start InventoryController - Get Inventory By ID]");
+        List<InvProductStatus> list =invProductStatusRepository.findAll();
+        return status(HttpStatus.OK).body(list);
     }
 }
