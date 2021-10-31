@@ -163,6 +163,9 @@ public class OrderService implements IOrderService {
             if (!checkAllowUpdateStt(status, orderStatusId)) {
                 throw new AppException("Can't update to this status");
             }
+            if (order.getOrderStatus().getOrderStatusID().equals(orderStatusId)) {
+                throw new AppException("You have not updated the status yet");
+            }
             if (status == 1) {
                 checkAndUpdateOrderSuccess(order);
             } else if (status == 2) {
@@ -210,7 +213,7 @@ public class OrderService implements IOrderService {
     private void updateOrderBack(Order order) {
         List<OrderDetails> orderDetailsList = orderDetailsRepository.findAllByOrder(order);
         for (OrderDetails o : orderDetailsList) {
-            stockRepository.minusStockQuantityByOrder(o.getQuantity(), o.getProduct());
+            stockRepository.plusStockQuantityByOrder(o.getQuantity(), o.getProduct());
         }
         order.setOrderStatus(orderStatusRepository.getById(1L));
     }
