@@ -11,17 +11,12 @@ import org.springframework.data.repository.query.Param;
 import javax.transaction.Transactional;
 
 public interface PurchaseDetailRepository extends JpaRepository<PurchaseDetails, Long> {
-    @Query(value = "SELECT u FROM PurchaseDetails u where u.purchaseDetailID= :purchasedetailid  and u.purchase.warehouse= :warehouseid")
+    @Query(value = "SELECT u FROM PurchaseDetails u where u.purchaseDetailID= :purchasedetailid  and u.purchase.warehouse.warehouseID= :warehouseid")
     PurchaseDetails findByPurchaseDetailId(@Param("purchasedetailid") Long purchaseDetailid, @Param("warehouseid") Long warehouseid);
 
     @Query(value = "SELECT u FROM PurchaseDetails u where u.purchaseDetailID= :purchasedetailid ")
     PurchaseDetails findByPurchaseDetailIdAdmin(@Param("purchasedetailid") Long purchasedetailid);
 
-
-    @Modifying
-    @Transactional
-    @Query(value = "Delete  FROM PurchaseDetails u where u.purchaseDetailID= :purchasedetailid  and u.purchase.warehouse= :warehouseid")
-    void deletePurchaseDetail(@Param("purchasedetailid") Long purchasedetailid, @Param("warehouseid") Long warehouseid);
 
     @Modifying
     @Transactional

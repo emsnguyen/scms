@@ -3,6 +3,7 @@ package com.scms.supplychainmanagementsystem.service.imp;
 import com.scms.supplychainmanagementsystem.common.UserCommon;
 import com.scms.supplychainmanagementsystem.dto.PurchaseDetailDto;
 import com.scms.supplychainmanagementsystem.entity.*;
+import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.MaterialRepository;
 import com.scms.supplychainmanagementsystem.repository.PurchaseDetailRepository;
 import com.scms.supplychainmanagementsystem.repository.PurchaseRepository;
@@ -119,7 +120,10 @@ public class PurchaseDetailService implements IPurchaseDetailService {
     public void deletePurchaseDetail(Long purchaseDetailId) {
         User currentUser = userCommon.getCurrentUser();
         if (currentUser.getRole().getRoleID() != 1) {
-            purchaseDetailRepository.deletePurchaseDetail(purchaseDetailId, currentUser.getWarehouse().getWarehouseID());
+            if(currentUser.getWarehouse().getWarehouseID()!=purchaseDetailRepository.getById(purchaseDetailId).getPurchase().getWarehouse().getWarehouseID()){
+                throw new AppException("You CAN NOT delete in other Warehouse");
+            }
+            purchaseDetailRepository.deletePurchaseAdmin(purchaseDetailId);
         } else {
             purchaseDetailRepository.deletePurchaseAdmin(purchaseDetailId);
         }
