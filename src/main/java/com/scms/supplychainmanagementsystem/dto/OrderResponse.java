@@ -29,4 +29,6 @@ public class OrderResponse {
     private String createdBy;
 
     private String lastModifiedBy;
+
+    private Long customerId;
 }

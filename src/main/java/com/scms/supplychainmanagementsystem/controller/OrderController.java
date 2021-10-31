@@ -75,7 +75,8 @@ public class OrderController {
     public ResponseEntity<Map<String, Object>> createOrder(@RequestBody OrderRequest orderRequest) {
         log.info("[Start OrderController - createOrder]");
         Map<String, Object> result = new HashMap<>();
-        iOrderService.createOrder(orderRequest);
+        Long orderId = iOrderService.createOrder(orderRequest);
+        result.put("data", orderId);
         result.put("message", "Order Created Successfully");
         log.info("[End OrderController - createOrder]");
         return status(CREATED).body(result);

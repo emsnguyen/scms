@@ -59,7 +59,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void createOrder(OrderRequest orderRequest) {
+    public Long createOrder(OrderRequest orderRequest) {
         log.info("[Start OrderService - createOrder]");
         User current = userCommon.getCurrentUser();
         Order order = new Order();
@@ -86,7 +86,7 @@ public class OrderService implements IOrderService {
         orderRepository.save(order);
         log.info("[End Save Order ID = " + order.getOrderId() + " to database]");
         log.info("[End OrderService - createOrder]");
-
+        return order.getOrderId();
     }
 
     @Override
@@ -117,6 +117,7 @@ public class OrderService implements IOrderService {
             orderResponse.setOrderCode(order.getOrderCode());
             orderResponse.setWarehouseId(order.getWarehouse().getWarehouseID());
             orderResponse.setContactDeliveryId(order.getContactDelivery().getContactID());
+            orderResponse.setCustomerId(order.getContactDelivery().getCustomer().getCustomerId());
             orderResponse.setCreatedDate(order.getCreatedDate());
             orderResponse.setLastModifiedDate(order.getLastModifiedDate());
             orderResponse.setNote(order.getNote());
