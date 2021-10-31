@@ -193,6 +193,9 @@ public class OrderService implements IOrderService {
     }
 
     private void checkAndUpdateOrderSuccess(Order order) {
+        if (!orderDetailsRepository.existsByOrder(order)) {
+            throw new AppException("Not exists any order item");
+        }
         if (orderDetailsRepository.existsByOrderIdAndNotEnoughStock(order)) {
             order.setOrderStatus(orderStatusRepository.getById(2L));
         } else {
@@ -213,15 +216,15 @@ public class OrderService implements IOrderService {
     }
 
     private boolean checkAllowUpdateStt(Long status, Long statusSelected) {
-        if (status == 1 && statusSelected == 3) {
+        if (status == 1 && (statusSelected == 1 || statusSelected == 3)) {
             return true;
-        } else if (status == 2 && (statusSelected == 1 || statusSelected == 3)) {
+        } else if (status == 2 && (statusSelected == 1 || statusSelected == 2 || statusSelected == 3)) {
             return true;
-        } else if (status == 3 && (statusSelected == 1 || statusSelected == 4 || statusSelected == 5)) {
+        } else if (status == 3 && (statusSelected != 2 && statusSelected != 6)) {
             return true;
-        } else if (status == 4 && (statusSelected == 5 || statusSelected == 6)) {
+        } else if (status == 4 && (statusSelected == 4 || statusSelected == 5 || statusSelected == 6)) {
             return true;
-        } else if (status == 5 && statusSelected == 6) {
+        } else if (status == 5 && (statusSelected == 5 || statusSelected == 6)) {
             return true;
         } else if (status == 6 && statusSelected == 6) {
             return true;
