@@ -21,6 +21,8 @@ public interface OrderDetailsRepository extends JpaRepository<OrderDetails, Long
 
     List<OrderDetails> findAllByOrder(Order order);
 
+    boolean existsByOrder(Order order);
+
     @Query(value = "select case when count(o.orderDetailId) > 0 then true else false end" +
             " from OrderDetails o where o.order = :order " +
             " and o.orderDetailsStatus.orderDetailStatusID = 1")
