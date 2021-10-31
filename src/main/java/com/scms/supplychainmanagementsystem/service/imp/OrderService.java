@@ -163,6 +163,9 @@ public class OrderService implements IOrderService {
             if (!checkAllowUpdateStt(status, orderStatusId)) {
                 throw new AppException("Can't update to this status");
             }
+            if (order.getOrderStatus().getOrderStatusID().equals(orderStatusId)) {
+                throw new AppException("You have not updated the status yet");
+            }
             if (status == 1) {
                 checkAndUpdateOrderSuccess(order);
             } else if (status == 2) {
@@ -193,6 +196,9 @@ public class OrderService implements IOrderService {
     }
 
     private void checkAndUpdateOrderSuccess(Order order) {
+        if (!orderDetailsRepository.existsByOrder(order)) {
+            throw new AppException("Not exists any order item");
+        }
         if (orderDetailsRepository.existsByOrderIdAndNotEnoughStock(order)) {
             order.setOrderStatus(orderStatusRepository.getById(2L));
         } else {
@@ -207,21 +213,21 @@ public class OrderService implements IOrderService {
     private void updateOrderBack(Order order) {
         List<OrderDetails> orderDetailsList = orderDetailsRepository.findAllByOrder(order);
         for (OrderDetails o : orderDetailsList) {
-            stockRepository.minusStockQuantityByOrder(o.getQuantity(), o.getProduct());
+            stockRepository.plusStockQuantityByOrder(o.getQuantity(), o.getProduct());
         }
         order.setOrderStatus(orderStatusRepository.getById(1L));
     }
 
     private boolean checkAllowUpdateStt(Long status, Long statusSelected) {
-        if (status == 1 && statusSelected == 3) {
+        if (status == 1 && (statusSelected == 1 || statusSelected == 3)) {
             return true;
-        } else if (status == 2 && (statusSelected == 1 || statusSelected == 3)) {
+        } else if (status == 2 && (statusSelected == 1 || statusSelected == 2 || statusSelected == 3)) {
             return true;
-        } else if (status == 3 && (statusSelected == 1 || statusSelected == 4 || statusSelected == 5)) {
+        } else if (status == 3 && (statusSelected != 2 && statusSelected != 6)) {
             return true;
-        } else if (status == 4 && (statusSelected == 5 || statusSelected == 6)) {
+        } else if (status == 4 && (statusSelected == 4 || statusSelected == 5 || statusSelected == 6)) {
             return true;
-        } else if (status == 5 && statusSelected == 6) {
+        } else if (status == 5 && (statusSelected == 5 || statusSelected == 6)) {
             return true;
         } else if (status == 6 && statusSelected == 6) {
             return true;

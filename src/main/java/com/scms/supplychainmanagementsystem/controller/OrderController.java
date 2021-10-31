@@ -42,18 +42,25 @@ public class OrderController {
                                                             @RequestParam(defaultValue = "0") int page,
                                                             @RequestParam(defaultValue = "10") int size) {
         log.info("[Start OrderController - getAllOrders]");
-        List<Order> orderList;
-        Page<Order> orderPage;
+        List<OrderResponse> orderResponseList;
         Pageable pageable = PageRequest.of(page, size);
-        orderPage = iOrderService.getAllOrders(orderCode, customerName, orderStatusId, warehouseId, pageable);
-
-        orderList = orderPage.getContent();
+        Page<Order> orderPage = iOrderService.getAllOrders(orderCode, customerName, orderStatusId, warehouseId, pageable);
+        Page<OrderResponse> orderResponsePage = orderPage.map(o -> OrderResponse.builder()
+                .orderId(o.getOrderId()).createdDate(o.getCreatedDate())
+                .lastModifiedDate(o.getLastModifiedDate())
+                .note(o.getNote()).orderCode(o.getOrderCode()).warehouseId(o.getWarehouse().getWarehouseID())
+                .contactDeliveryId(o.getContactDelivery().getContactID())
+                .orderStatusId(o.getOrderStatus().getOrderStatusID())
+                .createdBy(o.getCreatedBy().getUsername())
+                .lastModifiedBy(o.getLastModifiedBy() != null ? o.getLastModifiedBy().getUsername() : null)
+                .build());
+        orderResponseList = orderResponsePage.getContent();
         Map<String, Object> response = new HashMap<>();
-        response.put("data", orderList);
-        response.put("currentPage", orderPage.getNumber());
-        response.put("totalItems", orderPage.getTotalElements());
-        response.put("totalPages", orderPage.getTotalPages());
-        if (!orderPage.isEmpty()) {
+        response.put("data", orderResponseList);
+        response.put("currentPage", orderResponsePage.getNumber());
+        response.put("totalItems", orderResponsePage.getTotalElements());
+        response.put("totalPages", orderResponsePage.getTotalPages());
+        if (!orderResponsePage.isEmpty()) {
             response.put("message", HttpStatus.OK);
         } else {
             response.put("message", "EMPTY_RESULT");
