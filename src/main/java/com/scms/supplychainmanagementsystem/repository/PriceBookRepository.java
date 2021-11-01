@@ -16,7 +16,7 @@ public interface PriceBookRepository extends JpaRepository<PriceBook, Long> {
 
     @Query(value = "select p from PriceBook p inner join PriceBookEntry e " +
             " where p.priceBookId = e.priceBook.priceBookId " +
-            " and e.product.productId = :productId")
+            " and e.product.productId = :productId order by p.isStandardPriceBook")
     List<PriceBook> getAllByProductId(Long productId);
 
     @Query(value = "select case when count(p.priceBookId) > 0 then true else false end " +
