@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -115,11 +116,14 @@ public class PriceBookService implements IPriceBookService {
     }
 
     @Override
-    public List<PriceBook> getAllPriceBookByProducId(Long productId) {
+    public List<PriceBookDto> getAllPriceBookByProducId(Long productId) {
         log.info("[Start PriceBookService - Get All PriceBook By Product ID = : " + productId + "]");
         List<PriceBook> priceBookList = priceBookRepository.getAllByProductId(productId);
+        List<PriceBookDto> priceBookDtos = priceBookList.stream().map(p -> new PriceBookDto(p.getPriceBookId()
+                , p.getPriceBookName(), p.getIsStandardPriceBook()
+                , p.getWarehouse().getWarehouseID())).collect(Collectors.toList());
         log.info("[End PriceBookService - Get All PriceBook By Product ID = : " + productId + "]");
-        return priceBookList;
+        return priceBookDtos;
     }
 
     public boolean checkAccessPriceBook(Long priceBookId) {

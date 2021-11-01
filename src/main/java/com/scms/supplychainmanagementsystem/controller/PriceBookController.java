@@ -115,8 +115,8 @@ public class PriceBookController {
     public ResponseEntity<Map<String, Object>> getAllPriceBookByProducId(@PathVariable Long productId) {
         log.info("[Start PriceBookController -  getAllPriceBookByProducId : " + productId + "]");
         Map<String, Object> result = new HashMap<>();
-        List<PriceBook> priceBookList = iPriceBookService.getAllPriceBookByProducId(productId);
-        result.put("data", priceBookList);
+        List<PriceBookDto> priceBookDtoList = iPriceBookService.getAllPriceBookByProducId(productId);
+        result.put("data", priceBookDtoList);
         result.put("message", OK);
         log.info("[End PriceBookController -  getAllPriceBookByProducId : " + productId + "]");
         return status(HttpStatus.OK).body(result);
