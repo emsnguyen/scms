@@ -18,5 +18,5 @@ public interface IPriceBookService {
 
     Page<PriceBook> getAllPriceBooks(String priceBookName, Long warehouseId, Pageable pageable);
 
-    List<PriceBook> getAllPriceBookByProducId(Long productId);
+    List<PriceBookDto> getAllPriceBookByProducId(Long productId);
 }

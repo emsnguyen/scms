@@ -15,7 +15,7 @@ import java.util.List;
 public interface PriceBookRepository extends JpaRepository<PriceBook, Long> {
 
     @Query(value = "select p from PriceBook p inner join PriceBookEntry e " +
-            " where p.priceBookId = e.priceBook.priceBookId " +
+            " on p.priceBookId = e.priceBook.priceBookId " +
             " and e.product.productId = :productId order by p.isStandardPriceBook")
     List<PriceBook> getAllByProductId(Long productId);
 
