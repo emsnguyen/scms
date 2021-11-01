@@ -5,6 +5,8 @@ import com.scms.supplychainmanagementsystem.entity.PriceBook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface IPriceBookService {
     void updatePriceBook(PriceBookDto priceBookDto);
 
@@ -15,4 +17,6 @@ public interface IPriceBookService {
     PriceBookDto getPriceBookById(Long priceBookId);
 
     Page<PriceBook> getAllPriceBooks(String priceBookName, Long warehouseId, Pageable pageable);
+
+    List<PriceBook> getAllPriceBookByProducId(Long productId);
 }

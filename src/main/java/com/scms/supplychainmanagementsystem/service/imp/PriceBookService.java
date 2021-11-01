@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 @Transactional
@@ -110,6 +112,14 @@ public class PriceBookService implements IPriceBookService {
         }
         log.info("[End PriceBookService - Get All PriceBooks]");
         return priceBookPage;
+    }
+
+    @Override
+    public List<PriceBook> getAllPriceBookByProducId(Long productId) {
+        log.info("[Start PriceBookService - Get All PriceBook By Product ID = : " + productId + "]");
+        List<PriceBook> priceBookList = priceBookRepository.getAllByProductId(productId);
+        log.info("[End PriceBookService - Get All PriceBook By Product ID = : " + productId + "]");
+        return priceBookList;
     }
 
     public boolean checkAccessPriceBook(Long priceBookId) {
