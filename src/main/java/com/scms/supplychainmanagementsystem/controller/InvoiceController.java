@@ -4,6 +4,7 @@ import com.scms.supplychainmanagementsystem.dto.InventoryDto;
 import com.scms.supplychainmanagementsystem.dto.InvoiceDto;
 import com.scms.supplychainmanagementsystem.entity.Inventory;
 import com.scms.supplychainmanagementsystem.entity.Invoice;
+import com.scms.supplychainmanagementsystem.repository.InvoiceRepository;
 import com.scms.supplychainmanagementsystem.service.IInventoryService;
 import com.scms.supplychainmanagementsystem.service.IInvoiceService;
 import io.swagger.annotations.ApiOperation;
@@ -33,7 +34,7 @@ import static org.springframework.http.ResponseEntity.status;
 public class InvoiceController {
 
     private IInvoiceService iInvoiceService;
-
+    private InvoiceRepository invoiceRepository;
 
 
     @GetMapping()
@@ -77,6 +78,21 @@ public class InvoiceController {
             return null;
         }
     }
+
+    @GetMapping("/order/{orderId}")
+    public ResponseEntity<InvoiceDto> getInvoiceByOrderId(@PathVariable Long orderId) {
+        log.info("[Start InvoiceController - Get Invoice By orderID]");
+        Invoice invoice = iInvoiceService.getInvoiceByOrderIdInWarehouse(orderId);
+        if (invoice != null) {
+            InvoiceDto invoiceDto = new InvoiceDto(invoice);
+            log.info("[EndInvoiceController - Get Invoice By orderID]");
+            return status(HttpStatus.OK).body(invoiceDto);
+        } else {
+            return null;
+        }
+    }
+
+
 
     @PutMapping("/{invoiceId}")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")

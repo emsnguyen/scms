@@ -2,11 +2,13 @@ package com.scms.supplychainmanagementsystem.controller;
 
 import com.scms.supplychainmanagementsystem.dto.WarehouseDto;
 import com.scms.supplychainmanagementsystem.entity.Warehouse;
+import com.scms.supplychainmanagementsystem.exceptions.AppException;
 import com.scms.supplychainmanagementsystem.repository.WarehouseRepository;
 import com.scms.supplychainmanagementsystem.service.IWarehouseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -101,7 +103,11 @@ public class WarehouseController {
     @ApiOperation(value = "Requires ADMIN or MANAGER Access")
     public ResponseEntity<String> DeleteWarehouse(@PathVariable Long warehoseId) {
         log.info("[Start WarehouselController - Get Warehouse By ID]");
-        iWarehouseService.deleteWarehouse(warehoseId);
+        try {
+            iWarehouseService.deleteWarehouse(warehoseId);
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException("Some resource using this data");
+        }
         log.info("[End WarehouselController - Get Warehouse By ID]");
         return new ResponseEntity<>("Delete Warehouse Successfully", OK);
     }
