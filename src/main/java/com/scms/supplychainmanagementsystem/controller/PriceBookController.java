@@ -111,7 +111,7 @@ public class PriceBookController {
         return status(HttpStatus.OK).body(result);
     }
 
-    @GetMapping("/{productId}")
+    @GetMapping("/by-product/{productId}")
     public ResponseEntity<Map<String, Object>> getAllPriceBookByProducId(@PathVariable Long productId) {
         log.info("[Start PriceBookController -  getAllPriceBookByProducId : " + productId + "]");
         Map<String, Object> result = new HashMap<>();
