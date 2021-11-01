@@ -61,6 +61,9 @@ public class PriceBookEntryService implements IPriceBookEntryService {
 
         priceBookEntry.setProduct(productRepository.findById(priceBookEntryDto.getProductId())
                 .orElseThrow(() -> new AppException("Product not found")));
+        if (priceBookEntryRepository.existProductInPriceBook(priceBookEntryDto.getProductId(), priceBookEntryDto.getPriceBookId())) {
+            throw new AppException("Exist this product in PriceBook");
+        }
         log.info("[Start Save PriceBookEntry to database]");
         priceBookEntryRepository.saveAndFlush(priceBookEntry);
         log.info("[End Save PriceBookEntry to database]");

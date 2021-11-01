@@ -13,6 +13,10 @@ import java.util.List;
 @Repository
 public interface PriceBookEntryRepository extends JpaRepository<PriceBookEntry, Long> {
 
+    @Query(value = "select case when count(p.priceBookEntryID) > 0 then true else false end from PriceBookEntry p " +
+            " where p.priceBook.priceBookId = :priceBookId and p.product.productId = :productId")
+    boolean existProductInPriceBook(Long productId, Long priceBookId);
+
     @Query(value = "select p from PriceBookEntry p where p.priceBook.priceBookId = :priceBookId")
     Page<PriceBookEntry> findAllByPriceBookId(@Param("priceBookId") Long priceBookId, Pageable pageable);
 
